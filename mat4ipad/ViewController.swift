@@ -54,16 +54,26 @@ struct Unassigned:Exp {
     
 }
 class ViewController: UIViewController {
-    var exp:Exp = Mul(a: Mat(elements: []), b: Unassigned(letter: "A"));
+    var _exp:Exp = Unassigned(letter: "_");
+    var exp:Exp {
+        get {
+            return _exp
+        }
+        set {
+            _exp = newValue
+            mathlbl.latex = _exp.latex()
+        }
+    }
     
     @IBOutlet weak var mathcontainer: UIView!
+    var mathlbl: MTMathUILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        let mathlbl = MTMathUILabel()
+        mathlbl = MTMathUILabel()
         mathlbl.frame = mathcontainer.frame
         mathcontainer.addSubview(mathlbl)
-        mathlbl.latex = exp.latex()
-        // Do any additional setup after loading the view.
+        
+        exp = Mul(a: Mat(elements: []), b: Unassigned(letter: "A"));
     }
 
 
