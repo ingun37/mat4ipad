@@ -31,7 +31,10 @@ class ViewController: UIViewController {
         mathView.frame = mathContainer.frame
         mathContainer.addSubview(mathView)
         
-        exp = Mul(a: Mat(elements: []), b: Unassigned(letter: "A"));
+        exp = Mul(a: Mat(elements: [
+            [Unassigned(letter: "a"), Unassigned(letter: "b")],
+            [Unassigned(letter: "b"), Unassigned(letter: "d")],
+            ]), b: Unassigned(letter: "A"));
     }
 
 

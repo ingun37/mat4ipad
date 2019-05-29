@@ -34,12 +34,8 @@ struct Mul:BinaryOp {
 }
 struct Mat:Exp {
     func latex() -> String {
-        return """
-        \\begin{pmatrix}
-        a & b \\\\
-        c & d
-        \\end{pmatrix}
-        """
+        let inner = elements.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
+        return "\\begin{pmatrix}\n" + inner + "\n\\end{pmatrix}"
     }
     
     var elements:[[Exp]];

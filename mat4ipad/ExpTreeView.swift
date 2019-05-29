@@ -48,8 +48,13 @@ class ExpTreeView: UIView {
             v2.setExp(exp: exp.b)
             stack.addArrangedSubview(v1)
             stack.addArrangedSubview(v2)
-        } else {
-            
+        } else if let exp = exp as? Mat {
+            let elements = exp.elements.flatMap({$0})
+            elements.forEach({e in
+                let v = ExpTreeView()
+                v.setExp(exp: e)
+                stack.addArrangedSubview(v)
+            })
         }
     }
     
