@@ -9,69 +9,28 @@
 import UIKit
 import iosMath
 
-protocol item {
-    
-}
-enum Err:Error {
-    case stackisempty
-    case unknownArith
-}
-
-protocol Exp: item {
-    func latex() -> String;
-}
-protocol BinaryOp:Exp {
-    var a: Exp { get }
-    var b: Exp { get }
-}
-struct Mul:BinaryOp {
-    var a: Exp
-    
-    var b: Exp
-    
-    func latex() -> String {
-        return "{\(a.latex())} * {\(b.latex())}"
-    }
-}
-struct Mat:Exp {
-    func latex() -> String {
-        return """
-                \\begin{pmatrix}
-                a & b \\\\
-                c & d
-                \\end{pmatrix}
-        """
-    }
-    
-    var elements:[[Exp]];
-}
-struct Unassigned:Exp {
-    func latex() -> String {
-        return letter
-    }
-    
-    var letter:String
-    
-}
 class ViewController: UIViewController {
     var _exp:Exp = Unassigned(letter: "_");
+    
+    
+    @IBOutlet weak var mathContainer: UIView!
+    var mathView:ExpTreeView!
     var exp:Exp {
         get {
             return _exp
         }
         set {
             _exp = newValue
-            mathlbl.latex = _exp.latex()
+            mathView.setExp(exp: _exp)
         }
     }
     
-    @IBOutlet weak var mathcontainer: UIView!
-    var mathlbl: MTMathUILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        mathlbl = MTMathUILabel()
-        mathlbl.frame = mathcontainer.frame
-        mathcontainer.addSubview(mathlbl)
+        mathView = ExpTreeView()
+        mathView.frame = mathContainer.frame
+        mathContainer.addSubview(mathView)
         
         exp = Mul(a: Mat(elements: []), b: Unassigned(letter: "A"));
     }

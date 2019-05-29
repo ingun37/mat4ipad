@@ -26,8 +26,8 @@
                                     <action selector="mul:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="O93-sf-Ph3"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HNB-bp-K1Y">
-                                <rect key="frame" x="89" y="423" width="626" height="128"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8oX-GA-zOv">
+                                <rect key="frame" x="20" y="348" width="728" height="656"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -36,7 +36,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="mathcontainer" destination="HNB-bp-K1Y" id="u1v-O1-uHr"/>
+                        <outlet property="mathContainer" destination="8oX-GA-zOv" id="qwX-q1-Xc9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
