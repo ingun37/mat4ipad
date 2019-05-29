@@ -22,27 +22,27 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
-                    <rect key="frame" x="0.0" y="0.0" width="483" height="263"/>
+                    <rect key="frame" x="8" y="8" width="467" height="247"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sL1-vS-N5p">
-                            <rect key="frame" x="0.0" y="0.0" width="483" height="70"/>
+                            <rect key="frame" x="0.0" y="0.0" width="467" height="70"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="s1x-QA-C1V"/>
                             </constraints>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="70" width="483" height="193"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
+                            <rect key="frame" x="0.0" y="70" width="467" height="177"/>
                         </stackView>
                     </subviews>
                 </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="4DU-3H-ZtF"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" id="Ph6-2I-93t"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" id="fhV-34-oCh"/>
-                <constraint firstItem="iCE-KS-6QP" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="hZx-aT-LuT"/>
+                <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" constant="8" id="Ph6-2I-93t"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" constant="8" id="fhV-34-oCh"/>
+                <constraint firstItem="iCE-KS-6QP" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="hZx-aT-LuT"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>

@@ -52,4 +52,11 @@ class ExpTreeView: UIView {
             
         }
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = 8;
+        layer.borderColor = UIColor(red: 0.5, green: 0.2, blue: 0.8, alpha: 1).cgColor;
+        layer.borderWidth = 3.0;
+    }
 }
