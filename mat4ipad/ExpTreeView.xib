@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
-                <outlet property="latexContainer" destination="sL1-vS-N5p" id="sqT-5d-pYm"/>
+                <outlet property="outstack" destination="iCE-KS-6QP" id="ky7-s1-Qhw"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="jVi-kD-RGi"/>
             </connections>
         </placeholder>
@@ -24,15 +24,8 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="247"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sL1-vS-N5p">
-                            <rect key="frame" x="0.0" y="0.0" width="467" height="70"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="70" id="s1x-QA-C1V"/>
-                            </constraints>
-                        </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="70" width="467" height="177"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
+                            <rect key="frame" x="0.0" y="0.0" width="467" height="247"/>
                         </stackView>
                     </subviews>
                 </stackView>

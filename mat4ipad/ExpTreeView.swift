@@ -11,8 +11,9 @@ import iosMath
 
 @IBDesignable
 class ExpTreeView: UIView {
+    
+    @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
-    @IBOutlet weak var latexContainer: UIView!
     
     var contentView:UIView?
 
@@ -37,10 +38,9 @@ class ExpTreeView: UIView {
     }
     func setExp(exp:Exp) {
         let mathlbl = MTMathUILabel()
-        mathlbl.frame = latexContainer.frame
         mathlbl.latex = exp.latex()
         mathlbl.sizeToFit()
-        latexContainer.addSubview(mathlbl)
+        outstack.insertArrangedSubview(mathlbl, at: 0)
         if let exp = exp as? BinaryOp {
             let v1 = ExpTreeView()
             v1.setExp(exp: exp.a)

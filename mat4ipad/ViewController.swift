@@ -12,7 +12,6 @@ import iosMath
 class ViewController: UIViewController {
     var _exp:Exp = Unassigned(letter: "_");
     
-    
     @IBOutlet weak var mathContainer: UIView!
     var mathView:ExpTreeView!
     var exp:Exp {
