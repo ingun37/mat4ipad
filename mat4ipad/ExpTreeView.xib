@@ -21,7 +21,7 @@
             <rect key="frame" x="0.0" y="0.0" width="483" height="297"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="247"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
@@ -31,6 +31,7 @@
                 </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" constant="8" id="Ph6-2I-93t"/>
@@ -41,7 +42,15 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="j6H-wM-vWX"/>
+            </connections>
             <point key="canvasLocation" x="187.68115942028987" y="-90.736607142857139"/>
         </view>
+        <tapGestureRecognizer id="I2V-gd-Upp">
+            <connections>
+                <action selector="ontap:" destination="-1" id="jPC-Q9-nSQ"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>

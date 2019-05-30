@@ -7,6 +7,9 @@ target 'mat4ipad' do
 
   # Pods for mat4ipad
   pod 'iosMath'
+  pod 'RxSwift', '~> 5'
+  pod 'RxCocoa', '~> 5'
+  
   target 'mat4ipadTests' do
     inherit! :search_paths
     # Pods for testing
