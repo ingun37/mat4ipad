@@ -26,7 +26,7 @@ class ViewController: UIViewController, ExpTreeDelegate {
     
     @IBOutlet weak var mathContainer: UIView!
     
-    var mathView:ExpTreeView!
+    var mathView:ExpTreeView?
     
     var exp:Exp {
         get {
@@ -34,16 +34,25 @@ class ViewController: UIViewController, ExpTreeDelegate {
         }
         set {
             _exp = newValue
-            mathView.setExp(exp: _exp, del:self)
+            refresh()
         }
     }
     
+    func refresh() {
+        if let mv = mathView {
+            mathContainer.willRemoveSubview(mv)
+            mv.removeFromSuperview()
+        }
+        
+        mathView = ExpTreeView()
+        guard let mathView = mathView else {return}
+        mathView.frame = mathContainer.frame
+        mathContainer.addSubview(mathView)
+        mathView.setExp(exp: exp, del:self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mathView = ExpTreeView()
-        mathView.frame = mathContainer.frame
-        mathContainer.addSubview(mathView)
         
         exp = Mul(a:  BG(color: UIColor.purple, e:Mat(elements: [
             [Unassigned(letter: "a"), Unassigned(letter: "b")],
