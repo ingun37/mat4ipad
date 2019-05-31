@@ -105,7 +105,7 @@ struct BG:Exp {
         return "\\colorbox{\(color.hex)}{\(e.latex())}"
     }
     
-    var color:UIColor
+    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
     var e:Exp
 }
 struct Buffer:Exp {

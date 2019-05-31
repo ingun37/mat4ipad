@@ -29,7 +29,7 @@ class ApplyTableVC: UIViewController {
             return
         }
         let options = [
-            Mul(a: exp, b: Unassigned(letter: "Z"))
+            Mul(a: BG(e:exp), b: BG(e:Unassigned(letter: "Z")))
         ]
         let oble = Observable.just(options)
         let ct = UITableViewCell.self
