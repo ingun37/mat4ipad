@@ -36,6 +36,14 @@ class ExpTreeView: UIView {
         view.frame = self.bounds
         self.addSubview(view)
         contentView = view
+        
+        layer.cornerRadius = 8;
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.shadowRadius = 1
+//        layer.masksToBounds = false
     }
     func loadViewFromNib() -> UIView? {
         let bundle = Bundle(for: type(of: self))
@@ -74,10 +82,6 @@ class ExpTreeView: UIView {
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        layer.cornerRadius = 8;
-    }
 }
 
 extension Range where Bound == Double {
