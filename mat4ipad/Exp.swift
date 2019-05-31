@@ -43,6 +43,11 @@ class Exp: item {
             }
             return false
         })
+        for i in 0..<kids.count {
+            if kids[i] is Mul && kids[i].kids.count == 1{
+                kids[i] = kids[i].kids[0]
+            }
+        }
     }
 }
 
