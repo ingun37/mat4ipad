@@ -8,16 +8,25 @@ PODS:
   - RxSwift (5.0.0)
 
 DEPENDENCIES:
-  - iosMath
+  - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - iosMath
     - RxCocoa
     - RxRelay
     - RxSwift
+
+EXTERNAL SOURCES:
+  iosMath:
+    :commit: e9b6ec66911089ca0673dd0034715652e71420c9
+    :git: https://github.com/kostub/iosMath
+
+CHECKOUT OPTIONS:
+  iosMath:
+    :commit: e9b6ec66911089ca0673dd0034715652e71420c9
+    :git: https://github.com/kostub/iosMath
 
 SPEC CHECKSUMS:
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
@@ -25,6 +34,6 @@ SPEC CHECKSUMS:
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
 
-PODFILE CHECKSUM: 6cc64fe923adcfc3cc1a2185a6d40e7dfefdd193
+PODFILE CHECKSUM: fa01f73e06f14a4b569708629450c7a93da1fee0
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.7.1

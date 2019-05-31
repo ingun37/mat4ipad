@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol item {
     
@@ -46,5 +47,28 @@ struct Unassigned:Exp {
     }
     
     var letter:String
+}
+struct BG:Exp {
+    func latex() -> String {
+        return "\\colorbox{\(color.hex)}{\(e.latex())}"
+    }
     
+    var color:UIColor
+    var e:Exp
+}
+extension UIColor {
+    var hex: String {
+        get {
+            var r:CGFloat = 0
+            var g:CGFloat = 0
+            var b:CGFloat = 0
+            var a:CGFloat = 0
+            
+            getRed(&r, green: &g, blue: &b, alpha: &a)
+            
+            let rgb:Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+            
+            return NSString(format:"#%06x", rgb) as String
+        }
+    }
 }

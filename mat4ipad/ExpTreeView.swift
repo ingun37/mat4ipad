@@ -44,33 +44,49 @@ class ExpTreeView: UIView {
     }
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
-        self.exp = exp
-        self.del = del
-        let mathlbl = MTMathUILabel()
-        mathlbl.latex = exp.latex()
-        mathlbl.sizeToFit()
-        outstack.insertArrangedSubview(mathlbl, at: 0)
-        if let exp = exp as? BinaryOp {
-            let v1 = ExpTreeView()
-            v1.setExp(exp: exp.a, del:del)
-            let v2 = ExpTreeView()
-            v2.setExp(exp: exp.b, del:del)
-            stack.addArrangedSubview(v1)
-            stack.addArrangedSubview(v2)
-        } else if let exp = exp as? Mat {
-            let elements = exp.elements.flatMap({$0})
-            elements.forEach({e in
-                let v = ExpTreeView()
-                v.setExp(exp: e, del:del)
-                stack.addArrangedSubview(v)
-            })
+        
+        if let exp = exp as? BG {
+            contentView?.backgroundColor = exp.color
+            setExp(exp: exp.e, del: del)
+        } else {
+            self.exp = exp
+            self.del = del
+            let mathlbl = MTMathUILabel()
+            mathlbl.latex = exp.latex()
+            mathlbl.sizeToFit()
+            outstack.insertArrangedSubview(mathlbl, at: 0)
+            
+            if let exp = exp as? BinaryOp {
+                let v1 = ExpTreeView()
+                v1.setExp(exp: exp.a, del:del)
+                let v2 = ExpTreeView()
+                v2.setExp(exp: exp.b, del:del)
+                stack.addArrangedSubview(v1)
+                stack.addArrangedSubview(v2)
+            } else if let exp = exp as? Mat {
+                let elements = exp.elements.flatMap({$0})
+                elements.forEach({e in
+                    let v = ExpTreeView()
+                    v.setExp(exp: e, del:del)
+                    stack.addArrangedSubview(v)
+                })
+            }
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = 8;
-        layer.borderColor = UIColor(red: 0.5, green: 0.2, blue: 0.8, alpha: 1).cgColor;
-        layer.borderWidth = 3.0;
+    }
+}
+
+extension Range where Bound == Double {
+    private func interp(_ n:Int, _ d:Int) -> Double {
+        let a:Double = (upperBound*Double(n)/Double(d))
+        let b:Double = (lowerBound*Double(d-n)/Double(d))
+        return a + b
+    }
+    func block(_ numerator:Int, _ denominator:Int) -> Range<Double> {
+        return interp(numerator, denominator)..<interp(numerator+1, denominator)
     }
 }

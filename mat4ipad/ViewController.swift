@@ -45,12 +45,11 @@ class ViewController: UIViewController, ExpTreeDelegate {
         mathView.frame = mathContainer.frame
         mathContainer.addSubview(mathView)
         
-        exp = Mul(a: Mat(elements: [
+        exp = Mul(a:  BG(color: UIColor.purple, e:Mat(elements: [
             [Unassigned(letter: "a"), Unassigned(letter: "b")],
             [Unassigned(letter: "b"), Unassigned(letter: "d")],
-            ]), b: Unassigned(letter: "A"));
+            ])), b: BG(color: UIColor.green, e: Unassigned(letter: "A")));
     }
-
 
     @IBAction func mul(_ sender: Any) {
         
