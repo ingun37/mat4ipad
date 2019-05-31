@@ -11,18 +11,15 @@ import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     func remove(uid: String) {
-        if self.exp.askRemove(removingUid: uid) {
-            exp = Buffer(e: Unassigned(letter: "A"))
-        }
+        exp.remove(uid: uid)
         refresh()
     }
     
     
     func changeto(uid:String, to: Exp) {
         print("replacing \(uid) to \(to.uid)")
-        if self.exp.replace(uid: uid, to: to) {
-            refresh()
-        }
+        exp.replace(uid: uid, to: to)
+        refresh()
     }
     
     var tappedExp:Exp?
@@ -37,7 +34,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
             vc.set(exp: exp, del:self)
         }
     }
-    var exp:Exp = Unassigned(letter: "_");
+    var exp:Exp = Unassigned("_");
     
     @IBOutlet weak var mathContainer: UIView!
     
@@ -59,10 +56,10 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        exp = Buffer(e: Mul(elements:  [BG(e:Mat(elements: [
-            [BG(e:Unassigned(letter: "a")), BG(e:Unassigned(letter: "b"))],
-            [BG(e:Unassigned(letter: "b")), BG(e:Unassigned(letter: "d"))],
-            ])), BG(e: Unassigned(letter: "A"))]))
+        exp = Buffer(Mul([BG(Mat([
+            [BG(Unassigned("a")), BG(Unassigned("b"))],
+            [BG(Unassigned("b")), BG(Unassigned("d"))],
+            ])), BG(Unassigned("A"))]))
         refresh()
     }
 

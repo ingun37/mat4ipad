@@ -17,148 +17,103 @@ enum Err:Error {
     case unknownArith
 }
 
-protocol Exp: item {
-    var uid:String {get}
-    func latex() -> String;
-    mutating func replace(uid:String, to:Exp)-> Bool
-    mutating func askRemove(removingUid:String)->Bool
-}
-protocol MultiOp:Exp {
-    var elements:[Exp] {get}
-}
-
-struct Mul: MultiOp {
-    mutating func askRemove(removingUid: String) -> Bool {
-        if removingUid == uid {
-            return true
+class Exp: item {
+    let uid: String = UUID().uuidString
+    var kids:[Exp] = []
+    func latex() -> String {
+        return ""
+    }
+    func replace(uid:String, to:Exp) {
+        for i in 0..<kids.count {
+            if kids[i].uid == uid {
+                kids[i] = to
+            } else {
+                kids[i].replace(uid: uid, to: to)
+            }
         }
-        
-        (0..<elements.count).filter({elements[$0].askRemove(removingUid: removingUid)}).sorted(by: {$0>$1}).forEach({removingIdx in
-            self.elements.remove(at: removingIdx)
+    }
+    func remove(uid:String) {
+        kids.forEach({$0.remove(uid: uid)})
+        kids.removeAll(where: {$0.uid == uid})
+        kids.removeAll(where: {kid in
+            if kid is BG || kid is Buffer || kid is Mul {
+                if kid.kids.isEmpty {
+                    return true
+                }
+            }
+            return false
         })
-
-        return elements.count < 2
-    }
-    
-    var elements: [Exp]
-    
-    mutating func replace(uid: String, to: Exp)-> Bool {
-        for i in 0..<elements.count {
-            if elements[i].uid == uid {
-                elements[i] = to
-                return true
-            }
-        }
-        for i in 0..<elements.count {
-            if elements[i].replace(uid: uid, to: to) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    let uid: String = UUID().uuidString
-    
-    func latex() -> String {
-        return elements.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
 }
-struct Mat:Exp {
-    func askRemove(removingUid: String) -> Bool {
-        return uid == removingUid
+
+class Mul: Exp {
+    override func latex() -> String {
+        return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
-    
-    
-    mutating func replace(uid: String, to: Exp)-> Bool {
-        for i in 0..<elements.count {
-            for j in 0..<elements[i].count {
-                if elements[i][j].uid == uid {
-                    elements[i][j] = to
-                    return true
-                }
-            }
-        }
-        for i in 0..<elements.count {
-            for j in 0..<elements[i].count {
-                if elements[i][j].replace(uid: uid, to: to) {
-                    return true
-                }
-            }
-        }
-        return false
+    init(_ operands:[Exp]) {
+        super.init()
+        kids = operands
     }
-    
-    let uid: String = UUID().uuidString
-    
-    func latex() -> String {
-        let inner = elements.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
+}
+class Mat:Exp {
+    let rows, cols:Int
+    override func latex() -> String {
+        let array2d = (0..<rows).map({r in kids[r*cols..<r*cols+cols]})
+        
+        let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
         return "\\begin{pmatrix}\n" + inner + "\n\\end{pmatrix}"
     }
-    
-    var elements:[[Exp]];
-}
-struct Unassigned:Exp {
-    func askRemove(removingUid: String) -> Bool {
-        return removingUid == uid
+    init(r:Int, c:Int) {
+        rows = r
+        cols = c
+        super.init()
+        kids = Array(repeating: BG(Unassigned("A")), count: rows*cols)
     }
-    
-    func replace(uid: String, to: Exp)-> Bool {  return false  }
-    
-    let uid: String = UUID().uuidString
-    
-    func latex() -> String {
+    init(_ arr2d:[[Exp]]) {
+        rows = arr2d.count
+        cols = arr2d[0].count
+        super.init()
+        kids = arr2d.flatMap({$0})
+    }
+}
+class Unassigned:Exp {
+    override func latex() -> String {
         return letter
     }
     
     var letter:String
+    init(_ l:String) {
+        letter = l
+        super.init()
+    }
 }
-struct BG:Exp {
-    mutating func askRemove(removingUid: String) -> Bool {
-        if uid == removingUid {
-            return true
-        }
-        return e.askRemove(removingUid: removingUid)
+class BG:Exp {
+    override func latex() -> String {
+        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
     }
-    
-    mutating func replace(uid: String, to: Exp)-> Bool {
-        if e.uid == uid {
-            e = to
-            return true
-        }
-        return e.replace(uid: uid, to: to)
+    var e:Exp {
+        return kids[0]
     }
-    
-    let uid: String = UUID().uuidString
-    
-    func latex() -> String {
-        return "\\colorbox{\(color.hex)}{\(e.latex())}"
-    }
-    
     let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
-    var e:Exp
+    
+    init(_ e:Exp) {
+        super.init()
+        kids = [e]
+    }
 }
-struct Buffer:Exp {
-    mutating func askRemove(removingUid: String) -> Bool {
-        if uid == removingUid {
-            return true
-        }
-        return e.askRemove(removingUid: removingUid)
-    }
-    mutating func replace(uid: String, to: Exp)-> Bool {
-        if e.uid == uid {
-            e = to
-            return true
-        }
-        return e.replace(uid: uid, to: to)
+class Buffer:Exp {
+    override func latex() -> String {
+        return kids[0].latex()
     }
     
-    let uid: String = UUID().uuidString
-    
-    func latex() -> String {
-        return e.latex()
+    init(_ e:Exp) {
+        super.init()
+        kids = [e]
     }
     
-    var e:Exp
+    var e:Exp {
+        return kids[0]
+    }
 }
 extension UIColor {
     var hex: String {

@@ -53,7 +53,6 @@ class ExpTreeView: UIView {
     }
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
-        
         if let exp = exp as? BG {
             contentView?.backgroundColor = exp.color
             setExp(exp: exp.e, del: del)
@@ -66,21 +65,11 @@ class ExpTreeView: UIView {
             mathlbl.latex = exp.latex()
             mathlbl.sizeToFit()
             outstack.insertArrangedSubview(mathlbl, at: 0)
-            
-            if let exp = exp as? MultiOp {
-                exp.elements.forEach({e in
-                    let v = ExpTreeView()
-                    v.setExp(exp: e, del:del)
-                    stack.addArrangedSubview(v)
-                })
-            } else if let exp = exp as? Mat {
-                let elements = exp.elements.flatMap({$0})
-                elements.forEach({e in
-                    let v = ExpTreeView()
-                    v.setExp(exp: e, del:del)
-                    stack.addArrangedSubview(v)
-                })
-            }
+            exp.kids.forEach({e in
+                let v = ExpTreeView()
+                v.setExp(exp: e, del:del)
+                stack.addArrangedSubview(v)
+            })
         }
     }
     
