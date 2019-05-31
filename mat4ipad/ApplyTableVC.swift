@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 protocol ApplyTableDelegate {
     func changeto(uid:String, to:Exp)
+    func remove(uid:String)
 }
 class ApplyTableVC: UIViewController {
     var del:ApplyTableDelegate?
@@ -23,11 +24,13 @@ class ApplyTableVC: UIViewController {
         self.del = del
     }
     func optionsFor(exp:Exp)-> [Exp] {
+        var options:[Exp] = []
         if let exp = exp as? Mul {
-            return [Mul(elements: exp.elements + [BG(e:Unassigned(letter: "Z"))] )]
+            options = [Mul(elements: exp.elements + [BG(e:Unassigned(letter: "Z"))] )]
         } else {
-            return []
         }
+        
+        return options
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +55,14 @@ class ApplyTableVC: UIViewController {
         }).disposed(by: disposeBag)
     }
     
-
+    @IBAction func removeClick(_ sender: Any) {
+        dismiss(animated: true) {
+            if let uid = self.exp?.uid {
+                self.del?.remove(uid: uid)
+            }
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

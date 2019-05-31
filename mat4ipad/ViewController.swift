@@ -10,6 +10,14 @@ import UIKit
 import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    func remove(uid: String) {
+        if self.exp.askRemove(removingUid: uid) {
+            exp = Buffer(e: Unassigned(letter: "A"))
+        }
+        refresh()
+    }
+    
+    
     func changeto(uid:String, to: Exp) {
         print("replacing \(uid) to \(to.uid)")
         if self.exp.replace(uid: uid, to: to) {

@@ -21,12 +21,25 @@ protocol Exp: item {
     var uid:String {get}
     func latex() -> String;
     mutating func replace(uid:String, to:Exp)-> Bool
+    mutating func askRemove(removingUid:String)->Bool
 }
 protocol MultiOp:Exp {
     var elements:[Exp] {get}
 }
 
 struct Mul: MultiOp {
+    mutating func askRemove(removingUid: String) -> Bool {
+        if removingUid == uid {
+            return true
+        }
+        
+        (0..<elements.count).filter({elements[$0].askRemove(removingUid: removingUid)}).sorted(by: {$0>$1}).forEach({removingIdx in
+            self.elements.remove(at: removingIdx)
+        })
+
+        return elements.count < 2
+    }
+    
     var elements: [Exp]
     
     mutating func replace(uid: String, to: Exp)-> Bool {
@@ -51,6 +64,11 @@ struct Mul: MultiOp {
     }
 }
 struct Mat:Exp {
+    func askRemove(removingUid: String) -> Bool {
+        return uid == removingUid
+    }
+    
+    
     mutating func replace(uid: String, to: Exp)-> Bool {
         for i in 0..<elements.count {
             for j in 0..<elements[i].count {
@@ -80,6 +98,10 @@ struct Mat:Exp {
     var elements:[[Exp]];
 }
 struct Unassigned:Exp {
+    func askRemove(removingUid: String) -> Bool {
+        return removingUid == uid
+    }
+    
     func replace(uid: String, to: Exp)-> Bool {  return false  }
     
     let uid: String = UUID().uuidString
@@ -91,9 +113,15 @@ struct Unassigned:Exp {
     var letter:String
 }
 struct BG:Exp {
+    mutating func askRemove(removingUid: String) -> Bool {
+        if uid == removingUid {
+            return true
+        }
+        return e.askRemove(removingUid: removingUid)
+    }
+    
     mutating func replace(uid: String, to: Exp)-> Bool {
         if e.uid == uid {
-            print("replacing BG's e to \(to.latex())")
             e = to
             return true
         }
@@ -110,6 +138,12 @@ struct BG:Exp {
     var e:Exp
 }
 struct Buffer:Exp {
+    mutating func askRemove(removingUid: String) -> Bool {
+        if uid == removingUid {
+            return true
+        }
+        return e.askRemove(removingUid: removingUid)
+    }
     mutating func replace(uid: String, to: Exp)-> Bool {
         if e.uid == uid {
             e = to
