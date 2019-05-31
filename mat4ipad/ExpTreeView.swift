@@ -53,12 +53,10 @@ class ExpTreeView: UIView {
     }
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
-        if let exp = exp as? BG {
-            contentView?.backgroundColor = exp.color
-            setExp(exp: exp.e, del: del)
-        } else if let exp = exp as? Buffer {
+        if let exp = exp as? Buffer {
             setExp(exp: exp.e, del: del)
         } else {
+            contentView?.backgroundColor = exp.bgcolor
             self.exp = exp
             self.del = del
             let mathlbl = MTMathUILabel()

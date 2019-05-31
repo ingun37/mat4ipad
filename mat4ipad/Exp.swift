@@ -20,14 +20,18 @@ enum Err:Error {
 class Exp: item {
     let uid: String = UUID().uuidString
     var kids:[Exp] = []
+    let bgcolor:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
     func latex() -> String {
+        return "\\colorbox{\(bgcolor.hex)}{\(_latex())}"
+    }
+    func _latex() -> String {
         return ""
     }
     func associative() {
         if self is Mul {
-            if let idx = kids.firstIndex(where: {kid in kid is BG && kid.kids[0] is Mul}) {
+            if let idx = kids.firstIndex(where: {kid in kid is Mul}) {
                 let kid = kids.remove(at: idx)
-                kids.insert(contentsOf: kid.kids[0].kids, at: idx)
+                kids.insert(contentsOf: kid.kids, at: idx)
                 associative()
                 return
             }
@@ -47,7 +51,7 @@ class Exp: item {
         kids.forEach({$0.remove(uid: uid)})
         kids.removeAll(where: {$0.uid == uid})
         kids.removeAll(where: {kid in
-            if kid is BG || kid is Buffer || kid is Mul {
+            if kid is Buffer || kid is Mul {
                 if kid.kids.isEmpty {
                     return true
                 }
@@ -64,7 +68,7 @@ class Exp: item {
 }
 
 class Mul: Exp {
-    override func latex() -> String {
+    override func _latex() -> String {
         return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
     init(_ operands:[Exp]) {
@@ -74,7 +78,7 @@ class Mul: Exp {
 }
 class Mat:Exp {
     let rows, cols:Int
-    override func latex() -> String {
+    override func _latex() -> String {
         let array2d = (0..<rows).map({r in kids[r*cols..<r*cols+cols]})
         
         let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
@@ -84,7 +88,7 @@ class Mat:Exp {
         rows = r
         cols = c
         super.init()
-        kids = Array(repeating: BG(Unassigned("A")), count: rows*cols)
+        kids = Array(repeating: Unassigned("A"), count: rows*cols)
     }
     init(_ arr2d:[[Exp]]) {
         rows = arr2d.count
@@ -94,7 +98,7 @@ class Mat:Exp {
     }
 }
 class Unassigned:Exp {
-    override func latex() -> String {
+    override func _latex() -> String {
         return letter
     }
     
@@ -104,22 +108,9 @@ class Unassigned:Exp {
         super.init()
     }
 }
-class BG:Exp {
-    override func latex() -> String {
-        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
-    }
-    var e:Exp {
-        return kids[0]
-    }
-    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
-    
-    init(_ e:Exp) {
-        super.init()
-        kids = [e]
-    }
-}
+
 class Buffer:Exp {
-    override func latex() -> String {
+    override func _latex() -> String {
         return kids[0].latex()
     }
     

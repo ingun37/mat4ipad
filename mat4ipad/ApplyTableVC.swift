@@ -26,9 +26,9 @@ class ApplyTableVC: UIViewController {
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
         if let exp = exp as? Mul {
-            options = [Mul(exp.kids + [BG(Unassigned("Z"))] )]
+            options = [Mul(exp.kids + [Unassigned("Z")] )]
         } else {
-            options = [Mul([BG(exp), BG(Unassigned("Z"))])]
+            options = [Mul([exp, Unassigned("Z")])]
         }
         
         return options
