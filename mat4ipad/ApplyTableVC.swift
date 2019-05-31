@@ -10,13 +10,17 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
-
+protocol ApplyTableDelegate {
+    func changeto(uid:String, to:Exp)
+}
 class ApplyTableVC: UIViewController {
+    var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
     var exp:Exp?
-    func set(exp:Exp) {
+    func set(exp:Exp, del:ApplyTableDelegate?) {
         self.exp = exp
+        self.del = del
     }
     
     override func viewDidLoad() {
@@ -30,11 +34,17 @@ class ApplyTableVC: UIViewController {
         let oble = Observable.just(options)
         let ct = UITableViewCell.self
         oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ct), curriedArgument: { (row, element, cell) in
-            print("fuckyou")
             let mathlbl = MTMathUILabel()
             mathlbl.latex = element.latex()
             mathlbl.frame = cell.contentView.frame;
             cell.contentView.addSubview(mathlbl)
+        }).disposed(by: disposeBag)
+        
+        tv.rx.modelSelected(Exp.self).subscribe(onNext:  { value in
+            self.dismiss(animated: true, completion: {
+                print("sending to value \(value.uid): \(value.latex())")
+                self.del?.changeto(uid:exp.uid, to: value)
+            })
         }).disposed(by: disposeBag)
     }
     

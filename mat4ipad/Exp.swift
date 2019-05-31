@@ -18,15 +18,31 @@ enum Err:Error {
 }
 
 protocol Exp: item {
+    var uid:String {get}
     func latex() -> String;
+    mutating func replace(uid:String, to:Exp)-> Bool
 }
 protocol BinaryOp:Exp {
     var a: Exp { get }
     var b: Exp { get }
 }
-struct Mul:BinaryOp {
-    var a: Exp
+
+struct Mul: BinaryOp {
+    mutating func replace(uid: String, to: Exp)-> Bool {
+        if a.uid == uid {
+            a = to
+            return true
+        } else if b.uid == uid {
+            b = to
+            return true
+        } else {
+            return a.replace(uid: uid, to: to) || b.replace(uid: uid, to: to)
+        }
+    }
     
+    let uid: String = UUID().uuidString
+    
+    var a: Exp
     var b: Exp
     
     func latex() -> String {
@@ -34,6 +50,27 @@ struct Mul:BinaryOp {
     }
 }
 struct Mat:Exp {
+    mutating func replace(uid: String, to: Exp)-> Bool {
+        for i in 0..<elements.count {
+            for j in 0..<elements[i].count {
+                if elements[i][j].uid == uid {
+                    elements[i][j] = to
+                    return true
+                }
+            }
+        }
+        for i in 0..<elements.count {
+            for j in 0..<elements[i].count {
+                if elements[i][j].replace(uid: uid, to: to) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    let uid: String = UUID().uuidString
+    
     func latex() -> String {
         let inner = elements.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
         return "\\begin{pmatrix}\n" + inner + "\n\\end{pmatrix}"
@@ -42,6 +79,10 @@ struct Mat:Exp {
     var elements:[[Exp]];
 }
 struct Unassigned:Exp {
+    func replace(uid: String, to: Exp)-> Bool {  return false  }
+    
+    let uid: String = UUID().uuidString
+    
     func latex() -> String {
         return letter
     }
@@ -49,6 +90,17 @@ struct Unassigned:Exp {
     var letter:String
 }
 struct BG:Exp {
+    mutating func replace(uid: String, to: Exp)-> Bool {
+        if e.uid == uid {
+            print("replacing BG's e to \(to.latex())")
+            e = to
+            return true
+        }
+        return e.replace(uid: uid, to: to)
+    }
+    
+    let uid: String = UUID().uuidString
+    
     func latex() -> String {
         return "\\colorbox{\(color.hex)}{\(e.latex())}"
     }

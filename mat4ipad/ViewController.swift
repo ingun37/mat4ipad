@@ -9,7 +9,14 @@
 import UIKit
 import iosMath
 
-class ViewController: UIViewController, ExpTreeDelegate {
+class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    func changeto(uid:String, to: Exp) {
+        print("replacing \(uid) to \(to.uid)")
+        if self.exp.replace(uid: uid, to: to) {
+            refresh()
+        }
+    }
+    
     var tappedExp:Exp?
     func onTap(exp: Exp) {
         tappedExp = exp
@@ -19,24 +26,15 @@ class ViewController: UIViewController, ExpTreeDelegate {
         if segue.identifier == "op" {
             guard let vc = segue.destination as? ApplyTableVC else { return }
             guard let exp = tappedExp else {return}
-            vc.set(exp: exp)
+            vc.set(exp: exp, del:self)
         }
     }
-    var _exp:Exp = Unassigned(letter: "_");
+    var exp:Exp = Unassigned(letter: "_");
     
     @IBOutlet weak var mathContainer: UIView!
     
     var mathView:ExpTreeView?
     
-    var exp:Exp {
-        get {
-            return _exp
-        }
-        set {
-            _exp = newValue
-            refresh()
-        }
-    }
     
     func refresh() {
         if let mv = mathView {
@@ -58,6 +56,7 @@ class ViewController: UIViewController, ExpTreeDelegate {
             [Unassigned(letter: "a"), Unassigned(letter: "b")],
             [Unassigned(letter: "b"), Unassigned(letter: "d")],
             ])), b: BG(color: UIColor.green, e: Unassigned(letter: "A")));
+        refresh()
     }
 
     @IBAction func mul(_ sender: Any) {

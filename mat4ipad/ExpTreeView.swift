@@ -21,6 +21,7 @@ class ExpTreeView: UIView {
 
     @IBAction func ontap(_ sender: Any) {
         guard let exp = exp else {return}
+        print("sending \(exp.uid)")
         del?.onTap(exp: exp)
     }
     required init?(coder aDecoder: NSCoder) {
