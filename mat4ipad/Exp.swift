@@ -108,6 +108,23 @@ struct BG:Exp {
     var color:UIColor
     var e:Exp
 }
+struct Buffer:Exp {
+    mutating func replace(uid: String, to: Exp)-> Bool {
+        if e.uid == uid {
+            e = to
+            return true
+        }
+        return e.replace(uid: uid, to: to)
+    }
+    
+    let uid: String = UUID().uuidString
+    
+    func latex() -> String {
+        return e.latex()
+    }
+    
+    var e:Exp
+}
 extension UIColor {
     var hex: String {
         get {

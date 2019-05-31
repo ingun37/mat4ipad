@@ -57,6 +57,8 @@ class ExpTreeView: UIView {
         if let exp = exp as? BG {
             contentView?.backgroundColor = exp.color
             setExp(exp: exp.e, del: del)
+        } else if let exp = exp as? Buffer {
+            setExp(exp: exp.e, del: del)
         } else {
             self.exp = exp
             self.del = del
