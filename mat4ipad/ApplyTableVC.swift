@@ -22,15 +22,19 @@ class ApplyTableVC: UIViewController {
         self.exp = exp
         self.del = del
     }
-    
+    func optionsFor(exp:Exp)-> [Exp] {
+        if let exp = exp as? Mul {
+            return [Mul(elements: exp.elements + [BG(e:Unassigned(letter: "Z"))] )]
+        } else {
+            return []
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let exp = exp else {
             return
         }
-        let options = [
-            Mul(a: BG(e:exp), b: BG(e:Unassigned(letter: "Z")))
-        ]
+        let options = optionsFor(exp: exp)
         let oble = Observable.just(options)
         let ct = UITableViewCell.self
         oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ct), curriedArgument: { (row, element, cell) in

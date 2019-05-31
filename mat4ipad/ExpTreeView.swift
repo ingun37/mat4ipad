@@ -67,13 +67,12 @@ class ExpTreeView: UIView {
             mathlbl.sizeToFit()
             outstack.insertArrangedSubview(mathlbl, at: 0)
             
-            if let exp = exp as? BinaryOp {
-                let v1 = ExpTreeView()
-                v1.setExp(exp: exp.a, del:del)
-                let v2 = ExpTreeView()
-                v2.setExp(exp: exp.b, del:del)
-                stack.addArrangedSubview(v1)
-                stack.addArrangedSubview(v2)
+            if let exp = exp as? MultiOp {
+                exp.elements.forEach({e in
+                    let v = ExpTreeView()
+                    v.setExp(exp: e, del:del)
+                    stack.addArrangedSubview(v)
+                })
             } else if let exp = exp as? Mat {
                 let elements = exp.elements.flatMap({$0})
                 elements.forEach({e in

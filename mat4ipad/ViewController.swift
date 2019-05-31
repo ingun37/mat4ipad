@@ -51,10 +51,10 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        exp = Buffer(e: Mul(a:  BG(e:Mat(elements: [
+        exp = Buffer(e: Mul(elements:  [BG(e:Mat(elements: [
             [BG(e:Unassigned(letter: "a")), BG(e:Unassigned(letter: "b"))],
             [BG(e:Unassigned(letter: "b")), BG(e:Unassigned(letter: "d"))],
-            ])), b: BG(e: Unassigned(letter: "A"))))
+            ])), BG(e: Unassigned(letter: "A"))]))
         refresh()
     }
 

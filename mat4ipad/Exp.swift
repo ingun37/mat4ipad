@@ -22,31 +22,32 @@ protocol Exp: item {
     func latex() -> String;
     mutating func replace(uid:String, to:Exp)-> Bool
 }
-protocol BinaryOp:Exp {
-    var a: Exp { get }
-    var b: Exp { get }
+protocol MultiOp:Exp {
+    var elements:[Exp] {get}
 }
 
-struct Mul: BinaryOp {
+struct Mul: MultiOp {
+    var elements: [Exp]
+    
     mutating func replace(uid: String, to: Exp)-> Bool {
-        if a.uid == uid {
-            a = to
-            return true
-        } else if b.uid == uid {
-            b = to
-            return true
-        } else {
-            return a.replace(uid: uid, to: to) || b.replace(uid: uid, to: to)
+        for i in 0..<elements.count {
+            if elements[i].uid == uid {
+                elements[i] = to
+                return true
+            }
         }
+        for i in 0..<elements.count {
+            if elements[i].replace(uid: uid, to: to) {
+                return true
+            }
+        }
+        return false
     }
     
     let uid: String = UUID().uuidString
     
-    var a: Exp
-    var b: Exp
-    
     func latex() -> String {
-        return "{\(a.latex())} * {\(b.latex())}"
+        return elements.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
 }
 struct Mat:Exp {
