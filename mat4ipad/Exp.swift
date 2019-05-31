@@ -23,6 +23,16 @@ class Exp: item {
     func latex() -> String {
         return ""
     }
+    func associative() {
+        if self is Mul {
+            if let idx = kids.firstIndex(where: {kid in kid is BG && kid.kids[0] is Mul}) {
+                let kid = kids.remove(at: idx)
+                kids.insert(contentsOf: kid.kids[0].kids, at: idx)
+                associative()
+                return
+            }
+        }
+    }
     func replace(uid:String, to:Exp) {
         for i in 0..<kids.count {
             if kids[i].uid == uid {
@@ -31,6 +41,7 @@ class Exp: item {
                 kids[i].replace(uid: uid, to: to)
             }
         }
+        associative()
     }
     func remove(uid:String) {
         kids.forEach({$0.remove(uid: uid)})
@@ -48,6 +59,7 @@ class Exp: item {
                 kids[i] = kids[i].kids[0]
             }
         }
+        associative()
     }
 }
 
