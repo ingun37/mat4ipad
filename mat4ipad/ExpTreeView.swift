@@ -20,6 +20,7 @@ class ExpTreeView: UIView {
     var del:ExpTreeDelegate?
     @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
+    @IBOutlet weak var latexWrap: UIView!
     
     @IBOutlet weak var matWrap: UIView!
     @IBOutlet weak var matcollection: MatCollection!
@@ -59,6 +60,7 @@ class ExpTreeView: UIView {
         let nib = UINib(nibName: String(describing:type(of: self)), bundle: bundle)
         return nib.instantiate(withOwner: self, options: nil).first as? UIView
     }
+    @IBOutlet weak var latexWrapHeight: NSLayoutConstraint!
     @IBOutlet weak var matWrapAspectRatio: NSLayoutConstraint!
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
@@ -71,7 +73,10 @@ class ExpTreeView: UIView {
             let mathlbl = MTMathUILabel()
             mathlbl.latex = exp.latex()
             mathlbl.sizeToFit()
-            outstack.insertArrangedSubview(mathlbl, at: 0)
+            let newLatexHeightCon = NSLayoutConstraint(item: latexWrapHeight.firstItem!, attribute: latexWrapHeight.firstAttribute, relatedBy: latexWrapHeight.relation, toItem: latexWrapHeight.secondItem, attribute: latexWrapHeight.secondAttribute, multiplier: latexWrapHeight.multiplier, constant: mathlbl.frame.size.height)
+            latexWrap.removeConstraint(latexWrapHeight)
+            latexWrap.addConstraint(newLatexHeightCon)
+            latexWrap.addSubview(mathlbl)
             
             if let exp = exp as? Mat {
                 matWrap.isHidden = false

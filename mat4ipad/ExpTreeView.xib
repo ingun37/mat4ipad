@@ -12,6 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
+                <outlet property="latexWrap" destination="cJF-Qu-Dom" id="YJd-W1-MDo"/>
+                <outlet property="latexWrapHeight" destination="j71-vb-kcS" id="Ig2-8Y-ahh"/>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="8al-tr-An2"/>
                 <outlet property="matWrapAspectRatio" destination="PXd-E7-tKp" id="2Fy-fW-Pyt"/>
                 <outlet property="matcollection" destination="xgq-T9-bIb" id="TgD-lR-774"/>
@@ -27,10 +29,16 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="1220"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom">
+                            <rect key="frame" x="0.0" y="0.0" width="467" height="100"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="100" id="j71-vb-kcS"/>
+                            </constraints>
+                        </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="0.0" width="467" height="745"/>
+                            <rect key="frame" x="0.0" y="108" width="467" height="637"/>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
+                        <view contentMode="scaleToFill" verticalHuggingPriority="246" verticalCompressionResistancePriority="746" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
                             <rect key="frame" x="0.0" y="753" width="467" height="467"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xgq-T9-bIb" customClass="MatCollection" customModule="mat4ipad" customModuleProvider="target">
