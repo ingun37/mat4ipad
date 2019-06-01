@@ -97,7 +97,17 @@ class ExpTreeView: UIView {
                     } else if let e = element as? IntExp {
                         cell.lbl.text = "\(e.i)"
                     }
+                    
+                    cell.lbl.rx.text.orEmpty.throttle(.milliseconds(200), scheduler: MainScheduler.instance).distinctUntilChanged().observeOn(MainScheduler.instance).skip(1).subscribe(onNext: {txt in
+                        print("txt : \(txt)")
+                    }).disposed(by: self.disposeBag)
                 }).disposed(by: disposeBag)
+                
+                matcollection.rx.itemSelected.subscribe(onNext: { (idx) in
+                    guard let cell = self.matcollection.cellForItem(at: idx) as? MatCell else {return}
+                    cell.lbl.becomeFirstResponder()
+                }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
+                
                 
             } else {
                 matWrap.isHidden = true
@@ -167,11 +177,14 @@ class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
         return 0
     }
 }
-class MatCell:UICollectionViewCell {
+class MatCell:UICollectionViewCell, UITextFieldDelegate {
     
-    @IBOutlet weak var lbl: UILabel!
+    @IBOutlet weak var lbl: UITextField!
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
-        
     }
 }

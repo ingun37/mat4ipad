@@ -19,17 +19,22 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eM1-cJ-YLd">
                     <rect key="frame" x="8" y="52" width="398" height="145"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Sq-xN-NTX">
-                            <rect key="frame" x="178" y="62" width="42" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="biu-a2-Flr">
+                            <rect key="frame" x="8" y="64" width="382" height="17"/>
                             <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="X39-Xq-339"/>
+                            </connections>
+                        </textField>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="3Sq-xN-NTX" firstAttribute="centerY" secondItem="eM1-cJ-YLd" secondAttribute="centerY" id="0Ud-Qf-pV1"/>
-                        <constraint firstItem="3Sq-xN-NTX" firstAttribute="centerX" secondItem="eM1-cJ-YLd" secondAttribute="centerX" id="7aV-su-kpe"/>
+                        <constraint firstItem="biu-a2-Flr" firstAttribute="centerX" secondItem="eM1-cJ-YLd" secondAttribute="centerX" id="Qzh-w6-F09"/>
+                        <constraint firstItem="biu-a2-Flr" firstAttribute="leading" secondItem="eM1-cJ-YLd" secondAttribute="leading" constant="8" id="pcB-QG-jIx"/>
+                        <constraint firstAttribute="trailing" secondItem="biu-a2-Flr" secondAttribute="trailing" constant="8" id="trr-N4-EcS"/>
+                        <constraint firstItem="biu-a2-Flr" firstAttribute="centerY" secondItem="eM1-cJ-YLd" secondAttribute="centerY" id="zpX-Tr-0JJ"/>
                     </constraints>
                 </view>
             </subviews>
@@ -45,7 +50,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="lbl" destination="3Sq-xN-NTX" id="uzn-jg-gO8"/>
+                <outlet property="lbl" destination="biu-a2-Flr" id="F39-Ut-bGG"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="-75.334821428571431"/>
         </view>
