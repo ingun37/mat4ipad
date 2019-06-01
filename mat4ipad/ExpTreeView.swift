@@ -64,12 +64,7 @@ class ExpTreeView: UIView {
     @IBOutlet weak var matWrapAspectRatio: NSLayoutConstraint!
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
-        if let exp = exp as? Buffer {
-            setExp(exp: exp.e, del: del)
-        }else if let exp = exp as? BG {
-            contentView?.backgroundColor = exp.color
-            setExp(exp: exp.e, del: del)
-        } else {
+        if true {
             self.exp = exp
             self.del = del
             latexWrap.set(exp.latex())

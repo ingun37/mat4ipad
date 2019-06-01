@@ -13,13 +13,13 @@ enum Err:Error {
     case stackisempty
     case unknownArith
 }
-func stripBGs(_ e:Exp)->Exp {
-    if e is BG {
-        return stripBGs(e.kids[0])
-    } else {
-        return e
-    }
-}
+//func stripBGs(_ e:Exp)->Exp {
+//    if e is BG {
+//        return stripBGs(e.kids[0])
+//    } else {
+//        return e
+//    }
+//}
 //protocol Expvv{
 //    let uid: String = UUID().uuidString
 //    var kids:[Exp] = []
@@ -85,34 +85,34 @@ protocol Exp{
     func needRemove()->Bool
     func associative()
 }
-struct BG:Exp {
-    var uid: String = UUID().uuidString
-    var kids: [Exp] = []
-    
-    func needRetire() -> Int? { return nil }
-    func needRemove() -> Bool { return kids.isEmpty }
-    func associative() {}
-    
-    func latex() -> String {
-        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
-    }
-    var e:Exp {
-        return kids[0]
-    }
-    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
-    
-    init(_ e:Exp) {
-        kids = [e]
-    }
-}
+//struct BG:Exp {
+//    var uid: String = UUID().uuidString
+//    var kids: [Exp] = []
+//
+//    func needRetire() -> Int? { return nil }
+//    func needRemove() -> Bool { return kids.isEmpty }
+//    func associative() {}
+//
+//    func latex() -> String {
+//        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
+//    }
+//    var e:Exp {
+//        return kids[0]
+//    }
+//    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
+//
+//    init(_ e:Exp) {
+//        kids = [e]
+//    }
+//}
 class Mul: Exp {
     var uid: String = UUID().uuidString
     
     var kids: [Exp] = []
     
     func associative() {
-        if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
-            let mulKid = stripBGs(kids.remove(at: idx))
+        if let idx = kids.firstIndex(where: {$0 is Mul}) {
+            let mulKid = kids.remove(at: idx)
             kids.insert(contentsOf: mulKid.kids, at: idx)
             associative()
         }
@@ -196,27 +196,27 @@ class IntExp:Exp {
         self.i = i
     }
 }
-class Buffer:Exp {
-    var uid: String = UUID().uuidString
-    var kids: [Exp] = []
-    func needRetire() -> Int? {return nil}
-    func associative() {    }
-    
-    func latex() -> String {
-        return kids[0].latex()
-    }
-    
-    init(_ e:Exp) {
-        kids = [e]
-    }
-    
-    var e:Exp {
-        return kids[0]
-    }
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
-}
+//class Buffer:Exp {
+//    var uid: String = UUID().uuidString
+//    var kids: [Exp] = []
+//    func needRetire() -> Int? {return nil}
+//    func associative() {    }
+//    
+//    func latex() -> String {
+//        return kids[0].latex()
+//    }
+//    
+//    init(_ e:Exp) {
+//        kids = [e]
+//    }
+//    
+//    var e:Exp {
+//        return kids[0]
+//    }
+//    func needRemove() -> Bool {
+//        return kids.isEmpty
+//    }
+//}
 extension UIColor {
     var hex: String {
         get {
