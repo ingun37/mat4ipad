@@ -89,14 +89,8 @@ struct BG:Exp {
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
-    
+    func needRetire() -> Int? { return nil }
+    func needRemove() -> Bool { return kids.isEmpty }
     func associative() {}
     
     func latex() -> String {
@@ -143,17 +137,9 @@ class Mul: Exp {
 }
 class Mat:Exp {
     var uid: String = UUID().uuidString
-    
     var kids: [Exp] = []
-    
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
-    
+    func needRetire() -> Int? { return nil }
+    func needRemove() -> Bool { return kids.isEmpty }
     func associative() { }
     
     let rows, cols:Int
@@ -181,17 +167,9 @@ class Mat:Exp {
 }
 class Unassigned:Exp {
     var uid: String = UUID().uuidString
-    
     var kids: [Exp] = []
-    
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return false
-    }
-    
+    func needRetire() -> Int? { return nil }
+    func needRemove() -> Bool { return false }
     func associative() { }
     
     func latex() -> String {
@@ -205,13 +183,9 @@ class Unassigned:Exp {
 }
 class IntExp:Exp {
     var uid: String  = UUID().uuidString
-    
     var kids: [Exp] = []
-    
-    func needRetire() -> Int? {        return nil    }
-    
-    func needRemove() -> Bool {        return false    }
-    
+    func needRetire() -> Int? { return nil }
+    func needRemove() -> Bool { return false }
     func associative() {}
     
     var i:Int = 0
