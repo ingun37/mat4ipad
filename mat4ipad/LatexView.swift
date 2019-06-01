@@ -10,6 +10,7 @@ import UIKit
 import iosMath
 
 class LatexView: UIView {
+    
     @IBOutlet weak var initialHeightCon: NSLayoutConstraint!
     var currentHeightCon:NSLayoutConstraint!
     var mathView:MTMathUILabel!

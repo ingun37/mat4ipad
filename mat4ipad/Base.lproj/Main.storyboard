@@ -18,22 +18,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EY8-Vo-fDE">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EY8-Vo-fDE">
                                 <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8oX-GA-zOv">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7YB-oO-viv" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="128"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="3Ib-cA-Utl"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="initialHeightCon" destination="3Ib-cA-Utl" id="1UL-Cb-C07"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8oX-GA-zOv">
+                                        <rect key="frame" x="0.0" y="128" width="768" height="876"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="EY8-Vo-fDE" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Bg5-fB-A2h"/>
+                            <constraint firstItem="EY8-Vo-fDE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="CpO-sc-6lt"/>
+                            <constraint firstItem="EY8-Vo-fDE" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="KOL-bg-kRM"/>
+                            <constraint firstItem="EY8-Vo-fDE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="mKg-cF-Al6"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="mathContainer" destination="8oX-GA-zOv" id="qwX-q1-Xc9"/>
+                        <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" popoverAnchorView="8oX-GA-zOv" id="wcU-Ns-MxU">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>

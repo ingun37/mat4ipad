@@ -10,6 +10,7 @@ import UIKit
 import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
         let co = mat.cols
         var kids2d = (0..<mat.rows).map({ri in mat.kids[ri*co..<ri*co+co]})
@@ -82,6 +83,8 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         mathView.frame = mathContainer.frame
         mathContainer.addSubview(mathView)
         mathView.setExp(exp: exp, del:self)
+        
+        preview.set(exp.latex())
     }
     
     override func viewDidLoad() {
