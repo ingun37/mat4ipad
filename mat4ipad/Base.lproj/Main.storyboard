@@ -18,18 +18,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8oX-GA-zOv">
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EY8-Vo-fDE">
                                 <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8oX-GA-zOv">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="8oX-GA-zOv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Cja-Hd-aTW"/>
-                            <constraint firstItem="8oX-GA-zOv" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Rvv-1u-gft"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8oX-GA-zOv" secondAttribute="bottom" id="dvC-VT-746"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8oX-GA-zOv" secondAttribute="trailing" id="k8o-Jm-kmK"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>

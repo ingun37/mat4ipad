@@ -29,12 +29,13 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="1220"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="467" height="100"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="100" id="j71-vb-kcS"/>
                             </constraints>
                             <connections>
+                                <outlet property="initialHeightCon" destination="j71-vb-kcS" id="pin-QZ-Ln6"/>
                                 <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="etj-In-jbc"/>
                             </connections>
                         </view>
