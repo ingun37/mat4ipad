@@ -10,6 +10,15 @@ import UIKit
 import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    func changeMatrixElement(mat: Mat, row: Int, col: Int, txt: String) {
+        let sub = mat.kids[row*mat.cols + col]
+        if let i = Int(txt) {
+            self.changeto(uid: sub.uid, to: IntExp(i))
+        } else {
+            self.changeto(uid: sub.uid, to: Unassigned(txt))
+        }
+    }
+    
     @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
         let co = mat.cols

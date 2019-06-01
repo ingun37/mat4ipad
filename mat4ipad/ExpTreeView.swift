@@ -12,11 +12,18 @@ import iosMath
 protocol ExpTreeDelegate {
     func onTap(exp:Exp)
     func expandBy(mat:Mat, row:Int, col:Int)
+    func changeMatrixElement(mat:Mat, row:Int, col:Int, txt:String)
 }
 import RxSwift
 import RxCocoa
 
-class ExpTreeView: UIView {
+class ExpTreeView: UIView, MatCellDelegate {
+    func onMatrixElementChange(_ i: Int, _ j: Int, to: String) {
+        guard let mat = exp as? Mat else {return}
+        print("\(i),\(j) to \(to)")
+        del?.changeMatrixElement(mat: mat, row: i, col: j, txt: to)
+    }
+    
     var del:ExpTreeDelegate?
     @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
@@ -88,7 +95,7 @@ class ExpTreeView: UIView {
                     } else if let e = element as? IntExp {
                         cell.lbl.text = "\(e.i)"
                     }
-                    
+                    cell.set(row/exp.cols, row%exp.cols, del: self)
                     cell.lbl.rx.text.orEmpty.throttle(.milliseconds(200), scheduler: MainScheduler.instance).distinctUntilChanged().observeOn(MainScheduler.instance).skip(1).subscribe(onNext: {txt in
                         print("txt : \(txt)")
                     }).disposed(by: self.disposeBag)
@@ -168,11 +175,21 @@ class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
         return 0
     }
 }
+protocol MatCellDelegate {
+    func onMatrixElementChange(_ i:Int, _ j:Int, to:String)
+}
 class MatCell:UICollectionViewCell, UITextFieldDelegate {
-    
+    var del:MatCellDelegate?
+    var i, j:Int!
+    func set(_ i:Int, _ j:Int, del:MatCellDelegate) {
+        self.i = i;
+        self.j = j
+        self.del = del
+    }
     @IBOutlet weak var lbl: UITextField!
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        del?.onMatrixElementChange(i, j, to: textField.text ?? "")
         return true
     }
     override func awakeFromNib() {
