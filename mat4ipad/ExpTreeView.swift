@@ -20,8 +20,10 @@ class ExpTreeView: UIView {
     @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
     
+    @IBOutlet weak var matWrap: UIView!
     @IBOutlet weak var matcollection: MatCollection!
     var contentView:UIView?
+    let disposeBag = DisposeBag()
 
     @IBAction func ontap(_ sender: Any) {
         guard let exp = exp else {return}
@@ -70,10 +72,22 @@ class ExpTreeView: UIView {
             outstack.insertArrangedSubview(mathlbl, at: 0)
             
             if let exp = exp as? Mat {
-                matcollection.isHidden = false
+                matWrap.isHidden = false
                 stack.isHidden = true
+                matcollection.set(exp: exp)
+                
+                let items = Observable.just(
+                    exp.kids
+                )
+                
+                items.bind(to: matcollection.rx.items(cellIdentifier: "cell", cellType: MatCell.self), curriedArgument: { (row, element, cell) in
+                    if let e = element as? Unassigned {
+                        cell.lbl.text = e.letter
+                    }
+                }).disposed(by: disposeBag)
+                
             } else {
-                matcollection.isHidden = true
+                matWrap.isHidden = true
                 stack.isHidden = false
                 exp.kids.forEach({e in
                     let v = ExpTreeView()
@@ -97,24 +111,25 @@ extension Range where Bound == Double {
     }
 }
 class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
-    let disposeBag = DisposeBag()
     override func awakeFromNib() {
         super.awakeFromNib()
         register(UINib(nibName: "MatCell", bundle: Bundle(for: MatCell.self)), forCellWithReuseIdentifier: "cell")
-        
-        let items = Observable.just(
-            (0..<4).map { "\($0)" }
-        )
-        
-        items.bind(to: self.rx.items(cellIdentifier: "cell", cellType: MatCell.self)) { (row, element, cell) in
-            
-            }
-            .disposed(by: disposeBag)
+        print("awake called")
         self.delegate = self
-
+    }
+    var rows = 1;
+    var cols = 1;
+    func set(exp:Mat) {
+        print("set called")
+        rows = exp.rows
+        cols = exp.cols
+        
     }
     func collectionView(_ cv: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: frame.size.width/2, height: frame.size.height/2)
+        let w = frame.size.width/CGFloat(cols)
+        let h = frame.size.height/CGFloat(rows)
+        let m = min(w, h)
+        return CGSize(width: m, height: m)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -125,6 +140,7 @@ class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
 }
 class MatCell:UICollectionViewCell {
     
+    @IBOutlet weak var lbl: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         
