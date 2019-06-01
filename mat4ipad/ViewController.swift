@@ -10,6 +10,27 @@ import UIKit
 import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    func expandBy(mat: Mat, row: Int, col: Int) {
+        let co = mat.cols
+        var kids2d = (0..<mat.rows).map({ri in mat.kids[ri*co..<ri*co+co]})
+        if col < 0 && 0 < co + col {
+            kids2d = kids2d.map({row in row.dropLast(-col)})
+        } else if 0 < col {
+            kids2d = kids2d.map({row in row+Array(repeating: Unassigned("a"), count: col)})
+        }
+        
+        if row < 0 && 0 < mat.rows + row {
+            kids2d = kids2d.dropLast(-row)
+        } else if 0 < row {
+            let colLen = kids2d[0].count
+            let emptyrow = Array(repeating: Unassigned("a") as Exp, count: colLen)[0..<colLen]
+            kids2d = kids2d + Array(repeating: emptyrow, count: row)
+        }
+        
+        let newMat = Mat(kids2d)
+        changeto(uid: mat.uid, to: newMat)
+    }
+    
     func remove(uid: String) {
         exp.remove(uid: uid)
         refresh()

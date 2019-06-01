@@ -96,6 +96,12 @@ class Mat:Exp {
         super.init()
         kids = arr2d.flatMap({$0})
     }
+    init(_ arr2d:[ArraySlice<Exp>]) {
+        rows = arr2d.count
+        cols = arr2d[0].count
+        super.init()
+        kids = arr2d.flatMap({$0})
+    }
 }
 class Unassigned:Exp {
     override func _latex() -> String {

@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="8al-tr-An2"/>
+                <outlet property="matWrapAspectRatio" destination="PXd-E7-tKp" id="2Fy-fW-Pyt"/>
                 <outlet property="matcollection" destination="xgq-T9-bIb" id="TgD-lR-774"/>
                 <outlet property="outstack" destination="iCE-KS-6QP" id="ky7-s1-Qhw"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="jVi-kD-RGi"/>
@@ -51,10 +52,16 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDO-lD-YD2">
                                                     <rect key="frame" x="0.0" y="0.0" width="208.5" height="50"/>
                                                     <state key="normal" title="-"/>
+                                                    <connections>
+                                                        <action selector="decreaseRow:" destination="-1" eventType="touchUpInside" id="56r-Rx-hN2"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrN-is-Q5W">
                                                     <rect key="frame" x="208.5" y="0.0" width="208.5" height="50"/>
                                                     <state key="normal" title="+"/>
+                                                    <connections>
+                                                        <action selector="increaseRow:" destination="-1" eventType="touchUpInside" id="eOW-3j-a7B"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </stackView>
@@ -76,11 +83,17 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="208.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="+"/>
+                                                    <connections>
+                                                        <action selector="increaseCol:" destination="-1" eventType="touchUpInside" id="Pue-H1-rha"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajV-d5-zoX">
                                                     <rect key="frame" x="0.0" y="208.5" width="50" height="208.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="-"/>
+                                                    <connections>
+                                                        <action selector="decreaseCol:" destination="-1" eventType="touchUpInside" id="fSI-56-KFr"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </stackView>

@@ -11,6 +11,7 @@ import iosMath
 
 protocol ExpTreeDelegate {
     func onTap(exp:Exp)
+    func expandBy(mat:Mat, row:Int, col:Int)
 }
 import RxSwift
 import RxCocoa
@@ -58,6 +59,7 @@ class ExpTreeView: UIView {
         let nib = UINib(nibName: String(describing:type(of: self)), bundle: bundle)
         return nib.instantiate(withOwner: self, options: nil).first as? UIView
     }
+    @IBOutlet weak var matWrapAspectRatio: NSLayoutConstraint!
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
         if let exp = exp as? Buffer {
@@ -76,6 +78,10 @@ class ExpTreeView: UIView {
                 stack.isHidden = true
                 matcollection.set(exp: exp)
                 
+                let newCon = NSLayoutConstraint(item: matWrapAspectRatio.firstItem!, attribute: matWrapAspectRatio.firstAttribute, relatedBy: matWrapAspectRatio.relation, toItem: matWrapAspectRatio.secondItem, attribute: matWrapAspectRatio.secondAttribute, multiplier: CGFloat(exp.cols)/CGFloat(exp.rows), constant: matWrapAspectRatio.constant)
+                
+                matWrap.removeConstraint(matWrapAspectRatio)
+                matWrap.addConstraint(newCon)
                 let items = Observable.just(
                     exp.kids
                 )
@@ -96,6 +102,22 @@ class ExpTreeView: UIView {
                 })
             }
         }
+    }
+    @IBAction func increaseCol(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 0, col: 1)
+    }
+    @IBAction func decreaseCol(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 0, col: -1)
+    }
+    @IBAction func increaseRow(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 1, col: 0)
+    }
+    @IBAction func decreaseRow(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: -1, col: 0)
     }
     
 }
@@ -128,8 +150,8 @@ class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
     func collectionView(_ cv: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let w = frame.size.width/CGFloat(cols)
         let h = frame.size.height/CGFloat(rows)
-        let m = min(w, h)
-        return CGSize(width: m, height: m)
+        
+        return CGSize(width: w, height: h)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
