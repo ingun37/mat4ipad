@@ -16,22 +16,30 @@ enum Err:Error {
     case stackisempty
     case unknownArith
 }
-
+func stripBGs(_ e:Exp)->Exp {
+    if e is BG {
+        return stripBGs(e.kids[0])
+    } else {
+        return e
+    }
+}
 class Exp: item {
     let uid: String = UUID().uuidString
     var kids:[Exp] = []
-    let bgcolor:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
     func latex() -> String {
-        return "\\colorbox{\(bgcolor.hex)}{\(_latex())}"
-    }
-    func _latex() -> String {
         return ""
+    }
+    func needRetire()->Int? {
+        return nil
+    }
+    func needRemove()->Bool {
+        return false
     }
     func associative() {
         if self is Mul {
-            if let idx = kids.firstIndex(where: {kid in kid is Mul}) {
-                let kid = kids.remove(at: idx)
-                kids.insert(contentsOf: kid.kids, at: idx)
+            if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
+                let mulKid = stripBGs(kids.remove(at: idx))
+                kids.insert(contentsOf: mulKid.kids, at: idx)
                 associative()
                 return
             }
@@ -50,35 +58,52 @@ class Exp: item {
     func remove(uid:String) {
         kids.forEach({$0.remove(uid: uid)})
         kids.removeAll(where: {$0.uid == uid})
-        kids.removeAll(where: {kid in
-            if kid is Buffer || kid is Mul {
-                if kid.kids.isEmpty {
-                    return true
-                }
-            }
-            return false
-        })
+        kids.removeAll(where: {$0.needRemove()})
+        
         for i in 0..<kids.count {
-            if kids[i] is Mul && kids[i].kids.count == 1{
-                kids[i] = kids[i].kids[0]
+            if let successor = kids[i].needRetire() {
+                kids[i] = kids[i].kids[successor]
             }
         }
         associative()
     }
 }
-
+class BG:Exp {
+    override func latex() -> String {
+        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
+    }
+    var e:Exp {
+        return kids[0]
+    }
+    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
+    
+    init(_ e:Exp) {
+        super.init()
+        kids = [e]
+    }
+}
 class Mul: Exp {
-    override func _latex() -> String {
+    override func latex() -> String {
         return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
     init(_ operands:[Exp]) {
         super.init()
         kids = operands
     }
+    override func needRetire() -> Int? {
+        if kids.count == 1 {
+            return 0
+        } else {
+            return nil
+        }
+    }
+    override func needRemove() -> Bool {
+        return kids.isEmpty
+    }
 }
 class Mat:Exp {
     let rows, cols:Int
-    override func _latex() -> String {
+    override func latex() -> String {
         let array2d = (0..<rows).map({r in kids[r*cols..<r*cols+cols]})
         
         let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
@@ -104,7 +129,7 @@ class Mat:Exp {
     }
 }
 class Unassigned:Exp {
-    override func _latex() -> String {
+    override func latex() -> String {
         return letter
     }
     
@@ -116,7 +141,7 @@ class Unassigned:Exp {
 }
 class IntExp:Exp {
     var i:Int = 0
-    override func _latex() -> String {
+    override func latex() -> String {
         return "\(i)"
     }
     init(_ i:Int) {
@@ -125,7 +150,7 @@ class IntExp:Exp {
     }
 }
 class Buffer:Exp {
-    override func _latex() -> String {
+    override func latex() -> String {
         return kids[0].latex()
     }
     
@@ -136,6 +161,9 @@ class Buffer:Exp {
     
     var e:Exp {
         return kids[0]
+    }
+    override func needRemove() -> Bool {
+        return kids.isEmpty
     }
 }
 extension UIColor {

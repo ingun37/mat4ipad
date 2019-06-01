@@ -88,10 +88,10 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        exp = Buffer(Mul([Mat([
+        exp = Mul([BG(Mat([
             [IntExp(1), IntExp(0)],
             [IntExp(0), IntExp(1)],
-            ]), Unassigned("A")]))
+            ])), BG(Unassigned("A"))])
         refresh()
     }
 
