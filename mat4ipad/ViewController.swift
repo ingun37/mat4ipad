@@ -16,7 +16,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         if col < 0 && 0 < co + col {
             kids2d = kids2d.map({row in row.dropLast(-col)})
         } else if 0 < col {
-            kids2d = kids2d.map({row in row+Array(repeating: IntExp(0), count: col)})
+            kids2d = kids2d.map({row in row+Array(repeating: IntExp(0) as Exp, count: col)})
         }
         
         if row < 0 && 0 < mat.rows + row {
@@ -32,14 +32,13 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     }
     
     func remove(uid: String) {
-        exp.remove(uid: uid)
+        exp = removed(e: exp, uid: uid)
         refresh()
     }
     
     
     func changeto(uid:String, to: Exp) {
-        print("replacing \(uid) to \(to.uid)")
-        exp.replace(uid: uid, to: to)
+        exp = replaced(e: exp, uid: uid, to: to)
         refresh()
     }
     

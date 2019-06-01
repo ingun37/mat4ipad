@@ -9,9 +9,6 @@
 import Foundation
 import UIKit
 
-protocol item {
-    
-}
 enum Err:Error {
     case stackisempty
     case unknownArith
@@ -23,53 +20,86 @@ func stripBGs(_ e:Exp)->Exp {
         return e
     }
 }
-class Exp: item {
-    let uid: String = UUID().uuidString
-    var kids:[Exp] = []
-    func latex() -> String {
-        return ""
-    }
-    func needRetire()->Int? {
+//protocol Expvv{
+//    let uid: String = UUID().uuidString
+//    var kids:[Exp] = []
+//    func latex() -> String {
+//        return ""
+//    }
+//    func needRetire()->Int? {
+//        return nil
+//    }
+//    func needRemove()->Bool {
+//        return false
+//    }
+//    func associative() {
+//        if self is Mul {
+//            if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
+//                let mulKid = stripBGs(kids.remove(at: idx))
+//                kids.insert(contentsOf: mulKid.kids, at: idx)
+//                associative()
+//                return
+//            }
+//        }
+//    }
+//    func remove(uid:String) {
+//        kids.forEach({$0.remove(uid: uid)})
+//        kids.removeAll(where: {$0.uid == uid})
+//        kids.removeAll(where: {$0.needRemove()})
+//
+//        for i in 0..<kids.count {
+//            if let successor = kids[i].needRetire() {
+//                kids[i] = kids[i].kids[successor]
+//            }
+//        }
+//        associative()
+//    }
+//}
+func replaced(e:Exp, uid:String, to:Exp)-> Exp {
+    var o = e
+    o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
+    o.kids = o.kids.map({$0.uid == uid ? to : $0})
+    o.associative()
+    return o
+}
+func removed(e:Exp, uid:String)-> Exp {
+    var o = e
+    o.kids.removeAll(where: {$0.uid == uid})
+    o.kids = o.kids.map({removed(e: $0, uid: uid)})
+    o.kids.removeAll(where: {$0.needRemove()})
+    o.kids = o.kids.map({ e in
+        if let successor = e.needRetire() {
+            return e.kids[successor]
+        } else {
+            return e
+        }
+    })
+    o.associative()
+    return o
+}
+protocol Exp{
+    var uid: String {get}
+    var kids:[Exp] {get set}
+    func latex() -> String
+    func needRetire()->Int?
+    func needRemove()->Bool
+    func associative()
+}
+struct BG:Exp {
+    var uid: String = UUID().uuidString
+    var kids: [Exp] = []
+    
+    func needRetire() -> Int? {
         return nil
     }
-    func needRemove()->Bool {
-        return false
+    
+    func needRemove() -> Bool {
+        return kids.isEmpty
     }
-    func associative() {
-        if self is Mul {
-            if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
-                let mulKid = stripBGs(kids.remove(at: idx))
-                kids.insert(contentsOf: mulKid.kids, at: idx)
-                associative()
-                return
-            }
-        }
-    }
-    func replace(uid:String, to:Exp) {
-        for i in 0..<kids.count {
-            if kids[i].uid == uid {
-                kids[i] = to
-            } else {
-                kids[i].replace(uid: uid, to: to)
-            }
-        }
-        associative()
-    }
-    func remove(uid:String) {
-        kids.forEach({$0.remove(uid: uid)})
-        kids.removeAll(where: {$0.uid == uid})
-        kids.removeAll(where: {$0.needRemove()})
-        
-        for i in 0..<kids.count {
-            if let successor = kids[i].needRetire() {
-                kids[i] = kids[i].kids[successor]
-            }
-        }
-        associative()
-    }
-}
-class BG:Exp {
-    override func latex() -> String {
+    
+    func associative() {}
+    
+    func latex() -> String {
         return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
     }
     var e:Exp {
@@ -78,32 +108,56 @@ class BG:Exp {
     let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
     
     init(_ e:Exp) {
-        super.init()
         kids = [e]
     }
 }
 class Mul: Exp {
-    override func latex() -> String {
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp] = []
+    
+    func associative() {
+        if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
+            let mulKid = stripBGs(kids.remove(at: idx))
+            kids.insert(contentsOf: mulKid.kids, at: idx)
+            associative()
+        }
+    }
+    
+    func latex() -> String {
         return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
     }
     init(_ operands:[Exp]) {
-        super.init()
         kids = operands
     }
-    override func needRetire() -> Int? {
+    func needRetire() -> Int? {
         if kids.count == 1 {
             return 0
         } else {
             return nil
         }
     }
-    override func needRemove() -> Bool {
+    func needRemove() -> Bool {
         return kids.isEmpty
     }
 }
 class Mat:Exp {
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp] = []
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return kids.isEmpty
+    }
+    
+    func associative() { }
+    
     let rows, cols:Int
-    override func latex() -> String {
+    func latex() -> String {
         let array2d = (0..<rows).map({r in kids[r*cols..<r*cols+cols]})
         
         let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
@@ -112,57 +166,80 @@ class Mat:Exp {
     init(r:Int, c:Int) {
         rows = r
         cols = c
-        super.init()
         kids = Array(repeating: Unassigned("A"), count: rows*cols)
     }
     init(_ arr2d:[[Exp]]) {
         rows = arr2d.count
         cols = arr2d[0].count
-        super.init()
         kids = arr2d.flatMap({$0})
     }
     init(_ arr2d:[ArraySlice<Exp>]) {
         rows = arr2d.count
         cols = arr2d[0].count
-        super.init()
         kids = arr2d.flatMap({$0})
     }
 }
 class Unassigned:Exp {
-    override func latex() -> String {
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp] = []
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return false
+    }
+    
+    func associative() { }
+    
+    func latex() -> String {
         return letter
     }
     
     var letter:String
     init(_ l:String) {
         letter = l
-        super.init()
     }
 }
 class IntExp:Exp {
+    var uid: String  = UUID().uuidString
+    
+    var kids: [Exp] = []
+    
+    func needRetire() -> Int? {        return nil    }
+    
+    func needRemove() -> Bool {        return false    }
+    
+    func associative() {}
+    
     var i:Int = 0
-    override func latex() -> String {
+    func latex() -> String {
         return "\(i)"
     }
     init(_ i:Int) {
         self.i = i
-        super.init()
     }
 }
 class Buffer:Exp {
-    override func latex() -> String {
+    var uid: String = UUID().uuidString
+    var kids: [Exp] = []
+    func needRetire() -> Int? {return nil}
+    func associative() {    }
+    
+    func latex() -> String {
         return kids[0].latex()
     }
     
     init(_ e:Exp) {
-        super.init()
         kids = [e]
     }
     
     var e:Exp {
         return kids[0]
     }
-    override func needRemove() -> Bool {
+    func needRemove() -> Bool {
         return kids.isEmpty
     }
 }
