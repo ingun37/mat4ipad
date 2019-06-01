@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
+                <outlet property="matcollection" destination="xgq-T9-bIb" id="TgD-lR-774"/>
                 <outlet property="outstack" destination="iCE-KS-6QP" id="ky7-s1-Qhw"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="jVi-kD-RGi"/>
             </connections>
@@ -24,9 +25,19 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="247"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="0.0" width="467" height="247"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" ambiguous="YES" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
+                            <rect key="frame" x="0.0" y="0.0" width="467" height="111"/>
                         </stackView>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xgq-T9-bIb" customClass="MatCollection" customModule="mat4ipad" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="119" width="467" height="128"/>
+                            <color key="backgroundColor" red="0.96862745100000003" green="0.87843137250000003" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="VAY-Q7-H0P">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
                     </subviews>
                 </stackView>
             </subviews>
