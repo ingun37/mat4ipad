@@ -26,11 +26,13 @@ class ApplyTableVC: UIViewController {
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
         if let exp = exp as? Mul {
-            options = [Mul(exp.kids + [Unassigned("Z")] )]
+            options.append(Mul(exp.kids + [Unassigned("Z")] ))
         } else {
-            options = [Mul([exp, Unassigned("Z")])]
+            options.append(Mul([exp, Unassigned("Z")]))
         }
-        
+        if exp is Unassigned {
+            options.append(Mat([[IntExp(1),IntExp(0)],[IntExp(0),IntExp(1)]]))
+        }
         return options
     }
     override func viewDidLoad() {

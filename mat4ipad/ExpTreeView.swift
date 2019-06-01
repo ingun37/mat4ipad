@@ -94,6 +94,8 @@ class ExpTreeView: UIView {
                 items.bind(to: matcollection.rx.items(cellIdentifier: "cell", cellType: MatCell.self), curriedArgument: { (row, element, cell) in
                     if let e = element as? Unassigned {
                         cell.lbl.text = e.letter
+                    } else if let e = element as? IntExp {
+                        cell.lbl.text = "\(e.i)"
                     }
                 }).disposed(by: disposeBag)
                 

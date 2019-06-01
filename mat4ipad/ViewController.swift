@@ -16,14 +16,14 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         if col < 0 && 0 < co + col {
             kids2d = kids2d.map({row in row.dropLast(-col)})
         } else if 0 < col {
-            kids2d = kids2d.map({row in row+Array(repeating: Unassigned("a"), count: col)})
+            kids2d = kids2d.map({row in row+Array(repeating: IntExp(0), count: col)})
         }
         
         if row < 0 && 0 < mat.rows + row {
             kids2d = kids2d.dropLast(-row)
         } else if 0 < row {
             let colLen = kids2d[0].count
-            let emptyrow = Array(repeating: Unassigned("a") as Exp, count: colLen)[0..<colLen]
+            let emptyrow = Array(repeating: IntExp(0) as Exp, count: colLen)[0..<colLen]
             kids2d = kids2d + Array(repeating: emptyrow, count: row)
         }
         
@@ -57,6 +57,17 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     }
     var exp:Exp = Unassigned("_");
     
+    func occupiedLetters(e:Exp)->[String] {
+        let kidsLetters = e.kids.map({self.occupiedLetters(e: $0)}).flatMap({$0})
+        if let e = e as? Unassigned {
+            return [e.letter] + kidsLetters
+        }
+        return kidsLetters
+    }
+    func availableLetters()->Set<String> {
+        return Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).subtracting(occupiedLetters(e: exp))
+    }
+    
     @IBOutlet weak var mathContainer: UIView!
     
     var mathView:ExpTreeView?
@@ -78,8 +89,8 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         super.viewDidLoad()
         
         exp = Buffer(Mul([Mat([
-            [Unassigned("a"), Unassigned("b")],
-            [Unassigned("b"), Unassigned("d")],
+            [IntExp(1), IntExp(0)],
+            [IntExp(0), IntExp(1)],
             ]), Unassigned("A")]))
         refresh()
     }

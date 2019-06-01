@@ -114,7 +114,16 @@ class Unassigned:Exp {
         super.init()
     }
 }
-
+class IntExp:Exp {
+    var i:Int = 0
+    override func _latex() -> String {
+        return "\(i)"
+    }
+    init(_ i:Int) {
+        self.i = i
+        super.init()
+    }
+}
 class Buffer:Exp {
     override func _latex() -> String {
         return kids[0].latex()
