@@ -18,8 +18,9 @@ import RxSwift
 import RxCocoa
 
 class ExpTreeView: UIView, MatCellDelegate {
-    @IBOutlet weak var initialWidth: NSLayoutConstraint!
+    @IBOutlet weak var stackWidth: NSLayoutConstraint!
     
+    @IBOutlet weak var stackHeight: NSLayoutConstraint!
     func onMatrixElementChange(_ i: Int, _ j: Int, to: String) {
         guard let mat = exp as? Mat else {return}
         print("\(i),\(j) to \(to)")
@@ -61,6 +62,7 @@ class ExpTreeView: UIView, MatCellDelegate {
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 1, height: 1)
         layer.shadowRadius = 1
+        stack.translatesAutoresizingMaskIntoConstraints = false
 //        layer.masksToBounds = false
     }
     func loadViewFromNib() -> UIView? {
@@ -69,7 +71,7 @@ class ExpTreeView: UIView, MatCellDelegate {
         return nib.instantiate(withOwner: self, options: nil).first as? UIView
     }
     @IBOutlet weak var latexWrapHeight: NSLayoutConstraint!
-    @IBOutlet weak var matWrapAspectRatio: NSLayoutConstraint!
+    
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
         if true {
@@ -81,11 +83,9 @@ class ExpTreeView: UIView, MatCellDelegate {
                 matWrap.isHidden = false
                 stack.isHidden = true
                 matcollection.set(exp: exp)
-                initialWidth.constant = CGFloat(exp.cols * 100)
-                let newCon = NSLayoutConstraint(item: matWrapAspectRatio.firstItem!, attribute: matWrapAspectRatio.firstAttribute, relatedBy: matWrapAspectRatio.relation, toItem: matWrapAspectRatio.secondItem, attribute: matWrapAspectRatio.secondAttribute, multiplier: CGFloat(exp.cols)/CGFloat(exp.rows), constant: matWrapAspectRatio.constant)
+                stackWidth.constant = CGFloat(exp.cols * 100)
+                stackHeight.constant = CGFloat(exp.rows * 100)
                 
-                matWrap.removeConstraint(matWrapAspectRatio)
-                matWrap.addConstraint(newCon)
                 let items = Observable.just(
                     exp.kids
                 )

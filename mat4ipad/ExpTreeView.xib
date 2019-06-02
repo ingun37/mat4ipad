@@ -12,14 +12,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
-                <outlet property="initialWidth" destination="IF4-3I-CDr" id="plI-Pw-mBC"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="YJd-W1-MDo"/>
                 <outlet property="latexWrapHeight" destination="j71-vb-kcS" id="Ig2-8Y-ahh"/>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="8al-tr-An2"/>
-                <outlet property="matWrapAspectRatio" destination="PXd-E7-tKp" id="2Fy-fW-Pyt"/>
                 <outlet property="matcollection" destination="xgq-T9-bIb" id="TgD-lR-774"/>
                 <outlet property="outstack" destination="iCE-KS-6QP" id="ky7-s1-Qhw"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="jVi-kD-RGi"/>
+                <outlet property="stackHeight" destination="SzI-On-3K9" id="Sa6-SE-8Qd"/>
+                <outlet property="stackWidth" destination="IF4-3I-CDr" id="plI-Pw-mBC"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -128,7 +128,6 @@
                                 <constraint firstAttribute="trailing" secondItem="xgq-T9-bIb" secondAttribute="trailing" constant="50" id="H1O-ha-iWO"/>
                                 <constraint firstAttribute="trailing" secondItem="EdS-qM-TI0" secondAttribute="trailing" id="IEs-CA-eX9"/>
                                 <constraint firstAttribute="bottom" secondItem="xgq-T9-bIb" secondAttribute="bottom" constant="50" id="L3H-eB-NFb"/>
-                                <constraint firstAttribute="width" secondItem="E17-UK-aR2" secondAttribute="height" multiplier="1:1" id="PXd-E7-tKp"/>
                                 <constraint firstItem="s1d-dp-Ebz" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="RWF-QD-JTb"/>
                                 <constraint firstItem="EdS-qM-TI0" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="XyT-tY-KCc"/>
                                 <constraint firstAttribute="bottom" secondItem="EdS-qM-TI0" secondAttribute="bottom" constant="50" id="fge-QY-56h"/>
@@ -139,6 +138,7 @@
                     </subviews>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" id="IF4-3I-CDr"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" id="SzI-On-3K9"/>
                     </constraints>
                 </stackView>
             </subviews>
@@ -146,9 +146,9 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" constant="8" id="Ph6-2I-93t"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" constant="8" id="fhV-34-oCh"/>
-                <constraint firstItem="iCE-KS-6QP" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="hZx-aT-LuT"/>
+                <constraint firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" constant="8" id="Ph6-2I-93t"/>
+                <constraint firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" constant="42" id="fhV-34-oCh"/>
+                <constraint firstItem="iCE-KS-6QP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="hZx-aT-LuT"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
