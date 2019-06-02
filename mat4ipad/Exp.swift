@@ -59,7 +59,7 @@ func replaced(e:Exp, uid:String, to:Exp)-> Exp {
     var o = e
     o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
     o.kids = o.kids.map({$0.uid == uid ? to : $0})
-    o.associative()
+    
     return o
 }
 func removed(e:Exp, uid:String)-> Exp {
@@ -74,38 +74,28 @@ func removed(e:Exp, uid:String)-> Exp {
             return e
         }
     })
-    o.associative()
     return o
 }
+
 protocol Exp{
     var uid: String {get}
     var kids:[Exp] {get set}
     func latex() -> String
     func needRetire()->Int?
     func needRemove()->Bool
-    func associative()
     func eval() throws ->Exp
 }
-//struct BG:Exp {
-//    var uid: String = UUID().uuidString
-//    var kids: [Exp] = []
-//
-//    func needRetire() -> Int? { return nil }
-//    func needRemove() -> Bool { return kids.isEmpty }
-//    func associative() {}
-//
-//    func latex() -> String {
-//        return "\\colorbox{\(color.hex)}{\(kids[0].latex())}"
-//    }
-//    var e:Exp {
-//        return kids[0]
-//    }
-//    let color:UIColor = UIColor(hue: CGFloat(Float.random(in: 0.0..<1.0)), saturation: CGFloat(Float.random(in: 0.25..<0.4)), brightness: CGFloat(Float.random(in: 0.7..<0.9)), alpha: 1)
-//
-//    init(_ e:Exp) {
-//        kids = [e]
-//    }
-//}
+protocol AssociativeExp:Exp {
+    func associated()->Exp
+}
+extension AssociativeExp {
+    func associated()->Exp {
+        var o = self
+        o.kids = kids.flatMap({ $0 is Self ? $0.kids : [$0]})
+        return o
+    }
+}
+
 enum evalErr:Error {
     case operandIsNotMatrix(Exp)
     case matrixSizeNotMatch(Mat, Mat)
@@ -120,8 +110,6 @@ extension evalErr {
             return "\\text{matrix size not match} {\(a.latex())} * {\(b.latex())}"
         case let .multiplyNotSupported(a , b):
             return "\\text{multiply not supported} {\(a.latex())} * {\(b.latex())}"
-        default:
-            return "\\text{whaaa}"
         }
     }
 }
@@ -171,7 +159,7 @@ extension Mat {
         return (0..<rows).map({$0*cols + j}).map({kids[$0]})
     }
 }
-class Add:Exp {
+class Add:AssociativeExp {
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -190,14 +178,6 @@ class Add:Exp {
         return kids.isEmpty
     }
     
-    func associative() {
-        if let idx = kids.firstIndex(where: {$0 is Add}) {
-            let mulKid = kids.remove(at: idx)
-            kids.insert(contentsOf: mulKid.kids, at: idx)
-            associative()
-        }
-    }
-    
     func eval() throws -> Exp {
         return self
     }
@@ -209,7 +189,7 @@ class Add:Exp {
         kids = [a, b]
     }
 }
-class Mul: Exp {
+class Mul: AssociativeExp {
     static func unit()->Exp {
         return IntExp(1)
     }
@@ -220,14 +200,6 @@ class Mul: Exp {
     var uid: String = UUID().uuidString
     
     var kids: [Exp] = []
-    
-    func associative() {
-        if let idx = kids.firstIndex(where: {$0 is Mul}) {
-            let mulKid = kids.remove(at: idx)
-            kids.insert(contentsOf: mulKid.kids, at: idx)
-            associative()
-        }
-    }
     
     func latex() -> String {
         return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
@@ -289,7 +261,6 @@ class Unassigned:Exp {
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
     func needRemove() -> Bool { return false }
-    func associative() { }
     
     func latex() -> String {
         return letter
@@ -309,7 +280,7 @@ class IntExp:Exp {
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
     func needRemove() -> Bool { return false }
-    func associative() {}
+
     
     var i:Int = 0
     func latex() -> String {
