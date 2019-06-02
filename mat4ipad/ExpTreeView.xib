@@ -13,21 +13,21 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="483" height="1270"/>
+            <rect key="frame" x="0.0" y="0.0" width="573" height="1270"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
-                    <rect key="frame" x="8" y="8" width="467" height="1220"/>
+                    <rect key="frame" x="8" y="8" width="557" height="1220"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom">
-                            <rect key="frame" x="0.0" y="0.0" width="467" height="76"/>
+                            <rect key="frame" x="0.0" y="0.0" width="557" height="76"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sa2-S3-OQh" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="8" y="8" width="451" height="60"/>
+                                    <rect key="frame" x="8" y="8" width="541" height="60"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="60" id="5cr-3V-cPY"/>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="451" id="gab-VJ-upq"/>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="gab-VJ-upq"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="initialHeightCon" destination="5cr-3V-cPY" id="mov-O6-bAF"/>
@@ -47,16 +47,16 @@
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="84" width="467" height="729"/>
+                            <rect key="frame" x="0.0" y="84" width="557" height="729"/>
                         </stackView>
                         <view contentMode="scaleToFill" verticalHuggingPriority="246" verticalCompressionResistancePriority="746" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
-                            <rect key="frame" x="0.0" y="821" width="467" height="399"/>
+                            <rect key="frame" x="0.0" y="821" width="557" height="399"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xgq-T9-bIb" customClass="MatCollection" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="417" height="349"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="507" height="349"/>
                                     <color key="backgroundColor" red="0.96862745100000003" green="0.87843137250000003" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="417" id="79t-FU-BlQ"/>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="79t-FU-BlQ"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="349" id="Cu9-tA-m56"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="VAY-Q7-H0P">
@@ -71,20 +71,20 @@
                                     </connections>
                                 </collectionView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s1d-dp-Ebz">
-                                    <rect key="frame" x="0.0" y="349" width="417" height="50"/>
+                                    <rect key="frame" x="0.0" y="349" width="507" height="50"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="d0u-tt-oDl">
-                                            <rect key="frame" x="0.0" y="0.0" width="417" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="507" height="50"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDO-lD-YD2">
-                                                    <rect key="frame" x="0.0" y="0.0" width="208.5" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="253.5" height="50"/>
                                                     <state key="normal" title="-"/>
                                                     <connections>
                                                         <action selector="decreaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="wD8-fs-pbp"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrN-is-Q5W">
-                                                    <rect key="frame" x="208.5" y="0.0" width="208.5" height="50"/>
+                                                    <rect key="frame" x="253.5" y="0.0" width="253.5" height="50"/>
                                                     <state key="normal" title="+"/>
                                                     <connections>
                                                         <action selector="increaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="CNm-mU-gvY"/>
@@ -101,7 +101,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EdS-qM-TI0">
-                                    <rect key="frame" x="417" y="0.0" width="50" height="349"/>
+                                    <rect key="frame" x="507" y="0.0" width="50" height="349"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Dbu-bC-khX">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="349"/>
@@ -171,7 +171,7 @@
                 <outlet property="matcollection" destination="xgq-T9-bIb" id="cZg-Td-v0g"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>
-            <point key="canvasLocation" x="187.68115942028987" y="235.04464285714283"/>
+            <point key="canvasLocation" x="252.89855072463769" y="235.04464285714283"/>
         </view>
         <tapGestureRecognizer id="I2V-gd-Upp">
             <connections>
