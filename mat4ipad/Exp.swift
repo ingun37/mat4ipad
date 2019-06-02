@@ -142,7 +142,7 @@ extension Mat {
         return (0..<rows).map({$0*cols + j}).map({kids[$0]})
     }
 }
-class Add:AssociativeExp {
+struct Add:AssociativeExp {
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -174,7 +174,7 @@ class Add:AssociativeExp {
         kids = operands
     }
 }
-class Mul: AssociativeExp {
+struct Mul: AssociativeExp {
     static func unit()->Exp {
         return IntExp(1)
     }
@@ -211,7 +211,7 @@ class Mul: AssociativeExp {
         return kids.isEmpty
     }
 }
-class Mat:Exp {
+struct Mat:Exp {
     func eval() throws -> Exp {
         return self
     }
@@ -245,7 +245,7 @@ class Mat:Exp {
         kids = arr2d.flatMap({$0})
     }
 }
-class Unassigned:Exp {
+struct Unassigned:Exp {
     func eval() throws -> Exp {
         return self
     }
@@ -264,7 +264,7 @@ class Unassigned:Exp {
         letter = l
     }
 }
-class IntExp:Exp {
+struct IntExp:Exp {
     func eval() throws -> Exp {
         return self
     }
