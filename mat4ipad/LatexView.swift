@@ -12,21 +12,17 @@ import iosMath
 class LatexView: UIView {
     
     @IBOutlet weak var initialHeightCon: NSLayoutConstraint!
-    var currentHeightCon:NSLayoutConstraint!
     var mathView:MTMathUILabel!
     func set(_ latex:String) {
         mathView.latex = latex
         mathView.sizeToFit()
-        let newLatexHeightCon = NSLayoutConstraint(item: currentHeightCon.firstItem!, attribute: currentHeightCon.firstAttribute, relatedBy: currentHeightCon.relation, toItem: currentHeightCon.secondItem, attribute: currentHeightCon.secondAttribute, multiplier: currentHeightCon.multiplier, constant: mathView.frame.size.height)
-        removeConstraint(currentHeightCon)
-        addConstraint(newLatexHeightCon)
-        currentHeightCon = newLatexHeightCon
+        initialHeightCon.constant = mathView.frame.size.height
+        
     }
     override func awakeFromNib() {
         super.awakeFromNib()
         mathView = MTMathUILabel()
         addSubview(mathView)
-        currentHeightCon = initialHeightCon
     }
     /*
     // Only override draw() if you perform custom drawing.

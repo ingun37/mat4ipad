@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
+                <outlet property="initialWidth" destination="IF4-3I-CDr" id="plI-Pw-mBC"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="YJd-W1-MDo"/>
                 <outlet property="latexWrapHeight" destination="j71-vb-kcS" id="Ig2-8Y-ahh"/>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="8al-tr-An2"/>
@@ -136,6 +137,9 @@
                             </constraints>
                         </view>
                     </subviews>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" id="IF4-3I-CDr"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

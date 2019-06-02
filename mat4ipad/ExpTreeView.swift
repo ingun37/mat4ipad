@@ -18,6 +18,8 @@ import RxSwift
 import RxCocoa
 
 class ExpTreeView: UIView, MatCellDelegate {
+    @IBOutlet weak var initialWidth: NSLayoutConstraint!
+    
     func onMatrixElementChange(_ i: Int, _ j: Int, to: String) {
         guard let mat = exp as? Mat else {return}
         print("\(i),\(j) to \(to)")
@@ -59,7 +61,6 @@ class ExpTreeView: UIView, MatCellDelegate {
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 1, height: 1)
         layer.shadowRadius = 1
-        
 //        layer.masksToBounds = false
     }
     func loadViewFromNib() -> UIView? {
@@ -80,7 +81,7 @@ class ExpTreeView: UIView, MatCellDelegate {
                 matWrap.isHidden = false
                 stack.isHidden = true
                 matcollection.set(exp: exp)
-                
+                initialWidth.constant = CGFloat(exp.cols * 100)
                 let newCon = NSLayoutConstraint(item: matWrapAspectRatio.firstItem!, attribute: matWrapAspectRatio.firstAttribute, relatedBy: matWrapAspectRatio.relation, toItem: matWrapAspectRatio.secondItem, attribute: matWrapAspectRatio.secondAttribute, multiplier: CGFloat(exp.cols)/CGFloat(exp.rows), constant: matWrapAspectRatio.constant)
                 
                 matWrap.removeConstraint(matWrapAspectRatio)
@@ -148,6 +149,7 @@ extension Range where Bound == Double {
     }
 }
 class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
+    @IBOutlet weak var initialWidthBiggerthan: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
         register(UINib(nibName: "MatCell", bundle: Bundle(for: MatCell.self)), forCellWithReuseIdentifier: "cell")

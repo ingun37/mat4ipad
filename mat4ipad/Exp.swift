@@ -99,7 +99,7 @@ func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
         }
         let new2d = try (0..<a.rows).map({i in
             try (0..<b.cols).map({j in
-                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {Add([$0, $1])})
+                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {try add($0, $1)})
             })
         })
         return Mat(new2d)
