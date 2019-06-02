@@ -93,11 +93,7 @@ func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
     if let a = e1 as? Unassigned, let b = e2 as? Unassigned {
         return Unassigned("\(a.letter)\(b.letter)")
     }
-    
-    if e1 is Unassigned || e2 is Unassigned {
-        return Mul([e1, e2])
-    }
-    
+
     if let a = e1 as? IntExp, let b = e2 as? IntExp {
         return IntExp(a.i * b.i)
     }
@@ -112,7 +108,7 @@ func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
         }
     }
 
-    throw evalErr.multiplyNotSupported(e1, e2)
+    return Mul([e1, e2])
 }
 extension Mat {
     func row(_ i:Int)->ArraySlice<Exp> {
