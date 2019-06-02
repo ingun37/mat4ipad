@@ -12,8 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExpTreeView" customModule="mat4ipad" customModuleProvider="target">
             <connections>
+                <outlet property="latexView" destination="sa2-S3-OQh" id="sJh-55-LCh"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="YJd-W1-MDo"/>
-                <outlet property="latexWrapHeight" destination="j71-vb-kcS" id="Ig2-8Y-ahh"/>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="8al-tr-An2"/>
                 <outlet property="matcollection" destination="xgq-T9-bIb" id="TgD-lR-774"/>
                 <outlet property="outstack" destination="iCE-KS-6QP" id="ky7-s1-Qhw"/>
@@ -30,24 +30,41 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="467" height="1220"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="467" height="100"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom">
+                            <rect key="frame" x="0.0" y="0.0" width="467" height="76"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sa2-S3-OQh" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
+                                    <rect key="frame" x="8" y="8" width="451" height="60"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="60" id="5cr-3V-cPY"/>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="451" id="gab-VJ-upq"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="initialHeightCon" destination="5cr-3V-cPY" id="mov-O6-bAF"/>
+                                        <outlet property="widthGreater" destination="gab-VJ-upq" id="EJi-C2-Txg"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="100" id="j71-vb-kcS"/>
+                                <constraint firstAttribute="trailing" secondItem="sa2-S3-OQh" secondAttribute="trailing" constant="8" id="5N2-FN-soT"/>
+                                <constraint firstAttribute="bottom" secondItem="sa2-S3-OQh" secondAttribute="bottom" constant="8" id="Pij-Lc-mYc"/>
+                                <constraint firstItem="sa2-S3-OQh" firstAttribute="top" secondItem="cJF-Qu-Dom" secondAttribute="top" constant="8" id="d8k-ui-ptT"/>
+                                <constraint firstItem="sa2-S3-OQh" firstAttribute="leading" secondItem="cJF-Qu-Dom" secondAttribute="leading" constant="8" id="jD0-HQ-uMF"/>
                             </constraints>
                             <connections>
-                                <outlet property="initialHeightCon" destination="j71-vb-kcS" id="pin-QZ-Ln6"/>
                                 <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="etj-In-jbc"/>
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="108" width="467" height="637"/>
+                            <rect key="frame" x="0.0" y="84" width="467" height="729"/>
                         </stackView>
                         <view contentMode="scaleToFill" verticalHuggingPriority="246" verticalCompressionResistancePriority="746" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
-                            <rect key="frame" x="0.0" y="753" width="467" height="467"/>
+                            <rect key="frame" x="0.0" y="821" width="467" height="399"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xgq-T9-bIb" customClass="MatCollection" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="417" height="417"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="417" height="349"/>
                                     <color key="backgroundColor" red="0.96862745100000003" green="0.87843137250000003" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="VAY-Q7-H0P">
                                         <size key="itemSize" width="50" height="50"/>
@@ -57,7 +74,7 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s1d-dp-Ebz">
-                                    <rect key="frame" x="0.0" y="417" width="417" height="50"/>
+                                    <rect key="frame" x="0.0" y="349" width="417" height="50"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="d0u-tt-oDl">
                                             <rect key="frame" x="0.0" y="0.0" width="417" height="50"/>
@@ -87,13 +104,13 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EdS-qM-TI0">
-                                    <rect key="frame" x="417" y="0.0" width="50" height="417"/>
+                                    <rect key="frame" x="417" y="0.0" width="50" height="349"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Dbu-bC-khX">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="417"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="349"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ghj-w7-kty">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="208.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="174.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="+"/>
                                                     <connections>
@@ -101,7 +118,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajV-d5-zoX">
-                                                    <rect key="frame" x="0.0" y="208.5" width="50" height="208.5"/>
+                                                    <rect key="frame" x="0.0" y="174.5" width="50" height="174.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="-"/>
                                                     <connections>

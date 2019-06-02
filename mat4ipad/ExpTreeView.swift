@@ -30,7 +30,8 @@ class ExpTreeView: UIView, MatCellDelegate {
     var del:ExpTreeDelegate?
     @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
-    @IBOutlet weak var latexWrap: LatexView!
+    @IBOutlet weak var latexWrap: UIView!
+    @IBOutlet weak var latexView: LatexView!
     
     @IBOutlet weak var matWrap: UIView!
     @IBOutlet weak var matcollection: MatCollection!
@@ -51,17 +52,24 @@ class ExpTreeView: UIView, MatCellDelegate {
         commonInit()
     }
     func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
         guard let view = loadViewFromNib() else { return }
         view.frame = self.bounds
         self.addSubview(view)
         contentView = view
         
         layer.cornerRadius = 8;
-        
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 1, height: 1)
         layer.shadowRadius = 1
+        
+        latexWrap.layer.cornerRadius = 8;
+        latexWrap.layer.shadowColor = UIColor.black.cgColor
+        latexWrap.layer.shadowOpacity = 0.5
+        latexWrap.layer.shadowOffset = CGSize(width: 1, height: 1)
+        latexWrap.layer.shadowRadius = 1
+        
         stack.translatesAutoresizingMaskIntoConstraints = false
 //        layer.masksToBounds = false
     }
@@ -77,8 +85,7 @@ class ExpTreeView: UIView, MatCellDelegate {
         if true {
             self.exp = exp
             self.del = del
-            latexWrap.set(exp.latex())
-            
+            latexView.set(exp.latex())
             if let exp = exp as? Mat {
                 matWrap.isHidden = false
                 stack.isHidden = true
@@ -108,9 +115,15 @@ class ExpTreeView: UIView, MatCellDelegate {
                 }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
                 
                 
+            } else if exp.kids.isEmpty {
+                matWrap.isHidden = true
+                stack.isHidden = false
+                stackWidth.constant = latexView.widthGreater.constant
+                stackHeight.constant = 100
             } else {
                 matWrap.isHidden = true
                 stack.isHidden = false
+                
                 exp.kids.forEach({e in
                     let v = ExpTreeView()
                     v.setExp(exp: e, del:del)
@@ -149,7 +162,6 @@ extension Range where Bound == Double {
     }
 }
 class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
-    @IBOutlet weak var initialWidthBiggerthan: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
         register(UINib(nibName: "MatCell", bundle: Bundle(for: MatCell.self)), forCellWithReuseIdentifier: "cell")

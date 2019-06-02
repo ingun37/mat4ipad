@@ -12,12 +12,14 @@ import iosMath
 class LatexView: UIView {
     
     @IBOutlet weak var initialHeightCon: NSLayoutConstraint!
+    @IBOutlet weak var widthGreater: NSLayoutConstraint!
+    
     var mathView:MTMathUILabel!
     func set(_ latex:String) {
         mathView.latex = latex
         mathView.sizeToFit()
         initialHeightCon.constant = mathView.frame.size.height
-        
+        widthGreater.constant = mathView.frame.size.width
     }
     override func awakeFromNib() {
         super.awakeFromNib()
