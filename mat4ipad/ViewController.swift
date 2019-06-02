@@ -87,7 +87,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
             mv.removeFromSuperview()
         }
         
-        mathView = ExpTreeView()
+        mathView = ExpTreeView.loadViewFromNib()
         guard let mathView = mathView else {return}
         mathView.frame = mathContainer.frame
         mathContainer.addSubview(mathView)

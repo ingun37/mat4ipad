@@ -18,9 +18,7 @@ import RxSwift
 import RxCocoa
 
 class ExpTreeView: UIView, MatCellDelegate {
-    @IBOutlet weak var stackWidth: NSLayoutConstraint!
     
-    @IBOutlet weak var stackHeight: NSLayoutConstraint!
     func onMatrixElementChange(_ i: Int, _ j: Int, to: String) {
         guard let mat = exp as? Mat else {return}
         print("\(i),\(j) to \(to)")
@@ -28,14 +26,12 @@ class ExpTreeView: UIView, MatCellDelegate {
     }
     
     var del:ExpTreeDelegate?
-    @IBOutlet weak var outstack: UIStackView!
     @IBOutlet weak var stack: UIStackView!
     @IBOutlet weak var latexWrap: UIView!
     @IBOutlet weak var latexView: LatexView!
     
     @IBOutlet weak var matWrap: UIView!
     @IBOutlet weak var matcollection: MatCollection!
-    var contentView:UIView?
     let disposeBag = DisposeBag()
 
     @IBAction func ontap(_ sender: Any) {
@@ -51,13 +47,8 @@ class ExpTreeView: UIView, MatCellDelegate {
         super.init(frame: frame)
         commonInit()
     }
-    func commonInit() {
-        translatesAutoresizingMaskIntoConstraints = false
-        guard let view = loadViewFromNib() else { return }
-        view.frame = self.bounds
-        self.addSubview(view)
-        contentView = view
-        
+    override func awakeFromNib() {
+        super.awakeFromNib()
         layer.cornerRadius = 8;
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.5
@@ -70,15 +61,18 @@ class ExpTreeView: UIView, MatCellDelegate {
         latexWrap.layer.shadowOffset = CGSize(width: 1, height: 1)
         latexWrap.layer.shadowRadius = 1
         
-        stack.translatesAutoresizingMaskIntoConstraints = false
+    }
+    func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        
 //        layer.masksToBounds = false
     }
-    func loadViewFromNib() -> UIView? {
-        let bundle = Bundle(for: type(of: self))
-        let nib = UINib(nibName: String(describing:type(of: self)), bundle: bundle)
-        return nib.instantiate(withOwner: self, options: nil).first as? UIView
+    static func loadViewFromNib() -> ExpTreeView {
+        let bundle = Bundle(for: self)
+        let nib = UINib(nibName: String(describing:self), bundle: bundle)
+        return nib.instantiate(withOwner: nil, options: nil).first as! ExpTreeView
     }
-    @IBOutlet weak var latexWrapHeight: NSLayoutConstraint!
     
     private var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
@@ -90,8 +84,6 @@ class ExpTreeView: UIView, MatCellDelegate {
                 matWrap.isHidden = false
                 stack.isHidden = true
                 matcollection.set(exp: exp)
-                stackWidth.constant = CGFloat(exp.cols * 100)
-                stackHeight.constant = CGFloat(exp.rows * 100)
                 
                 let items = Observable.just(
                     exp.kids
@@ -118,14 +110,12 @@ class ExpTreeView: UIView, MatCellDelegate {
             } else if exp.kids.isEmpty {
                 matWrap.isHidden = true
                 stack.isHidden = false
-                stackWidth.constant = latexView.widthGreater.constant
-                stackHeight.constant = 100
             } else {
                 matWrap.isHidden = true
                 stack.isHidden = false
                 
                 exp.kids.forEach({e in
-                    let v = ExpTreeView()
+                    let v = ExpTreeView.loadViewFromNib()
                     v.setExp(exp: e, del:del)
                     stack.addArrangedSubview(v)
                 })
@@ -170,11 +160,16 @@ class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
     }
     var rows = 1;
     var cols = 1;
+    @IBOutlet weak var width: NSLayoutConstraint!
+    @IBOutlet weak var height: NSLayoutConstraint!
     func set(exp:Mat) {
         print("set called")
         rows = exp.rows
         cols = exp.cols
+        width.constant = CGFloat(cols*100)
+        height.constant = CGFloat(rows*100)
         
+        updateConstraints()
     }
     func collectionView(_ cv: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let w = frame.size.width/CGFloat(cols)
