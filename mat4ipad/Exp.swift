@@ -77,6 +77,15 @@ extension evalErr {
     }
 }
 func add(_ a:Exp, _ b:Exp) throws -> Exp {
+    if let a = a as? Mat, let b = b as? Mat {
+        guard a.cols == b.cols && a.rows == b.rows else {
+            throw evalErr.matrixSizeNotMatch(a, b)
+        }
+        let new2d = try (0..<a.rows).map({i in
+            try zip(a.row(i), b.row(i)).map({ try add($0.0, $0.1) })
+        })
+        return Mat(new2d)
+    }
     if let a = a as? IntExp, let b = b as? IntExp {
         return IntExp(a.i + b.i)
     }
@@ -180,7 +189,13 @@ class Mul: AssociativeExp {
     var kids: [Exp] = []
     
     func latex() -> String {
-        return kids.map({"{\($0.latex())}"}).joined(separator: " * ")
+        return kids.map({ e in
+            if e is AssociativeExp {
+                return "({\(e.latex())})"
+            } else {
+                return "{\(e.latex())}"
+            }
+        }).joined(separator: " * ")
     }
     init(_ operands:[Exp]) {
         kids = operands
