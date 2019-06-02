@@ -190,7 +190,7 @@ class Mul: AssociativeExp {
     
     func latex() -> String {
         return kids.map({ e in
-            if e is AssociativeExp {
+            if e is Add {
                 return "({\(e.latex())})"
             } else {
                 return "{\(e.latex())}"
