@@ -76,7 +76,22 @@ extension evalErr {
         }
     }
 }
-
+func add(_ a:Exp, _ b:Exp) throws -> Exp {
+    if let a = a as? IntExp, let b = b as? IntExp {
+        return IntExp(a.i + b.i)
+    }
+    if let a = a as? IntExp {
+        if a.i == 0 {
+            return b
+        }
+    }
+    if let b = b as? IntExp {
+        if b.i == 0 {
+            return a
+        }
+    }
+    return Add([a, b])
+}
 func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
     if let a = e1 as? Mat, let b = e2 as? Mat {
         guard a.cols == b.rows else {
@@ -84,7 +99,7 @@ func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
         }
         let new2d = try (0..<a.rows).map({i in
             try (0..<b.cols).map({j in
-                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {Add($0, $1)})
+                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {Add([$0, $1])})
             })
         })
         return Mat(new2d)
@@ -138,14 +153,16 @@ class Add:AssociativeExp {
     }
     
     func eval() throws -> Exp {
-        return self
+        var r = try kids.map({try $0.eval()}).reduce(Add.unit(), {try add($0, $1)})
+        r.kids = try r.kids.map({try $0.eval()})
+        return r
     }
     
     static func unit()->Exp {
         return IntExp(0)
     }
-    init(_ a:Exp, _ b:Exp) {
-        kids = [a, b]
+    init(_ operands:[Exp]) {
+        kids = operands
     }
 }
 class Mul: AssociativeExp {
@@ -153,7 +170,9 @@ class Mul: AssociativeExp {
         return IntExp(1)
     }
     func eval() throws -> Exp {
-        return try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
+        var r = try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
+        r.kids = try r.kids.map({try $0.eval()})
+        return r
     }
     
     var uid: String = UUID().uuidString
