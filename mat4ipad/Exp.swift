@@ -13,53 +13,13 @@ enum Err:Error {
     case stackisempty
     case unknownArith
 }
-//func stripBGs(_ e:Exp)->Exp {
-//    if e is BG {
-//        return stripBGs(e.kids[0])
-//    } else {
-//        return e
-//    }
-//}
-//protocol Expvv{
-//    let uid: String = UUID().uuidString
-//    var kids:[Exp] = []
-//    func latex() -> String {
-//        return ""
-//    }
-//    func needRetire()->Int? {
-//        return nil
-//    }
-//    func needRemove()->Bool {
-//        return false
-//    }
-//    func associative() {
-//        if self is Mul {
-//            if let idx = kids.firstIndex(where: {stripBGs($0) is Mul}) {
-//                let mulKid = stripBGs(kids.remove(at: idx))
-//                kids.insert(contentsOf: mulKid.kids, at: idx)
-//                associative()
-//                return
-//            }
-//        }
-//    }
-//    func remove(uid:String) {
-//        kids.forEach({$0.remove(uid: uid)})
-//        kids.removeAll(where: {$0.uid == uid})
-//        kids.removeAll(where: {$0.needRemove()})
-//
-//        for i in 0..<kids.count {
-//            if let successor = kids[i].needRetire() {
-//                kids[i] = kids[i].kids[successor]
-//            }
-//        }
-//        associative()
-//    }
-//}
 func replaced(e:Exp, uid:String, to:Exp)-> Exp {
     var o = e
     o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
     o.kids = o.kids.map({$0.uid == uid ? to : $0})
-    
+    if let o = o as? AssociativeExp {
+        return o.associated()
+    }
     return o
 }
 func removed(e:Exp, uid:String)-> Exp {
@@ -74,6 +34,9 @@ func removed(e:Exp, uid:String)-> Exp {
             return e
         }
     })
+    if let o = o as? AssociativeExp {
+        return o.associated()
+    }
     return o
 }
 
