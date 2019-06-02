@@ -92,8 +92,16 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         mathView.frame = mathContainer.frame
         mathContainer.addSubview(mathView)
         mathView.setExp(exp: exp, del:self)
+        do {
+            try preview.set("{\(exp.latex())} = {\(exp.eval().latex())}")
+        } catch {
+            if let e = error as? evalErr {
+                preview.set("{\(exp.latex())} = {\(e.describeInLatex())}")
+            } else {
+                preview.set("{\(exp.latex())} = \\text{invalid}")
+            }
+        }
         
-        preview.set(exp.latex())
     }
     
     override func viewDidLoad() {

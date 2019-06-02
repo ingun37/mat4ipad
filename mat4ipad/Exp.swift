@@ -84,6 +84,7 @@ protocol Exp{
     func needRetire()->Int?
     func needRemove()->Bool
     func associative()
+    func eval() throws ->Exp
 }
 //struct BG:Exp {
 //    var uid: String = UUID().uuidString
@@ -105,7 +106,117 @@ protocol Exp{
 //        kids = [e]
 //    }
 //}
+enum evalErr:Error {
+    case operandIsNotMatrix(Exp)
+    case matrixSizeNotMatch(Mat, Mat)
+    case multiplyNotSupported(Exp, Exp)
+}
+extension evalErr {
+    func describeInLatex() -> String {
+        switch self {
+        case let .operandIsNotMatrix(e):
+            return "\\text{operand is not a matrix: }{\(e.latex())}"
+        case let .matrixSizeNotMatch(a, b):
+            return "\\text{matrix size not match} {\(a.latex())} * {\(b.latex())}"
+        case let .multiplyNotSupported(a , b):
+            return "\\text{multiply not supported} {\(a.latex())} * {\(b.latex())}"
+        default:
+            return "\\text{whaaa}"
+        }
+    }
+}
+
+func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
+    if let a = e1 as? Mat, let b = e2 as? Mat {
+        guard a.cols == b.rows else {
+            throw evalErr.matrixSizeNotMatch(a, b)
+        }
+        let new2d = try (0..<a.rows).map({i in
+            try (0..<b.cols).map({j in
+                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {Add($0, $1)})
+            })
+        })
+        return Mat(new2d)
+    }
+    
+    if let a = e1 as? Unassigned, let b = e2 as? Unassigned {
+        return Unassigned("\(a.letter)\(b.letter)")
+    }
+    
+    if e1 is Unassigned || e2 is Unassigned {
+        return Mul([e1, e2])
+    }
+    
+    if let a = e1 as? IntExp, let b = e2 as? IntExp {
+        return IntExp(a.i * b.i)
+    }
+    if let a = e1 as? IntExp {
+        if a.i == 1 {
+            return e2
+        }
+    }
+    if let b = e2 as? IntExp {
+        if b.i == 1 {
+            return e1
+        }
+    }
+
+    throw evalErr.multiplyNotSupported(e1, e2)
+}
+extension Mat {
+    func row(_ i:Int)->ArraySlice<Exp> {
+        return kids[i*cols..<i*cols+cols]
+    }
+    func col(_ j:Int)->[Exp] {
+        return (0..<rows).map({$0*cols + j}).map({kids[$0]})
+    }
+}
+class Add:Exp {
+    var uid: String = UUID().uuidString
+    var kids: [Exp] = []
+    func latex() -> String {
+        return kids.map({"{\($0.latex())}"}).joined(separator: " + ")
+    }
+    
+    func needRetire() -> Int? {
+        if kids.count == 1 {
+            return 0
+        } else {
+            return nil
+        }
+    }
+    
+    func needRemove() -> Bool {
+        return kids.isEmpty
+    }
+    
+    func associative() {
+        if let idx = kids.firstIndex(where: {$0 is Add}) {
+            let mulKid = kids.remove(at: idx)
+            kids.insert(contentsOf: mulKid.kids, at: idx)
+            associative()
+        }
+    }
+    
+    func eval() throws -> Exp {
+        return self
+    }
+    
+    static func unit()->Exp {
+        return IntExp(0)
+    }
+    init(_ a:Exp, _ b:Exp) {
+        kids = [a, b]
+    }
+}
 class Mul: Exp {
+    static func unit()->Exp {
+        return IntExp(1)
+    }
+    func eval() throws -> Exp {
+        return try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
+    }
+    
     var uid: String = UUID().uuidString
     
     var kids: [Exp] = []
@@ -136,6 +247,10 @@ class Mul: Exp {
     }
 }
 class Mat:Exp {
+    func eval() throws -> Exp {
+        return self
+    }
+    
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
@@ -166,6 +281,10 @@ class Mat:Exp {
     }
 }
 class Unassigned:Exp {
+    func eval() throws -> Exp {
+        return self
+    }
+    
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
@@ -182,6 +301,10 @@ class Unassigned:Exp {
     }
 }
 class IntExp:Exp {
+    func eval() throws -> Exp {
+        return self
+    }
+    
     var uid: String  = UUID().uuidString
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
