@@ -50,10 +50,6 @@ class ExpTreeView: UIView, MatCellDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = 8;
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 1, height: 1)
-        layer.shadowRadius = 1
         
         latexWrap.layer.cornerRadius = 8;
         latexWrap.layer.shadowColor = UIColor.black.cgColor

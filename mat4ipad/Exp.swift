@@ -9,43 +9,15 @@
 import Foundation
 import UIKit
 
-enum Err:Error {
-    case stackisempty
-    case unknownArith
-}
-func replaced(e:Exp, uid:String, to:Exp)-> Exp {
-    var o = e
-    o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
-    o.kids = o.kids.map({$0.uid == uid ? to : $0})
-    if let o = o as? AssociativeExp {
-        return o.associated()
-    }
-    return o
-}
-func removed(e:Exp, uid:String)-> Exp {
-    var o = e
-    o.kids.removeAll(where: {$0.uid == uid})
-    o.kids = o.kids.map({removed(e: $0, uid: uid)})
-    o.kids.removeAll(where: {$0.needRemove()})
-    o.kids = o.kids.map({ e in
-        if let successor = e.needRetire() {
-            return e.kids[successor]
-        } else {
-            return e
-        }
-    })
-    if let o = o as? AssociativeExp {
-        return o.associated()
-    }
-    return o
-}
-
 protocol Exp{
     var uid: String {get}
     var kids:[Exp] {get set}
     func latex() -> String
     func needRetire()->Int?
     func needRemove()->Bool
+    /**
+     Don't call eval of a newly created object inside of eval which is a possible !!!!
+     */
     func eval() throws ->Exp
 }
 protocol AssociativeExp:Exp {
@@ -76,72 +48,7 @@ extension evalErr {
         }
     }
 }
-func add(_ a:Exp, _ b:Exp) throws -> Exp {
-    if let a = a as? Mat, let b = b as? Mat {
-        guard a.cols == b.cols && a.rows == b.rows else {
-            throw evalErr.matrixSizeNotMatch(a, b)
-        }
-        let new2d = try (0..<a.rows).map({i in
-            try zip(a.row(i), b.row(i)).map({ try add($0.0, $0.1) })
-        })
-        return Mat(new2d)
-    }
-    if let a = a as? IntExp, let b = b as? IntExp {
-        return IntExp(a.i + b.i)
-    }
-    if let a = a as? IntExp {
-        if a.i == 0 {
-            return b
-        }
-    }
-    if let b = b as? IntExp {
-        if b.i == 0 {
-            return a
-        }
-    }
-    return Add([a, b])
-}
-func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
-    if let a = e1 as? Mat, let b = e2 as? Mat {
-        guard a.cols == b.rows else {
-            throw evalErr.matrixSizeNotMatch(a, b)
-        }
-        let new2d = try (0..<a.rows).map({i in
-            try (0..<b.cols).map({j in
-                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {try add($0, $1)})
-            })
-        })
-        return Mat(new2d)
-    }
-    
-    if let a = e1 as? Unassigned, let b = e2 as? Unassigned {
-        return Unassigned("\(a.letter)\(b.letter)")
-    }
 
-    if let a = e1 as? IntExp, let b = e2 as? IntExp {
-        return IntExp(a.i * b.i)
-    }
-    if let a = e1 as? IntExp {
-        if a.i == 1 {
-            return e2
-        }
-    }
-    if let b = e2 as? IntExp {
-        if b.i == 1 {
-            return e1
-        }
-    }
-
-    return Mul([e1, e2])
-}
-extension Mat {
-    func row(_ i:Int)->ArraySlice<Exp> {
-        return kids[i*cols..<i*cols+cols]
-    }
-    func col(_ j:Int)->[Exp] {
-        return (0..<rows).map({$0*cols + j}).map({kids[$0]})
-    }
-}
 struct Add:AssociativeExp {
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
@@ -162,9 +69,7 @@ struct Add:AssociativeExp {
     }
     
     func eval() throws -> Exp {
-        var r = try kids.map({try $0.eval()}).reduce(Add.unit(), {try add($0, $1)})
-        r.kids = try r.kids.map({try $0.eval()})
-        return r
+        return try kids.map({try $0.eval()}).reduce(Add.unit(), {try add($0, $1)})
     }
     
     static func unit()->Exp {
@@ -179,9 +84,7 @@ struct Mul: AssociativeExp {
         return IntExp(1)
     }
     func eval() throws -> Exp {
-        var r = try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
-        r.kids = try r.kids.map({try $0.eval()})
-        return r
+        return try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
     }
     
     var uid: String = UUID().uuidString
@@ -211,7 +114,14 @@ struct Mul: AssociativeExp {
         return kids.isEmpty
     }
 }
-struct Mat:Exp {
+protocol VectorSpace: Exp {
+    func identity()-> Self
+}
+struct Mat:VectorSpace {
+    func identity() -> Mat {
+        return Mat([[IntExp(1), IntExp(0)],[IntExp(0), IntExp(1)]])
+    }
+    
     func eval() throws -> Exp {
         return self
     }
@@ -244,6 +154,12 @@ struct Mat:Exp {
         cols = arr2d[0].count
         kids = arr2d.flatMap({$0})
     }
+    func row(_ i:Int)->ArraySlice<Exp> {
+        return kids[i*cols..<i*cols+cols]
+    }
+    func col(_ j:Int)->[Exp] {
+        return (0..<rows).map({$0*cols + j}).map({kids[$0]})
+    }
 }
 struct Unassigned:Exp {
     func eval() throws -> Exp {
@@ -264,7 +180,11 @@ struct Unassigned:Exp {
         letter = l
     }
 }
-struct IntExp:Exp {
+struct IntExp:VectorSpace {
+    func identity() -> IntExp {
+        return IntExp(1)
+    }
+    
     func eval() throws -> Exp {
         return self
     }
@@ -281,6 +201,58 @@ struct IntExp:Exp {
     }
     init(_ i:Int) {
         self.i = i
+    }
+}
+struct Power: Exp {
+    var base:Exp {
+        return kids[0]
+    }
+    var exponent:Exp {
+        return kids[1]
+    }
+    init(_ base:Exp, _ exponent:Exp) {
+        kids = [base, exponent]
+    }
+    func eval() throws -> Exp {//dont' evaluate a newly created thing.
+        let b = try base.eval()
+        let x = try exponent.eval()
+        if let x = x as? IntExp {
+            if x.i == 0 {
+                if let b = b as? VectorSpace {
+                    return b.identity()
+                }
+            } else {
+                return try Array(repeating: b, count: x.i-1).reduce(b) {try mul($0, $1)}
+            }
+        }
+        return Power(b, x)
+    }
+    
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp] = []
+    
+    func latex() -> String {
+        let kid = kids[0]
+        let base:String
+        if kid is Mul || kid is Add {
+            base = "(\(kid.latex()))"
+        } else {
+            base = kid.latex()
+        }
+        return "{\(base)}^{\(exponent.latex())}"
+    }
+    
+    func needRetire() -> Int? {
+        if let x = exponent as? IntExp {
+            if x.i == 1 {
+                return 0
+            }
+        }
+        return nil
+    }
+    func needRemove() -> Bool {
+        return kids.isEmpty
     }
 }
 //class Buffer:Exp {

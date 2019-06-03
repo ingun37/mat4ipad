@@ -15,6 +15,7 @@
 		6B2F5C2F229E939500A634B3 /* ApplyTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F5C2E229E939500A634B3 /* ApplyTableVC.swift */; };
 		6B3FA1BA22A225E100969F3E /* MatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B3FA1B922A225E100969F3E /* MatCell.xib */; };
 		6B49898122A2FFB000F47A5E /* LatexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B49898022A2FFB000F47A5E /* LatexView.swift */; };
+		6B49899022A5056E00F47A5E /* ExpOp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B49898F22A5056E00F47A5E /* ExpOp.swift */; };
 		6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */; };
 		6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA2229D9A77006A56D8 /* ViewController.swift */; };
 		6BBE5BA6229D9A77006A56D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA4229D9A77006A56D8 /* Main.storyboard */; };
@@ -52,6 +53,7 @@
 		6B2F5C2E229E939500A634B3 /* ApplyTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyTableVC.swift; sourceTree = "<group>"; };
 		6B3FA1B922A225E100969F3E /* MatCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatCell.xib; sourceTree = "<group>"; };
 		6B49898022A2FFB000F47A5E /* LatexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatexView.swift; sourceTree = "<group>"; };
+		6B49898F22A5056E00F47A5E /* ExpOp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpOp.swift; sourceTree = "<group>"; };
 		6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mat4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BBE5BA2229D9A77006A56D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */,
 				6BBE5BA2229D9A77006A56D8 /* ViewController.swift */,
 				6B2F5C1E229E4F8800A634B3 /* Exp.swift */,
+				6B49898F22A5056E00F47A5E /* ExpOp.swift */,
 				6BBE5BA4229D9A77006A56D8 /* Main.storyboard */,
 				6B2F5C2E229E939500A634B3 /* ApplyTableVC.swift */,
 				6B49898022A2FFB000F47A5E /* LatexView.swift */,
@@ -399,6 +402,7 @@
 				6B2F5C27229E64DC00A634B3 /* ExpTreeView.swift in Sources */,
 				6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */,
 				6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */,
+				6B49899022A5056E00F47A5E /* ExpOp.swift in Sources */,
 				6B49898122A2FFB000F47A5E /* LatexView.swift in Sources */,
 				6B2F5C2F229E939500A634B3 /* ApplyTableVC.swift in Sources */,
 				6B2F5C1F229E4F8800A634B3 /* Exp.swift in Sources */,

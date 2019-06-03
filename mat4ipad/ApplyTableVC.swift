@@ -14,7 +14,7 @@ protocol ApplyTableDelegate {
     func changeto(uid:String, to:Exp)
     func remove(uid:String)
 }
-class ApplyTableVC: UIViewController {
+class ApplyTableVC: UIViewController, UITextFieldDelegate {
     var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
@@ -25,12 +25,13 @@ class ApplyTableVC: UIViewController {
     }
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
-        options.append(Mul([exp, Unassigned("Z")]).associated())
-        options.append(Add([exp, Unassigned("Z")]).associated())
-        
         if exp is Unassigned {
             options.append(Mat([[IntExp(1),IntExp(0)],[IntExp(0),IntExp(1)]]))
         }
+        options.append(Mul([exp, Unassigned("Z")]).associated())
+        options.append(Add([exp, Unassigned("Z")]).associated())
+        options.append(Power(exp, Unassigned("n")))
+        
         return options
     }
     override func viewDidLoad() {
@@ -63,7 +64,16 @@ class ApplyTableVC: UIViewController {
             }
         }
     }
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        guard let exp = exp else {return true}
+        guard let valueTxt = textField.text else {return true}
+        guard let value = Int(valueTxt) else {return true}
+        self.dismiss(animated: true, completion: {
+            self.del?.changeto(uid:exp.uid, to: IntExp(value))
+        })
+        return true
+    }
     /*
     // MARK: - Navigation
 
