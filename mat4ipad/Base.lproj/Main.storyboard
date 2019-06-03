@@ -99,7 +99,7 @@
                                                         <rect key="frame" x="70" y="0.0" width="234" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>
                                                         <connections>
                                                             <outlet property="delegate" destination="Zc6-Oj-lwd" id="tZX-2Y-yXB"/>
                                                         </connections>

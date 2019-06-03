@@ -33,8 +33,22 @@ func removed(e:Exp, uid:String)-> Exp {
     }
     return o
 }
+func if2<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, T) throws ->Exp) throws ->Exp? {
+    if let a = a as? T, let b = b as? T {
+        return try c(a, b)
+    }
+    return nil
+}
+func if1<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, Exp) throws ->Exp?) throws ->Exp? {
+    if let a = a as? T {
+        return try c(a, b)
+    } else if let b = b as? T {
+        return try c(b, a)
+    }
+    return nil
+}
 func add(_ a:Exp, _ b:Exp) throws -> Exp {
-    if let a = a as? Mat, let b = b as? Mat {
+    return try if2(a, b, { (a:Mat, b:Mat) -> Exp in
         guard a.cols == b.cols && a.rows == b.rows else {
             throw evalErr.matrixSizeNotMatch(a, b)
         }
@@ -42,21 +56,11 @@ func add(_ a:Exp, _ b:Exp) throws -> Exp {
             try zip(a.row(i), b.row(i)).map({ try add($0.0, $0.1) })
         })
         return Mat(new2d)
-    }
-    if let a = a as? IntExp, let b = b as? IntExp {
+    }) ?? if2(a, b, { (a:IntExp, b:IntExp) -> Exp in
         return IntExp(a.i + b.i)
-    }
-    if let a = a as? IntExp {
-        if a.i == 0 {
-            return b
-        }
-    }
-    if let b = b as? IntExp {
-        if b.i == 0 {
-            return a
-        }
-    }
-    return Add([a, b])
+    }) ?? if1(a, b, { (a:IntExp, b) -> Exp? in
+        return a.i == 0 ? b : nil
+    }) ?? Add([a, b])
 }
 func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
     if let a = e1 as? Mat, let b = e2 as? Mat {

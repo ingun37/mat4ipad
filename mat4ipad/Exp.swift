@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import NumberKit
 
 protocol Exp{
     var uid: String {get}
@@ -50,6 +51,7 @@ extension evalErr {
 }
 
 struct Add:AssociativeExp {
+    
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -253,6 +255,62 @@ struct Power: Exp {
     }
     func needRemove() -> Bool {
         return kids.isEmpty
+    }
+}
+extension Int {
+    var exp:Exp {
+        return IntExp(self)
+    }
+}
+extension Rational where T == Int {
+    var exp:Exp {
+        return RationalExp(numerator.exp, denominator.exp)
+    }
+}
+struct RationalExp:VectorSpace {
+    func identity() -> RationalExp {
+        return RationalExp(IntExp(1), IntExp(1))
+    }
+    
+    func eval() throws -> Exp {
+        let nu = try numerator.eval()
+        let de = try denominator.eval()
+
+        if let de = de as? IntExp {
+            if de.i == 1 {
+                return nu
+            }
+            if let nu = nu as? IntExp {//if both is IntExp
+                if nu.i == 0 {
+                    return 0.exp
+                }
+                let r = Rational(nu.i, de.i)
+                if r.denominator == 1 {
+                    return r.numerator.exp
+                } else {
+                    return r.exp
+                }
+            }
+        }
+        return self
+    }
+    
+    var uid: String  = UUID().uuidString
+    var kids: [Exp] = []
+    func needRetire() -> Int? { return nil }
+    func needRemove() -> Bool { return false }
+    
+    var numerator:Exp {
+        return kids[0]
+    }
+    var denominator:Exp {
+        return kids[1]
+    }
+    func latex() -> String {
+        return "\\frac{\(numerator.latex())}{\(denominator.latex())}"
+    }
+    init(_ numerator:Exp, _ denominator:Exp) {
+        kids = [numerator, denominator]
     }
 }
 //class Buffer:Exp {
