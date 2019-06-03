@@ -62,8 +62,8 @@ func add(_ a:Exp, _ b:Exp) throws -> Exp {
         return a.i == 0 ? b : nil
     }) ?? Add([a, b])
 }
-func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
-    if let a = e1 as? Mat, let b = e2 as? Mat {
+func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
+    return try if2(a, b, { (a:Mat, b:Mat) -> Exp in
         guard a.cols == b.rows else {
             throw evalErr.matrixSizeNotMatch(a, b)
         }
@@ -73,25 +73,11 @@ func mul(_ e1:Exp, _ e2:Exp) throws ->Exp {//never call eval in here
             })
         })
         return Mat(new2d)
-    }
-    
-    if let a = e1 as? Unassigned, let b = e2 as? Unassigned {
+    }) ?? if2(a, b, { (a:Unassigned, b:Unassigned) -> Exp in
         return Unassigned("\(a.letter)\(b.letter)")
-    }
-    
-    if let a = e1 as? IntExp, let b = e2 as? IntExp {
+    }) ?? if2(a, b, { (a:IntExp, b:IntExp) -> Exp in
         return IntExp(a.i * b.i)
-    }
-    if let a = e1 as? IntExp {
-        if a.i == 1 {
-            return e2
-        }
-    }
-    if let b = e2 as? IntExp {
-        if b.i == 1 {
-            return e1
-        }
-    }
-    
-    return Mul([e1, e2])
+    }) ?? if1(a, b, { (a:IntExp, b) -> Exp? in
+        return a.i == 1 ? b : nil
+    }) ?? Mul([a, b])
 }

@@ -306,6 +306,7 @@ struct RationalExp:VectorSpace {
     var denominator:Exp {
         return kids[1]
     }
+    
     func latex() -> String {
         return "\\frac{\(numerator.latex())}{\(denominator.latex())}"
     }
