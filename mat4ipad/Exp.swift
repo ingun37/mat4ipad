@@ -36,6 +36,7 @@ enum evalErr:Error {
     case operandIsNotMatrix(Exp)
     case matrixSizeNotMatch(Mat, Mat)
     case multiplyNotSupported(Exp, Exp)
+    case invalidExponent(Exp, Exp)
 }
 extension evalErr {
     func describeInLatex() -> String {
@@ -46,12 +47,13 @@ extension evalErr {
             return "\\text{matrix size not match} {\(a.latex())} * {\(b.latex())}"
         case let .multiplyNotSupported(a , b):
             return "\\text{multiply not supported} {\(a.latex())} * {\(b.latex())}"
+        case let .invalidExponent(b, x):
+            return "\\text{invalid exponent} {{\(b.latex())}^{\(x.latex())}}"
         }
     }
 }
 
 struct Add:AssociativeExp {
-    
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -71,22 +73,18 @@ struct Add:AssociativeExp {
     }
     
     func eval() throws -> Exp {
-        return try kids.map({try $0.eval()}).reduce(Add.unit(), {try add($0, $1)})
+        let kds = try kids.map({try $0.eval()})
+        return try kds.dropFirst().reduce(kds[0], {try add($0, $1)})
     }
     
-    static func unit()->Exp {
-        return IntExp(0)
-    }
     init(_ operands:[Exp]) {
         kids = operands
     }
 }
 struct Mul: AssociativeExp {
-    static func unit()->Exp {
-        return IntExp(1)
-    }
     func eval() throws -> Exp {
-        return try kids.map({try $0.eval()}).reduce(Mul.unit(), {try mul($0, $1)})
+        let kds = try kids.map({try $0.eval()})
+        return try kds.dropFirst().reduce(kds[0], {try mul($0, $1)})
     }
     
     var uid: String = UUID().uuidString
@@ -118,10 +116,33 @@ struct Mul: AssociativeExp {
 }
 protocol VectorSpace: Exp {
     func identity()-> Self
+    var isZero:Bool {get}
+    var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    var isZero: Bool {
+        return kids.allSatisfy({ ($0 as? NumExp)?.isZero ?? false})
+    }
+    
+    var isIdentity: Bool {
+        return (0..<rows*cols).allSatisfy { (i) -> Bool in
+            if i%(cols+1) == 0 {
+                return (kids[i] as? NumExp)?.isIdentity ?? false
+            } else {
+                return (kids[i] as? NumExp)?.isZero ?? false
+            }
+        }
+    }
+    static func identityOf(_ r:Int, _ c:Int)-> Mat {
+        let arr2d = (0..<r).map({ri in
+            return (0..<c).map({ci in
+                return ci == ri ? NumExp(1) : NumExp(0)
+            })
+        })
+        return Mat(arr2d)
+    }
     func identity() -> Mat {
-        return Mat([[IntExp(1), IntExp(0)],[IntExp(0), IntExp(1)]])
+        return Mat.identityOf(rows, cols)
     }
     
     func eval() throws -> Exp {
@@ -182,28 +203,142 @@ struct Unassigned:Exp {
         letter = l
     }
 }
-struct IntExp:VectorSpace {
-    func identity() -> IntExp {
-        return IntExp(1)
+struct NumExp:VectorSpace {
+    static func * (left: NumExp, right: NumExp) -> NumExp {
+        switch left.num {
+        case let .Float(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(v * w)
+            case let .Int(w):
+                return NumExp(v * Float(w))
+            case let .Rational(w):
+                return NumExp(v * w.floatValue)
+            }
+        case let .Int(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(Float(v) * w)
+            case let .Int(w):
+                return NumExp(v * w)
+            case let .Rational(w):
+                return NumExp(w * Rational(v))
+            }
+        case let .Rational(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(v.floatValue * w)
+            case let .Int(w):
+                return NumExp(v * Rational(w))
+            case let .Rational(w):
+                return NumExp(v * w)
+            }
+        }
+    }
+    static func + (left: NumExp, right: NumExp) -> NumExp {
+        switch left.num {
+        case let .Float(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(v + w)
+            case let .Int(w):
+                return NumExp(v + Float(w))
+            case let .Rational(w):
+                return NumExp(v + w.floatValue)
+            }
+        case let .Int(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(Float(v) + w)
+            case let .Int(w):
+                return NumExp(v + w)
+            case let .Rational(w):
+                return NumExp(w + Rational(v))
+            }
+        case let .Rational(v):
+            switch right.num {
+            case let .Float(w):
+                return NumExp(v.floatValue + w)
+            case let .Int(w):
+                return NumExp(v + Rational(w))
+            case let .Rational(w):
+                return NumExp(v + w)
+            }
+        }
+    }
+    var isZero: Bool {
+        switch num {
+        case let .Float(f):
+            return f == 0
+        case let .Int(i):
+            return i == 0
+        case let .Rational(r):
+            return r.numerator == 0
+        }
+    }
+    
+    var isIdentity: Bool {
+        switch num {
+        case let .Float(f):
+            return f == 1
+        case let .Int(i):
+            return i == 1
+        case let .Rational(r):
+            return r.numerator == r.denominator
+        }
+    }
+    
+    var intValue:Int? {
+        switch num {
+        case let .Float(f):
+            return f == floor(f) ? Int(f) : nil
+        case let .Int(i):
+            return i
+        case let .Rational(r):
+            return r.numerator % r.denominator == 0 ? r.numerator/r.denominator : nil
+        }
+    }
+    enum NumType {
+        case Int(Int)
+        case Float(Float)
+        case Rational(Rational<Int>)
+    }
+    let num:NumType
+    init(_ i:Int) {
+        num = .Int(i)
+    }
+    init(_ f:Float) {
+        num = .Float(f)
+    }
+    init(_ numerator:Int, _ denominator:Int) {
+        num = .Rational(Rational(numerator, denominator))
+    }
+    init(_ r:Rational<Int>) {
+        num = .Rational(r)
+    }
+    func identity() -> NumExp {
+        return NumExp(1)
     }
     
     func eval() throws -> Exp {
         return self
     }
     
+    func latex() -> String {
+        switch num {
+        case let .Rational(r):
+            return "\\frac{\(r.numerator)}{\(r.denominator)}"
+        case let .Int(i):
+            return "\(i)"
+        case let .Float(f):
+            return "\(f)"
+        }
+    }
+    
     var uid: String  = UUID().uuidString
     var kids: [Exp] = []
     func needRetire() -> Int? { return nil }
     func needRemove() -> Bool { return false }
-
-    
-    var i:Int = 0
-    func latex() -> String {
-        return "\(i)"
-    }
-    init(_ i:Int) {
-        self.i = i
-    }
 }
 struct Power: Exp {
     var base:Exp {
@@ -218,14 +353,20 @@ struct Power: Exp {
     func eval() throws -> Exp {//dont' evaluate a newly created thing.
         let b = try base.eval()
         let x = try exponent.eval()
-        if let x = x as? IntExp {
-            if x.i == 0 {
+        if let x = x as? NumExp {
+            if x.isZero {
                 if let b = b as? VectorSpace {
                     return b.identity()
                 }
+            } else if x.isIdentity {
+                return b
+            } else if let n = x.intValue {
+                return try Array(repeating: b, count: n-1).reduce(b, {try mul($0, $1)})
             } else {
-                return try Array(repeating: b, count: x.i-1).reduce(b) {try mul($0, $1)}
+                throw evalErr.invalidExponent(b, x)
             }
+        } else {
+            throw evalErr.invalidExponent(b, x)
         }
         return Power(b, x)
     }
@@ -246,12 +387,7 @@ struct Power: Exp {
     }
     
     func needRetire() -> Int? {
-        if let x = exponent as? IntExp {
-            if x.i == 1 {
-                return 0
-            }
-        }
-        return nil
+        return ((exponent as? NumExp)?.isIdentity ?? false) ? 0 : nil
     }
     func needRemove() -> Bool {
         return kids.isEmpty
@@ -259,59 +395,7 @@ struct Power: Exp {
 }
 extension Int {
     var exp:Exp {
-        return IntExp(self)
-    }
-}
-extension Rational where T == Int {
-    var exp:Exp {
-        return RationalExp(numerator.exp, denominator.exp)
-    }
-}
-struct RationalExp:VectorSpace {
-    func identity() -> RationalExp {
-        return RationalExp(IntExp(1), IntExp(1))
-    }
-    
-    func eval() throws -> Exp {
-        let nu = try numerator.eval()
-        let de = try denominator.eval()
-
-        if let de = de as? IntExp {
-            if de.i == 1 {
-                return nu
-            }
-            if let nu = nu as? IntExp {//if both is IntExp
-                if nu.i == 0 {
-                    return 0.exp
-                }
-                let r = Rational(nu.i, de.i)
-                if r.denominator == 1 {
-                    return r.numerator.exp
-                } else {
-                    return r.exp
-                }
-            }
-        }
-        return self
-    }
-    
-    var uid: String  = UUID().uuidString
-    var kids: [Exp] = []
-    func needRetire() -> Int? { return nil }
-    func needRemove() -> Bool { return false }
-    
-    var numerator:Exp {
-        return kids[0]
-    }
-    var denominator:Exp {
-        return kids[1]
-    }
-    
-    func latex() -> String {
-        return "\\frac{\(numerator.latex())}{\(denominator.latex())}"
-    }
-    init(_ numerator:Exp, _ denominator:Exp) {
-        kids = [numerator, denominator]
+        return NumExp(self)
     }
 }
 //class Buffer:Exp {

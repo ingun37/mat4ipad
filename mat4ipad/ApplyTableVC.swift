@@ -26,7 +26,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
         if exp is Unassigned {
-            options.append(Mat([[IntExp(1),IntExp(0)],[IntExp(0),IntExp(1)]]))
+            options.append(Mat.identityOf(2, 2))
         }
         options.append(Mul([exp, Unassigned("Z")]).associated())
         options.append(Add([exp, Unassigned("Z")]).associated())
@@ -70,7 +70,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
         guard let valueTxt = textField.text else {return true}
         guard let value = Int(valueTxt) else {return true}
         self.dismiss(animated: true, completion: {
-            self.del?.changeto(uid:exp.uid, to: IntExp(value))
+            self.del?.changeto(uid:exp.uid, to: value.exp)
         })
         return true
     }

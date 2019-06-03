@@ -53,13 +53,13 @@ func add(_ a:Exp, _ b:Exp) throws -> Exp {
             throw evalErr.matrixSizeNotMatch(a, b)
         }
         let new2d = try (0..<a.rows).map({i in
-            try zip(a.row(i), b.row(i)).map({ try add($0.0, $0.1) })
+            try zip(a.row(i), b.row(i)).map({ try add($0, $1) })
         })
         return Mat(new2d)
-    }) ?? if2(a, b, { (a:IntExp, b:IntExp) -> Exp in
-        return IntExp(a.i + b.i)
-    }) ?? if1(a, b, { (a:IntExp, b) -> Exp? in
-        return a.i == 0 ? b : nil
+    }) ?? if2(a, b, { (a:NumExp, b:NumExp) -> Exp in
+        return a+b
+    }) ?? if1(a, b, { (a:NumExp, b) -> Exp? in
+        return a.isZero ? b : nil
     }) ?? Add([a, b])
 }
 func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
@@ -68,16 +68,17 @@ func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
             throw evalErr.matrixSizeNotMatch(a, b)
         }
         let new2d = try (0..<a.rows).map({i in
-            try (0..<b.cols).map({j in
-                try zip(a.row(i), b.col(j)).map({try mul($0, $1)}).reduce(Add.unit(), {try add($0, $1)})
+            try (0..<b.cols).map({j-> Exp in
+                let products = try zip(a.row(i), b.col(j)).map({try mul($0, $1)})
+                return try products.dropFirst().reduce(products[0], {try add($0, $1)})
             })
         })
         return Mat(new2d)
     }) ?? if2(a, b, { (a:Unassigned, b:Unassigned) -> Exp in
         return Unassigned("\(a.letter)\(b.letter)")
-    }) ?? if2(a, b, { (a:IntExp, b:IntExp) -> Exp in
-        return IntExp(a.i * b.i)
-    }) ?? if1(a, b, { (a:IntExp, b) -> Exp? in
-        return a.i == 1 ? b : nil
+    }) ?? if2(a, b, { (a:NumExp, b:NumExp) -> Exp in
+        return a * b
+    }) ?? if1(a, b, { (a:NumExp, b) -> Exp? in
+        return a.isIdentity ? b : nil
     }) ?? Mul([a, b])
 }

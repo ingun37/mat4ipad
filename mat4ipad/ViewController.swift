@@ -13,7 +13,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     func changeMatrixElement(mat: Mat, row: Int, col: Int, txt: String) {
         let sub = mat.kids[row*mat.cols + col]
         if let i = Int(txt) {
-            self.changeto(uid: sub.uid, to: IntExp(i))
+            self.changeto(uid: sub.uid, to: i.exp)
         } else {
             self.changeto(uid: sub.uid, to: Unassigned(txt))
         }
@@ -22,19 +22,20 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
         let co = mat.cols
-        var kids2d = (0..<mat.rows).map({ri in mat.kids[ri*co..<ri*co+co]})
+        var kids2d = (0..<mat.rows).map({ri in Array(mat.kids[ri*co..<ri*co+co])})
         if col < 0 && 0 < co + col {
             kids2d = kids2d.map({row in row.dropLast(-col)})
         } else if 0 < col {
-            kids2d = kids2d.map({row in row+Array(repeating: IntExp(0) as Exp, count: col)})
+            kids2d = kids2d.map({$0 + (0..<col).map({_ in 0.exp})})
         }
         
         if row < 0 && 0 < mat.rows + row {
             kids2d = kids2d.dropLast(-row)
         } else if 0 < row {
             let colLen = kids2d[0].count
-            let emptyrow = Array(repeating: IntExp(0) as Exp, count: colLen)[0..<colLen]
-            kids2d = kids2d + Array(repeating: emptyrow, count: row)
+            kids2d = kids2d + (0..<row).map({_ in
+                (0..<colLen).map({_ in 0.exp})
+            })
         }
         
         let newMat = Mat(kids2d)
@@ -107,10 +108,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        exp = Mul([Mat([
-            [IntExp(1), IntExp(0)],
-            [IntExp(0), IntExp(1)],
-            ]), Unassigned("A")])
+        exp = Mul([Mat.identityOf(2, 2), Unassigned("A")])
         refresh()
     }
 

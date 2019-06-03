@@ -88,8 +88,8 @@ class ExpTreeView: UIView, MatCellDelegate {
                 items.bind(to: matcollection.rx.items(cellIdentifier: "cell", cellType: MatCell.self), curriedArgument: { (row, element, cell) in
                     if let e = element as? Unassigned {
                         cell.lbl.text = e.letter
-                    } else if let e = element as? IntExp {
-                        cell.lbl.text = "\(e.i)"
+                    } else if let e = element as? NumExp {
+                        cell.lbl.text = e.latex()
                     }
                     cell.set(row/exp.cols, row%exp.cols, del: self)
                     cell.lbl.rx.text.orEmpty.throttle(.milliseconds(200), scheduler: MainScheduler.instance).distinctUntilChanged().observeOn(MainScheduler.instance).skip(1).subscribe(onNext: {txt in
