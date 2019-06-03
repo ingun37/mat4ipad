@@ -14,7 +14,13 @@ protocol Exp{
     var uid: String {get}
     var kids:[Exp] {get set}
     func latex() -> String
+    /**
+     Aware that kids could be missing in this function
+     */
     func needRetire()->Int?
+    /**
+     Aware that kids could be missing in this function
+     */
     func needRemove()->Bool
     /**
      Don't call eval of a newly created object inside of eval which is a possible !!!!
@@ -387,6 +393,9 @@ struct Power: Exp {
     }
     
     func needRetire() -> Int? {
+        if kids.count == 1 {
+            return 0
+        }
         return ((exponent as? NumExp)?.isIdentity ?? false) ? 0 : nil
     }
     func needRemove() -> Bool {
