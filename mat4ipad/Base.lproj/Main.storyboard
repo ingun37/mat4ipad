@@ -232,19 +232,19 @@
                                         <rect key="frame" x="0.0" y="176.5" width="304" height="287.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="JMn-fr-n6y" customClass="ApplyTableCell" customModule="mat4ipad" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="28" width="304" height="44"/>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="86" id="JMn-fr-n6y" customClass="ApplyTableCell" customModule="mat4ipad" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="304" height="86"/>
                                                 <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JMn-fr-n6y" id="H4h-Of-AXe">
-                                                    <rect key="frame" x="0.0" y="0.0" width="304" height="43.5"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JMn-fr-n6y" id="H4h-Of-AXe">
+                                                    <rect key="frame" x="0.0" y="0.0" width="304" height="85.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLG-L8-t66" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
-                                                            <rect key="frame" x="4" y="8" width="296" height="35.5"/>
+                                                            <rect key="frame" x="4" y="8" width="296" height="69.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="296" id="Elt-Vm-EO2"/>
-                                                                <constraint firstAttribute="height" constant="35.5" id="dh9-GB-Fpx"/>
+                                                                <constraint firstAttribute="height" priority="900" constant="50" id="dh9-GB-Fpx"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="initialHeightCon" destination="dh9-GB-Fpx" id="3qV-gL-CQf"/>
