@@ -18,6 +18,9 @@
 		6B49899022A5056E00F47A5E /* ExpOp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B49898F22A5056E00F47A5E /* ExpOp.swift */; };
 		6B49899E22A57D3300F47A5E /* NumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B49899922A52BEE00F47A5E /* NumberKit.framework */; };
 		6B49899F22A57D3300F47A5E /* NumberKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B49899922A52BEE00F47A5E /* NumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6B4989A322A6B77B00F47A5E /* MatrixCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B4989A222A6B77B00F47A5E /* MatrixCell.xib */; };
+		6B4989A522A6B85B00F47A5E /* MatrixViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4989A422A6B85B00F47A5E /* MatrixViews.swift */; };
+		6B4989A722A6B8BD00F47A5E /* MatrixRow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B4989A622A6B8BD00F47A5E /* MatrixRow.xib */; };
 		6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */; };
 		6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA2229D9A77006A56D8 /* ViewController.swift */; };
 		6BBE5BA6229D9A77006A56D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA4229D9A77006A56D8 /* Main.storyboard */; };
@@ -75,6 +78,9 @@
 		6B49899522A5293500F47A5E /* NumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B49899722A52BBB00F47A5E /* NumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B49899922A52BEE00F47A5E /* NumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B4989A222A6B77B00F47A5E /* MatrixCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatrixCell.xib; sourceTree = "<group>"; };
+		6B4989A422A6B85B00F47A5E /* MatrixViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixViews.swift; sourceTree = "<group>"; };
+		6B4989A622A6B8BD00F47A5E /* MatrixRow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatrixRow.xib; sourceTree = "<group>"; };
 		6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mat4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BBE5BA2229D9A77006A56D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +145,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6B4989A122A6B76B00F47A5E /* Mat */ = {
+			isa = PBXGroup;
+			children = (
+				6B4989A222A6B77B00F47A5E /* MatrixCell.xib */,
+				6B4989A422A6B85B00F47A5E /* MatrixViews.swift */,
+				6B4989A622A6B8BD00F47A5E /* MatrixRow.xib */,
+			);
+			path = Mat;
+			sourceTree = "<group>";
+		};
 		6BBE5B94229D9A77006A56D8 = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +181,7 @@
 		6BBE5B9F229D9A77006A56D8 /* mat4ipad */ = {
 			isa = PBXGroup;
 			children = (
+				6B4989A122A6B76B00F47A5E /* Mat */,
 				6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */,
 				6BBE5BA2229D9A77006A56D8 /* ViewController.swift */,
 				6B2F5C1E229E4F8800A634B3 /* Exp.swift */,
@@ -326,7 +343,9 @@
 			files = (
 				6B2F5C2D229E6E5000A634B3 /* ExpTreeView.xib in Resources */,
 				6BBE5BAB229D9A77006A56D8 /* LaunchScreen.storyboard in Resources */,
+				6B4989A322A6B77B00F47A5E /* MatrixCell.xib in Resources */,
 				6BBE5BA8229D9A77006A56D8 /* Assets.xcassets in Resources */,
+				6B4989A722A6B8BD00F47A5E /* MatrixRow.xib in Resources */,
 				6BBE5BA6229D9A77006A56D8 /* Main.storyboard in Resources */,
 				6B3FA1BA22A225E100969F3E /* MatCell.xib in Resources */,
 			);
@@ -427,6 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B4989A522A6B85B00F47A5E /* MatrixViews.swift in Sources */,
 				6B2F5C27229E64DC00A634B3 /* ExpTreeView.swift in Sources */,
 				6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */,
 				6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */,

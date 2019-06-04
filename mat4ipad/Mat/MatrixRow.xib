@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MatrixRow" customModule="mat4ipad" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="276"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="MNQ-0T-oAj">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="276"/>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="MNQ-0T-oAj" secondAttribute="trailing" id="7Cs-fA-nDY"/>
+                <constraint firstAttribute="bottom" secondItem="MNQ-0T-oAj" secondAttribute="bottom" id="cwF-CO-kkW"/>
+                <constraint firstItem="MNQ-0T-oAj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jQI-L4-IrE"/>
+                <constraint firstItem="MNQ-0T-oAj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nGo-ni-Oy4"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="stack" destination="MNQ-0T-oAj" id="ivZ-8Z-E9e"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="330.13392857142856"/>
+        </view>
+    </objects>
+</document>

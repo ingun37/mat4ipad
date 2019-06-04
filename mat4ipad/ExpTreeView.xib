@@ -51,39 +51,39 @@
                         <view contentMode="scaleToFill" verticalHuggingPriority="246" verticalCompressionResistancePriority="746" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
                             <rect key="frame" x="0.0" y="821" width="557" height="399"/>
                             <subviews>
-                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xgq-T9-bIb" customClass="MatCollection" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="507" height="349"/>
-                                    <color key="backgroundColor" red="0.96862745100000003" green="0.87843137250000003" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="527" height="369"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
+                                            <rect key="frame" x="0.0" y="0.0" width="527" height="369"/>
+                                        </stackView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="79t-FU-BlQ"/>
-                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="349" id="Cu9-tA-m56"/>
+                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
+                                        <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" id="QvT-zN-vgc"/>
+                                        <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" id="aAv-3P-xix"/>
+                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="xBq-ap-dVY"/>
                                     </constraints>
-                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="VAY-Q7-H0P">
-                                        <size key="itemSize" width="50" height="50"/>
-                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    </collectionViewFlowLayout>
                                     <connections>
-                                        <outlet property="height" destination="Cu9-tA-m56" id="8iA-bg-Evt"/>
-                                        <outlet property="width" destination="79t-FU-BlQ" id="Vyk-iv-Cgu"/>
+                                        <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
                                     </connections>
-                                </collectionView>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s1d-dp-Ebz">
-                                    <rect key="frame" x="0.0" y="349" width="507" height="50"/>
+                                    <rect key="frame" x="0.0" y="369" width="507" height="30"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="d0u-tt-oDl">
-                                            <rect key="frame" x="0.0" y="0.0" width="507" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="507" height="30"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDO-lD-YD2">
-                                                    <rect key="frame" x="0.0" y="0.0" width="253.5" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="253.5" height="30"/>
                                                     <state key="normal" title="-"/>
                                                     <connections>
                                                         <action selector="decreaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="wD8-fs-pbp"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrN-is-Q5W">
-                                                    <rect key="frame" x="253.5" y="0.0" width="253.5" height="50"/>
+                                                    <rect key="frame" x="253.5" y="0.0" width="253.5" height="30"/>
                                                     <state key="normal" title="+"/>
                                                     <connections>
                                                         <action selector="increaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="CNm-mU-gvY"/>
@@ -100,13 +100,13 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EdS-qM-TI0">
-                                    <rect key="frame" x="507" y="0.0" width="50" height="349"/>
+                                    <rect key="frame" x="527" y="0.0" width="30" height="349"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Dbu-bC-khX">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="349"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="30" height="349"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ghj-w7-kty">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="174.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="30" height="174.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="+"/>
                                                     <connections>
@@ -114,7 +114,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajV-d5-zoX">
-                                                    <rect key="frame" x="0.0" y="174.5" width="50" height="174.5"/>
+                                                    <rect key="frame" x="0.0" y="174.5" width="30" height="174.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <state key="normal" title="-"/>
                                                     <connections>
@@ -133,17 +133,15 @@
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="s1d-dp-Ebz" firstAttribute="top" secondItem="xgq-T9-bIb" secondAttribute="bottom" id="6Ix-6S-KhC"/>
-                                <constraint firstItem="xgq-T9-bIb" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="6fU-lW-Q7o"/>
-                                <constraint firstItem="xgq-T9-bIb" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="6i8-ig-tGs"/>
-                                <constraint firstItem="EdS-qM-TI0" firstAttribute="leading" secondItem="xgq-T9-bIb" secondAttribute="trailing" id="9dt-1g-Qgj"/>
-                                <constraint firstAttribute="trailing" secondItem="xgq-T9-bIb" secondAttribute="trailing" constant="50" id="H1O-ha-iWO"/>
+                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="0mI-x0-TRn"/>
+                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="H1h-dc-kpK"/>
                                 <constraint firstAttribute="trailing" secondItem="EdS-qM-TI0" secondAttribute="trailing" id="IEs-CA-eX9"/>
-                                <constraint firstAttribute="bottom" secondItem="xgq-T9-bIb" secondAttribute="bottom" constant="50" id="L3H-eB-NFb"/>
                                 <constraint firstItem="s1d-dp-Ebz" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="RWF-QD-JTb"/>
                                 <constraint firstItem="EdS-qM-TI0" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="XyT-tY-KCc"/>
                                 <constraint firstAttribute="bottom" secondItem="EdS-qM-TI0" secondAttribute="bottom" constant="50" id="fge-QY-56h"/>
                                 <constraint firstAttribute="bottom" secondItem="s1d-dp-Ebz" secondAttribute="bottom" id="fxn-df-atb"/>
+                                <constraint firstItem="s1d-dp-Ebz" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="bottom" id="l1C-P7-XpL"/>
+                                <constraint firstItem="EdS-qM-TI0" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="trailing" id="o6z-QU-vc3"/>
                                 <constraint firstAttribute="trailing" secondItem="s1d-dp-Ebz" secondAttribute="trailing" constant="50" id="wBN-f9-jSd"/>
                             </constraints>
                         </view>
@@ -165,7 +163,7 @@
                 <outlet property="latexView" destination="sa2-S3-OQh" id="0ou-j7-F7x"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="Q2R-bZ-76Z"/>
                 <outlet property="matWrap" destination="E17-UK-aR2" id="2lx-PQ-bYp"/>
-                <outlet property="matcollection" destination="xgq-T9-bIb" id="cZg-Td-v0g"/>
+                <outlet property="matrixView" destination="KrO-lo-Eyg" id="Dou-3d-UnW"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>
             <point key="canvasLocation" x="252.89855072463769" y="235.04464285714283"/>

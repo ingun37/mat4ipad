@@ -178,13 +178,8 @@ struct Mat:VectorSpace {
         cols = arr2d[0].count
         kids = arr2d.flatMap({$0})
     }
-    init(_ arr2d:[ArraySlice<Exp>]) {
-        rows = arr2d.count
-        cols = arr2d[0].count
-        kids = arr2d.flatMap({$0})
-    }
-    func row(_ i:Int)->ArraySlice<Exp> {
-        return kids[i*cols..<i*cols+cols]
+    func row(_ i:Int)->[Exp] {
+        return Array(kids[i*cols..<i*cols+cols])
     }
     func col(_ j:Int)->[Exp] {
         return (0..<rows).map({$0*cols + j}).map({kids[$0]})

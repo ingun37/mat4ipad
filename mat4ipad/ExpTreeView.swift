@@ -31,7 +31,8 @@ class ExpTreeView: UIView, MatCellDelegate {
     @IBOutlet weak var latexView: LatexView!
     
     @IBOutlet weak var matWrap: UIView!
-    @IBOutlet weak var matcollection: MatCollection!
+    @IBOutlet weak var matrixView: MatrixView!
+    
     let disposeBag = DisposeBag()
 
     @IBAction func ontap(_ sender: Any) {
@@ -79,30 +80,7 @@ class ExpTreeView: UIView, MatCellDelegate {
             if let exp = exp as? Mat {
                 matWrap.isHidden = false
                 stack.isHidden = true
-                matcollection.set(exp: exp)
-                
-                let items = Observable.just(
-                    exp.kids
-                )
-                
-                items.bind(to: matcollection.rx.items(cellIdentifier: "cell", cellType: MatCell.self), curriedArgument: { (row, element, cell) in
-                    if let e = element as? Unassigned {
-                        cell.lbl.text = e.letter
-                    } else if let e = element as? NumExp {
-                        cell.lbl.text = e.latex()
-                    }
-                    cell.set(row/exp.cols, row%exp.cols, del: self)
-                    cell.lbl.rx.text.orEmpty.throttle(.milliseconds(200), scheduler: MainScheduler.instance).distinctUntilChanged().observeOn(MainScheduler.instance).skip(1).subscribe(onNext: {txt in
-                        print("txt : \(txt)")
-                    }).disposed(by: self.disposeBag)
-                }).disposed(by: disposeBag)
-                
-                matcollection.rx.itemSelected.subscribe(onNext: { (idx) in
-                    guard let cell = self.matcollection.cellForItem(at: idx) as? MatCell else {return}
-                    cell.lbl.becomeFirstResponder()
-                }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
-                
-                
+                matrixView.set(exp)
             } else if exp.kids.isEmpty {
                 matWrap.isHidden = true
                 stack.isHidden = false
