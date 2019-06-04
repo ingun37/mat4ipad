@@ -10,7 +10,7 @@ import UIKit
 import iosMath
 
 protocol ExpTreeDelegate {
-    func onTap(exp:Exp)
+    func onTap(view:ExpTreeView)
     func expandBy(mat:Mat, row:Int, col:Int)
     func changeMatrixElement(mat:Mat, row:Int, col:Int, txt:String)
 }
@@ -37,7 +37,7 @@ class ExpTreeView: UIView, MatCellDelegate {
     @IBAction func ontap(_ sender: Any) {
         guard let exp = exp else {return}
         print("sending \(exp.uid)")
-        del?.onTap(exp: exp)
+        del?.onTap(view: self)
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -70,7 +70,7 @@ class ExpTreeView: UIView, MatCellDelegate {
         return nib.instantiate(withOwner: nil, options: nil).first as! ExpTreeView
     }
     
-    private var exp:Exp?
+    var exp:Exp?
     func setExp(exp:Exp, del:ExpTreeDelegate) {
         if true {
             self.exp = exp

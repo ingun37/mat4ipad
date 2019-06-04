@@ -43,10 +43,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
         let oble = Observable.just(options)
         let ct = UITableViewCell.self
         oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ct), curriedArgument: { (row, element, cell) in
-            let mathlbl = MTMathUILabel()
-            mathlbl.latex = element.latex()
-            mathlbl.frame = cell.contentView.frame;
-            cell.contentView.addSubview(mathlbl)
+            (cell as? ApplyTableCell)?.latex.set(element.latex())
         }).disposed(by: disposeBag)
         
         tv.rx.modelSelected(Exp.self).subscribe(onNext:  { value in
@@ -84,4 +81,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
     }
     */
 
+}
+class ApplyTableCell:UITableViewCell {
+    @IBOutlet weak var latex:LatexView!
 }

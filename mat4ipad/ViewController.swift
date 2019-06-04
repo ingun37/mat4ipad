@@ -10,6 +10,7 @@ import UIKit
 import iosMath
 
 class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+    @IBOutlet weak var anchorView: UIView!
     func changeMatrixElement(mat: Mat, row: Int, col: Int, txt: String) {
         let sub = mat.kids[row*mat.cols + col]
         if let i = Int(txt) {
@@ -53,15 +54,19 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         refresh()
     }
     
-    var tappedExp:Exp?
-    func onTap(exp: Exp) {
-        tappedExp = exp
-        performSegue(withIdentifier: "op", sender: exp)
+    func onTap(view: ExpTreeView) {
+        
+        performSegue(withIdentifier: "op", sender: view)
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "op" {
             guard let vc = segue.destination as? ApplyTableVC else { return }
-            guard let exp = tappedExp else {return}
+            guard let expview = sender as? ExpTreeView else {return}
+            guard let exp = expview.exp else {return}
+            let anchorPoint = expview.convert(CGPoint(x: expview.frame.size.width, y: expview.frame.size.height), to: anchorView.superview)
+            
+            anchorView.frame.origin = anchorPoint
+            print("\(anchorView.frame.origin.x), \(anchorView.frame.origin.y)")
             vc.set(exp: exp, del:self)
         }
     }
