@@ -145,14 +145,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		6B4989A122A6B76B00F47A5E /* Mat */ = {
+		6B4989A122A6B76B00F47A5E /* Matrix */ = {
 			isa = PBXGroup;
 			children = (
 				6B4989A222A6B77B00F47A5E /* MatrixCell.xib */,
 				6B4989A422A6B85B00F47A5E /* MatrixViews.swift */,
 				6B4989A622A6B8BD00F47A5E /* MatrixRow.xib */,
 			);
-			path = Mat;
+			path = Matrix;
 			sourceTree = "<group>";
 		};
 		6BBE5B94229D9A77006A56D8 = {
@@ -181,7 +181,7 @@
 		6BBE5B9F229D9A77006A56D8 /* mat4ipad */ = {
 			isa = PBXGroup;
 			children = (
-				6B4989A122A6B76B00F47A5E /* Mat */,
+				6B4989A122A6B76B00F47A5E /* Matrix */,
 				6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */,
 				6BBE5BA2229D9A77006A56D8 /* ViewController.swift */,
 				6B2F5C1E229E4F8800A634B3 /* Exp.swift */,

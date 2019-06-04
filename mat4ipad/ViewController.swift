@@ -9,7 +9,7 @@
 import UIKit
 import iosMath
 
-class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
+class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate {
     @IBOutlet weak var anchorView: UIView!
     func changeMatrixElement(mat: Mat, row: Int, col: Int, txt: String) {
         let sub = mat.kids[row*mat.cols + col]
@@ -53,21 +53,23 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
         exp = replaced(e: exp, uid: uid, to: to)
         refresh()
     }
-    
-    func onTap(view: ExpTreeView) {
-        
+    func onTap(view: ExpViewable) {
         performSegue(withIdentifier: "op", sender: view)
     }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "op" {
             guard let vc = segue.destination as? ApplyTableVC else { return }
-            guard let expview = sender as? ExpTreeView else {return}
-            guard let exp = expview.exp else {return}
-            let anchorPoint = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
+            guard let expview = sender as? ExpViewable else {return}
+
+            if let expview = expview as? ExpTreeView {
+                anchorView.frame.origin = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
+            } else if let matcell = expview as? MatrixCell {
+                anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
+            }
             
-            anchorView.frame.origin = anchorPoint
             print("\(anchorView.frame.origin.x), \(anchorView.frame.origin.y)")
-            vc.set(exp: exp, del:self)
+            vc.set(exp: expview.exp, del:self)
         }
     }
     var exp:Exp = Unassigned("_");

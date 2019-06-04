@@ -8,14 +8,25 @@
 
 import UIKit
 
-class MatrixCell: UIView {
+class MatrixCell: UIView, ExpViewable {
     override func awakeFromNib() {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
         layer.borderColor = UIColor.darkGray.cgColor;
         layer.borderWidth = 2
     }
-    @IBOutlet weak var latex: LatexView!
+    var exp:Exp = Unassigned("z")
+    var del:ExpViewableDelegate?
+    func set(_ exp:Exp, del:ExpViewableDelegate?) {
+        self.exp = exp
+        self.del = del
+        latex.set(exp.latex())
+    }
+    @IBOutlet private weak var latex: LatexView!
+    
+    @IBAction func ontap(_ sender: Any) {
+        del?.onTap(view: self)
+    }
     static func loadViewFromNib() -> MatrixCell {
         let bundle = Bundle(for: self)
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
@@ -41,13 +52,12 @@ class MatrixView:UIView {
         translatesAutoresizingMaskIntoConstraints = false
     }
     @IBOutlet weak var stack: UIStackView!
-    func set(_ m:Mat) {
+    func set(_ m:Mat, del:ExpViewableDelegate?) {
         for ri in (0..<m.rows) {
             let rowView = MatrixRow.loadViewFromNib()
             for ci in (0..<m.cols) {
                 let cell = MatrixCell.loadViewFromNib()
-                let row = m.row(ri)
-                cell.latex.set(row[ci].latex())
+                cell.set(m.row(ri)[ci], del:del)
                 rowView.stack.addArrangedSubview(cell)
             }
             stack.addArrangedSubview(rowView)

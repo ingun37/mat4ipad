@@ -8,24 +8,19 @@
 
 import UIKit
 import iosMath
-
-protocol ExpTreeDelegate {
-    func onTap(view:ExpTreeView)
+protocol ExpViewable:UIView {
+    var exp:Exp {get}
+}
+protocol ExpViewableDelegate {
+    func onTap(view:ExpViewable)
     func expandBy(mat:Mat, row:Int, col:Int)
-    func changeMatrixElement(mat:Mat, row:Int, col:Int, txt:String)
 }
 import RxSwift
 import RxCocoa
 
-class ExpTreeView: UIView, MatCellDelegate {
+class ExpTreeView: UIView, ExpViewable {
     
-    func onMatrixElementChange(_ i: Int, _ j: Int, to: String) {
-        guard let mat = exp as? Mat else {return}
-        print("\(i),\(j) to \(to)")
-        del?.changeMatrixElement(mat: mat, row: i, col: j, txt: to)
-    }
-    
-    var del:ExpTreeDelegate?
+    var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
     @IBOutlet weak var latexWrap: UIView!
     @IBOutlet weak var latexView: LatexView!
@@ -36,7 +31,6 @@ class ExpTreeView: UIView, MatCellDelegate {
     let disposeBag = DisposeBag()
 
     @IBAction func ontap(_ sender: Any) {
-        guard let exp = exp else {return}
         print("sending \(exp.uid)")
         del?.onTap(view: self)
     }
@@ -71,8 +65,8 @@ class ExpTreeView: UIView, MatCellDelegate {
         return nib.instantiate(withOwner: nil, options: nil).first as! ExpTreeView
     }
     
-    var exp:Exp?
-    func setExp(exp:Exp, del:ExpTreeDelegate) {
+    var exp:Exp = Unassigned("z")
+    func setExp(exp:Exp, del:ExpViewableDelegate) {
         if true {
             self.exp = exp
             self.del = del
@@ -80,7 +74,7 @@ class ExpTreeView: UIView, MatCellDelegate {
             if let exp = exp as? Mat {
                 matWrap.isHidden = false
                 stack.isHidden = true
-                matrixView.set(exp)
+                matrixView.set(exp, del:del)
             } else if exp.kids.isEmpty {
                 matWrap.isHidden = true
                 stack.isHidden = false
@@ -113,69 +107,4 @@ class ExpTreeView: UIView, MatCellDelegate {
         del?.expandBy(mat: mat, row: -1, col: 0)
     }
     
-}
-
-extension Range where Bound == Double {
-    private func interp(_ n:Int, _ d:Int) -> Double {
-        let a:Double = (upperBound*Double(n)/Double(d))
-        let b:Double = (lowerBound*Double(d-n)/Double(d))
-        return a + b
-    }
-    func block(_ numerator:Int, _ denominator:Int) -> Range<Double> {
-        return interp(numerator, denominator)..<interp(numerator+1, denominator)
-    }
-}
-class MatCollection:UICollectionView, UICollectionViewDelegateFlowLayout {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        register(UINib(nibName: "MatCell", bundle: Bundle(for: MatCell.self)), forCellWithReuseIdentifier: "cell")
-        print("awake called")
-        self.delegate = self
-    }
-    var rows = 1;
-    var cols = 1;
-    @IBOutlet weak var width: NSLayoutConstraint!
-    @IBOutlet weak var height: NSLayoutConstraint!
-    func set(exp:Mat) {
-        print("set called")
-        rows = exp.rows
-        cols = exp.cols
-        width.constant = CGFloat(cols*100)
-        height.constant = CGFloat(rows*100)
-        
-        updateConstraints()
-    }
-    func collectionView(_ cv: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let w = frame.size.width/CGFloat(cols)
-        let h = frame.size.height/CGFloat(rows)
-        
-        return CGSize(width: w, height: h)
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-}
-protocol MatCellDelegate {
-    func onMatrixElementChange(_ i:Int, _ j:Int, to:String)
-}
-class MatCell:UICollectionViewCell, UITextFieldDelegate {
-    var del:MatCellDelegate?
-    var i, j:Int!
-    func set(_ i:Int, _ j:Int, del:MatCellDelegate) {
-        self.i = i;
-        self.j = j
-        self.del = del
-    }
-    @IBOutlet weak var lbl: UITextField!
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        del?.onMatrixElementChange(i, j, to: textField.text ?? "")
-        return true
-    }
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }

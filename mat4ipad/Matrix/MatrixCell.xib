@@ -44,6 +44,7 @@
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="fCk-lj-HaB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="C00-KZ-dLh"/>
                 <constraint firstItem="fCk-lj-HaB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ieh-9m-5lR"/>
@@ -56,8 +57,14 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="latex" destination="H8W-cH-BSx" id="VLy-F3-eif"/>
+                <outletCollection property="gestureRecognizers" destination="DHv-sX-pnO" appends="YES" id="cqC-Hr-Una"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="-41.517857142857139"/>
         </view>
+        <tapGestureRecognizer id="DHv-sX-pnO">
+            <connections>
+                <action selector="ontap:" destination="iN0-l3-epB" id="kHR-is-eyL"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>
