@@ -10,6 +10,8 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
+import NumberKit
+
 protocol ApplyTableDelegate {
     func changeto(uid:String, to:Exp)
     func remove(uid:String)
@@ -61,16 +63,33 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
             }
         }
     }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
         guard let exp = exp else {return true}
         guard let valueTxt = textField.text else {return true}
-        guard let value = Int(valueTxt) else {return true}
-        self.dismiss(animated: true, completion: {
-            self.del?.changeto(uid:exp.uid, to: value.exp)
-        })
+        if let value = Int(valueTxt) {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: value.exp)
+            })
+        } else if let value = Float(valueTxt) {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: NumExp(value))
+            })
+        } else if let r = Rational<Int>(from: valueTxt){
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: NumExp(r))
+            })
+        } else if valueTxt.isAlphanumeric {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: Unassigned(valueTxt))
+            })
+        }
+        
         return true
     }
+    
     /*
     // MARK: - Navigation
 
@@ -84,4 +103,10 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!
+}
+
+extension String {
+    var isAlphanumeric: Bool {
+        return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
+    }
 }
