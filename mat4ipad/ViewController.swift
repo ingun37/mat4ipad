@@ -63,7 +63,7 @@ class ViewController: UIViewController, ExpTreeDelegate, ApplyTableDelegate {
             guard let vc = segue.destination as? ApplyTableVC else { return }
             guard let expview = sender as? ExpTreeView else {return}
             guard let exp = expview.exp else {return}
-            let anchorPoint = expview.convert(CGPoint(x: expview.frame.size.width, y: expview.frame.size.height), to: anchorView.superview)
+            let anchorPoint = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
             
             anchorView.frame.origin = anchorPoint
             print("\(anchorView.frame.origin.x), \(anchorView.frame.origin.y)")
