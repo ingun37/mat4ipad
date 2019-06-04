@@ -42,17 +42,28 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         let newMat = Mat(kids2d)
         changeto(uid: mat.uid, to: newMat)
     }
-    
+    var history:[Exp] = []
+    var exp:Exp {
+        if history.isEmpty {
+            history.append(Unassigned("A"))
+        }
+        return history.last!
+    }
     func remove(uid: String) {
-        exp = removed(e: exp, uid: uid)
+        history.append(removed(e: exp, uid: uid))
         refresh()
     }
     
     
     func changeto(uid:String, to: Exp) {
-        exp = replaced(e: exp, uid: uid, to: to)
+        history.append(replaced(e: exp, uid: uid, to: to))
         refresh()
     }
+    @IBAction func undo(_ sender: Any) {
+        history.popLast()
+        refresh()
+    }
+    
     func onTap(view: ExpViewable) {
         performSegue(withIdentifier: "op", sender: view)
     }
@@ -72,7 +83,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             vc.set(exp: expview.exp, del:self)
         }
     }
-    var exp:Exp = Unassigned("_");
+    
     
     func occupiedLetters(e:Exp)->[String] {
         let kidsLetters = e.kids.map({self.occupiedLetters(e: $0)}).flatMap({$0})
@@ -114,8 +125,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        exp = Mul([Mat.identityOf(2, 2), Unassigned("A")])
+        history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
         refresh()
     }
 
