@@ -11,14 +11,6 @@ import iosMath
 
 class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate {
     @IBOutlet weak var anchorView: UIView!
-    func changeMatrixElement(mat: Mat, row: Int, col: Int, txt: String) {
-        let sub = mat.kids[row*mat.cols + col]
-        if let i = Int(txt) {
-            self.changeto(uid: sub.uid, to: i.exp)
-        } else {
-            self.changeto(uid: sub.uid, to: Unassigned(txt))
-        }
-    }
     
     @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
@@ -60,7 +52,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         refresh()
     }
     @IBAction func undo(_ sender: Any) {
-        history.popLast()
+        let _ = history.popLast()
         refresh()
     }
     
@@ -96,21 +88,31 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         return Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).subtracting(occupiedLetters(e: exp))
     }
     
-    @IBOutlet weak var mathContainer: UIView!
+    @IBOutlet weak var mathScrollViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var mathScrollContentView: UIView!
+    @IBOutlet weak var mathScrollContentWidth: NSLayoutConstraint!
+    @IBOutlet weak var mathScrollContentHeight: NSLayoutConstraint!
     
     var mathView:ExpTreeView?
     
     func refresh() {
         if let mv = mathView {
-            mathContainer.willRemoveSubview(mv)
+            mathScrollContentView.willRemoveSubview(mv)
             mv.removeFromSuperview()
         }
         
         mathView = ExpTreeView.loadViewFromNib()
         guard let mathView = mathView else {return}
-        mathView.frame = mathContainer.frame
-        mathContainer.addSubview(mathView)
         mathView.setExp(exp: exp, del:self)
+        mathScrollContentView.addSubview(mathView)
+        mathView.onLayoutSubviews = { [unowned self] in
+            let size = mathView.frame.size
+            self.mathScrollContentWidth.constant = size.width
+            self.mathScrollContentHeight.constant = size.height
+            self.mathScrollViewHeight.constant = size.height
+        }
+        
+        
         do {
             try preview.set("{\(exp.latex())} = {\(exp.eval().latex())}")
         } catch {
@@ -122,7 +124,6 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         }
         
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]

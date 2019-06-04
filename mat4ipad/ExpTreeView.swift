@@ -42,6 +42,12 @@ class ExpTreeView: UIView, ExpViewable {
         super.init(frame: frame)
         commonInit()
     }
+    var onLayoutSubviews:()->Void = {}
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        onLayoutSubviews()
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = 8;
@@ -67,27 +73,25 @@ class ExpTreeView: UIView, ExpViewable {
     
     var exp:Exp = Unassigned("z")
     func setExp(exp:Exp, del:ExpViewableDelegate) {
-        if true {
-            self.exp = exp
-            self.del = del
-            latexView.set(exp.latex())
-            if let exp = exp as? Mat {
-                matWrap.isHidden = false
-                stack.isHidden = true
-                matrixView.set(exp, del:del)
-            } else if exp.kids.isEmpty {
-                matWrap.isHidden = true
-                stack.isHidden = false
-            } else {
-                matWrap.isHidden = true
-                stack.isHidden = false
-                
-                exp.kids.forEach({e in
-                    let v = ExpTreeView.loadViewFromNib()
-                    v.setExp(exp: e, del:del)
-                    stack.addArrangedSubview(v)
-                })
-            }
+        self.exp = exp
+        self.del = del
+        latexView.set(exp.latex())
+        if let exp = exp as? Mat {
+            matWrap.isHidden = false
+            stack.isHidden = true
+            matrixView.set(exp, del:del)
+        } else if exp.kids.isEmpty {
+            matWrap.isHidden = true
+            stack.isHidden = false
+        } else {
+            matWrap.isHidden = true
+            stack.isHidden = false
+            
+            exp.kids.forEach({e in
+                let v = ExpTreeView.loadViewFromNib()
+                v.setExp(exp: e, del:del)
+                stack.addArrangedSubview(v)
+            })
         }
     }
     @IBAction func increaseCol(_ sender: Any) {
