@@ -136,6 +136,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         undoButton.layer.shadowRadius = 1
         
         history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
+        preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         refresh()
     }
 
