@@ -46,104 +46,28 @@
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="84" width="557" height="729"/>
+                            <rect key="frame" x="0.0" y="84" width="557" height="759"/>
                         </stackView>
-                        <view contentMode="scaleToFill" verticalHuggingPriority="246" verticalCompressionResistancePriority="746" translatesAutoresizingMaskIntoConstraints="NO" id="E17-UK-aR2">
-                            <rect key="frame" x="0.0" y="821" width="557" height="399"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="851" width="557" height="369"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="527" height="369"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
-                                            <rect key="frame" x="0.0" y="0.0" width="527" height="369"/>
-                                        </stackView>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
+                                    <rect key="frame" x="0.0" y="0.0" width="557" height="369"/>
                                     <constraints>
-                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
-                                        <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" id="QvT-zN-vgc"/>
-                                        <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" id="aAv-3P-xix"/>
-                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="xBq-ap-dVY"/>
+                                        <constraint firstAttribute="height" priority="500" constant="369" id="bz0-kf-Fck"/>
                                     </constraints>
-                                    <connections>
-                                        <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
-                                    </connections>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s1d-dp-Ebz">
-                                    <rect key="frame" x="0.0" y="369" width="507" height="30"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="d0u-tt-oDl">
-                                            <rect key="frame" x="0.0" y="0.0" width="507" height="30"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDO-lD-YD2">
-                                                    <rect key="frame" x="0.0" y="0.0" width="253.5" height="30"/>
-                                                    <state key="normal" title="-"/>
-                                                    <connections>
-                                                        <action selector="decreaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="wD8-fs-pbp"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrN-is-Q5W">
-                                                    <rect key="frame" x="253.5" y="0.0" width="253.5" height="30"/>
-                                                    <state key="normal" title="+"/>
-                                                    <connections>
-                                                        <action selector="increaseRow:" destination="iN0-l3-epB" eventType="touchUpInside" id="CNm-mU-gvY"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                        </stackView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="d0u-tt-oDl" firstAttribute="top" secondItem="s1d-dp-Ebz" secondAttribute="top" id="2Z8-ZQ-c3R"/>
-                                        <constraint firstAttribute="trailing" secondItem="d0u-tt-oDl" secondAttribute="trailing" id="8bs-ne-bKP"/>
-                                        <constraint firstItem="d0u-tt-oDl" firstAttribute="leading" secondItem="s1d-dp-Ebz" secondAttribute="leading" id="Uus-BW-BOA"/>
-                                        <constraint firstAttribute="bottom" secondItem="d0u-tt-oDl" secondAttribute="bottom" id="YXb-KW-813"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EdS-qM-TI0">
-                                    <rect key="frame" x="527" y="0.0" width="30" height="349"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Dbu-bC-khX">
-                                            <rect key="frame" x="0.0" y="0.0" width="30" height="349"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ghj-w7-kty">
-                                                    <rect key="frame" x="0.0" y="0.0" width="30" height="174.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                    <state key="normal" title="+"/>
-                                                    <connections>
-                                                        <action selector="increaseCol:" destination="iN0-l3-epB" eventType="touchUpInside" id="hfK-6X-Nvp"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ajV-d5-zoX">
-                                                    <rect key="frame" x="0.0" y="174.5" width="30" height="174.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                    <state key="normal" title="-"/>
-                                                    <connections>
-                                                        <action selector="decreaseCol:" destination="iN0-l3-epB" eventType="touchUpInside" id="vvC-FN-xMg"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                        </stackView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="Dbu-bC-khX" secondAttribute="bottom" id="3Zx-iF-2jF"/>
-                                        <constraint firstItem="Dbu-bC-khX" firstAttribute="leading" secondItem="EdS-qM-TI0" secondAttribute="leading" id="DAz-Ta-Z4m"/>
-                                        <constraint firstAttribute="trailing" secondItem="Dbu-bC-khX" secondAttribute="trailing" id="glt-c5-A9z"/>
-                                        <constraint firstItem="Dbu-bC-khX" firstAttribute="top" secondItem="EdS-qM-TI0" secondAttribute="top" id="iHI-HZ-ZtG"/>
-                                    </constraints>
-                                </view>
+                                </stackView>
                             </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="0mI-x0-TRn"/>
-                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="H1h-dc-kpK"/>
-                                <constraint firstAttribute="trailing" secondItem="EdS-qM-TI0" secondAttribute="trailing" id="IEs-CA-eX9"/>
-                                <constraint firstItem="s1d-dp-Ebz" firstAttribute="leading" secondItem="E17-UK-aR2" secondAttribute="leading" id="RWF-QD-JTb"/>
-                                <constraint firstItem="EdS-qM-TI0" firstAttribute="top" secondItem="E17-UK-aR2" secondAttribute="top" id="XyT-tY-KCc"/>
-                                <constraint firstAttribute="bottom" secondItem="EdS-qM-TI0" secondAttribute="bottom" constant="50" id="fge-QY-56h"/>
-                                <constraint firstAttribute="bottom" secondItem="s1d-dp-Ebz" secondAttribute="bottom" id="fxn-df-atb"/>
-                                <constraint firstItem="s1d-dp-Ebz" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="bottom" id="l1C-P7-XpL"/>
-                                <constraint firstItem="EdS-qM-TI0" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="trailing" id="o6z-QU-vc3"/>
-                                <constraint firstAttribute="trailing" secondItem="s1d-dp-Ebz" secondAttribute="trailing" constant="50" id="wBN-f9-jSd"/>
+                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
+                                <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" id="QvT-zN-vgc"/>
+                                <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" id="aAv-3P-xix"/>
+                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="xBq-ap-dVY"/>
                             </constraints>
+                            <connections>
+                                <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
+                            </connections>
                         </view>
                     </subviews>
                 </stackView>
@@ -163,7 +87,6 @@
             <connections>
                 <outlet property="latexView" destination="sa2-S3-OQh" id="0ou-j7-F7x"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="Q2R-bZ-76Z"/>
-                <outlet property="matWrap" destination="E17-UK-aR2" id="2lx-PQ-bYp"/>
                 <outlet property="matrixView" destination="KrO-lo-Eyg" id="Dou-3d-UnW"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>

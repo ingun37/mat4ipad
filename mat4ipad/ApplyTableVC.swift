@@ -15,8 +15,13 @@ import NumberKit
 protocol ApplyTableDelegate {
     func changeto(uid:String, to:Exp)
     func remove(uid:String)
+    func expandBy(mat:Mat, row:Int, col:Int)
+
 }
 class ApplyTableVC: UIViewController, UITextFieldDelegate {
+    
+    @IBOutlet weak var matrixPanel: UIStackView!
+    
     var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
@@ -24,6 +29,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
     func set(exp:Exp, del:ApplyTableDelegate?) {
         self.exp = exp
         self.del = del
+        
     }
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
@@ -54,6 +60,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
                 self.del?.changeto(uid:exp.uid, to: value)
             })
         }).disposed(by: disposeBag)
+        matrixPanel.isHidden = !(exp is Mat)
     }
     
     @IBAction func removeClick(_ sender: Any) {
@@ -99,7 +106,27 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-
+    @IBAction func rowIncrease(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 1, col: 0)
+        dismiss(animated: true, completion: nil)
+    }
+    @IBAction func rowDecrease(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: -1, col: 0)
+        dismiss(animated: true, completion: nil)
+    }
+    @IBAction func columnIncrease(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 0, col: 1)
+        dismiss(animated: true, completion: nil)
+    }
+    @IBAction func columnDecrease(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        del?.expandBy(mat: mat, row: 0, col: -1)
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!

@@ -13,7 +13,6 @@ protocol ExpViewable:UIView {
 }
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
-    func expandBy(mat:Mat, row:Int, col:Int)
 }
 import RxSwift
 import RxCocoa
@@ -29,7 +28,6 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var latexWrap: UIView!
     @IBOutlet weak var latexView: LatexView!
     
-    @IBOutlet weak var matWrap: UIView!
     @IBOutlet weak var matrixView: MatrixView!
     
     let disposeBag = DisposeBag()
@@ -81,14 +79,14 @@ class ExpView: UIView, ExpViewable {
         self.del = del
         latexView.set(exp.latex())
         if let exp = exp as? Mat {
-            matWrap.isHidden = false
+            matrixView.isHidden = false
             stack.isHidden = true
             matrixView.set(exp, del:del)
         } else if exp.kids.isEmpty {
-            matWrap.isHidden = true
+            matrixView.isHidden = true
             stack.isHidden = false
         } else {
-            matWrap.isHidden = true
+            matrixView.isHidden = true
             stack.isHidden = false
             
             exp.kids.forEach({e in
@@ -100,19 +98,15 @@ class ExpView: UIView, ExpViewable {
     }
     @IBAction func increaseCol(_ sender: Any) {
         guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 0, col: 1)
     }
     @IBAction func decreaseCol(_ sender: Any) {
         guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 0, col: -1)
     }
     @IBAction func increaseRow(_ sender: Any) {
         guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 1, col: 0)
     }
     @IBAction func decreaseRow(_ sender: Any) {
         guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: -1, col: 0)
     }
     
 }

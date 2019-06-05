@@ -105,11 +105,10 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         guard let mathView = mathView else {return}
         mathView.setExp(exp: exp, del:self)
         mathScrollContentView.addSubview(mathView)
-        mathView.onLayoutSubviews = { [unowned self] in
-            let size = mathView.frame.size
-            self.mathScrollContentWidth.constant = size.width
-            self.mathScrollContentHeight.constant = size.height
-        }
+        mathView.layoutMarginsGuide.leadingAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        mathView.layoutMarginsGuide.topAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.topAnchor).isActive = true
+        mathView.layoutMarginsGuide.trailingAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        mathView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.bottomAnchor).isActive = true
         
         
         do {
