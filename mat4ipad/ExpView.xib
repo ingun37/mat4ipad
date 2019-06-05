@@ -71,7 +71,7 @@
                     </subviews>
                 </stackView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" red="0.28235294119999998" green="0.40784313729999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>

@@ -20,7 +20,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="276"/>
                 </stackView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="MNQ-0T-oAj" secondAttribute="trailing" id="7Cs-fA-nDY"/>
                 <constraint firstAttribute="bottom" secondItem="MNQ-0T-oAj" secondAttribute="bottom" id="cwF-CO-kkW"/>

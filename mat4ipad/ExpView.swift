@@ -21,8 +21,11 @@ class ExpView: UIView, ExpViewable {
     
     var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
+    var directSubExpViews:[ExpView] {
+        return stack.arrangedSubviews.compactMap({$0 as? ExpView})
+    }
     var allSubExpViews:[ExpView] {
-        let directSubviews = stack.arrangedSubviews.compactMap({$0 as? ExpView})
+        let directSubviews = directSubExpViews
         return directSubviews + directSubviews.map({$0.allSubExpViews}).flatMap({$0})
     }
     @IBOutlet weak var latexWrap: UIView!
@@ -53,10 +56,6 @@ class ExpView: UIView, ExpViewable {
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = 8;
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 1, height: 1)
-        layer.shadowRadius = 1
         
         latexWrap.layer.cornerRadius = 8;
         latexWrap.layer.shadowColor = UIColor.black.cgColor

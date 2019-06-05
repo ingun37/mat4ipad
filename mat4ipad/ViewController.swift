@@ -12,6 +12,7 @@ import iosMath
 class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate {
     @IBOutlet weak var anchorView: UIView!
     
+    @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
         let co = mat.cols
@@ -93,6 +94,13 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     
     var mathView:ExpView?
     var matrixDrags:[UIView] = []
+    func setBG(e:ExpView, f:CGFloat) {
+        let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
+        e.backgroundColor = color
+        e.directSubExpViews.forEach { (v) in
+            self.setBG(e: v, f:f - 0.1)
+        }
+    }
     func refresh() {
         if let mv = mathView {
             mathScrollContentView.willRemoveSubview(mv)
@@ -108,7 +116,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         mathView.layoutMarginsGuide.trailingAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.trailingAnchor).isActive = true
         mathView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.bottomAnchor).isActive = true
         
-        
+        setBG(e: mathView, f: 0.9)
         do {
             try preview.set("= {\(exp.eval().latex())}")
         } catch {
@@ -122,6 +130,11 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        undoButton.layer.shadowColor = UIColor.black.cgColor
+        undoButton.layer.shadowOpacity = 0.5
+        undoButton.layer.shadowOffset = CGSize(width: 1, height: 1)
+        undoButton.layer.shadowRadius = 1
+        
         history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
         refresh()
     }
