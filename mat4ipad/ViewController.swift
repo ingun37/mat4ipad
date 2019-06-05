@@ -90,8 +90,6 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     
     
     @IBOutlet weak var mathScrollContentView: UIView!
-    @IBOutlet weak var mathScrollContentWidth: NSLayoutConstraint!
-    @IBOutlet weak var mathScrollContentHeight: NSLayoutConstraint!
     
     var mathView:ExpView?
     var matrixDrags:[UIView] = []
@@ -112,12 +110,12 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         
         
         do {
-            try preview.set("{\(exp.latex())} = {\(exp.eval().latex())}")
+            try preview.set("= {\(exp.eval().latex())}")
         } catch {
             if let e = error as? evalErr {
-                preview.set("{\(exp.latex())} = {\(e.describeInLatex())}")
+                preview.set("= {\(e.describeInLatex())}")
             } else {
-                preview.set("{\(exp.latex())} = \\text{invalid}")
+                preview.set("= \\text{invalid}")
             }
         }
         

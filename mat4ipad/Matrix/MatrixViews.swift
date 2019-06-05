@@ -12,8 +12,13 @@ class MatrixCell: UIView, ExpViewable {
     override func awakeFromNib() {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
-        layer.borderColor = UIColor.darkGray.cgColor;
-        layer.borderWidth = 2
+
+        layer.cornerRadius = 8;
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        layer.shadowRadius = 1
+        
     }
     var exp:Exp = Unassigned("z")
     var del:ExpViewableDelegate?

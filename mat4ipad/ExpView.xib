@@ -34,7 +34,7 @@
                                     </connections>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" red="0.95907360406091369" green="0.90397838234393579" blue="0.78098075409672096" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="sa2-S3-OQh" secondAttribute="trailing" constant="8" id="5N2-FN-soT"/>
                                 <constraint firstAttribute="bottom" secondItem="sa2-S3-OQh" secondAttribute="bottom" constant="8" id="Pij-Lc-mYc"/>
@@ -51,14 +51,13 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="851" width="557" height="369"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
                                     <rect key="frame" x="0.0" y="0.0" width="557" height="369"/>
                                     <constraints>
                                         <constraint firstAttribute="height" priority="500" constant="369" id="bz0-kf-Fck"/>
                                     </constraints>
                                 </stackView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
                                 <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" id="QvT-zN-vgc"/>
@@ -72,7 +71,7 @@
                     </subviews>
                 </stackView>
             </subviews>
-            <color key="backgroundColor" red="0.96862745100000003" green="0.87843137250000003" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>
