@@ -94,7 +94,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     @IBOutlet weak var mathScrollContentHeight: NSLayoutConstraint!
     
     var mathView:ExpView?
-    
+    var matrixDrags:[UIView] = []
     func refresh() {
         if let mv = mathView {
             mathScrollContentView.willRemoveSubview(mv)
@@ -110,6 +110,8 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             self.mathScrollContentWidth.constant = size.width
             self.mathScrollContentHeight.constant = size.height
             self.mathScrollViewHeight.constant = size.height
+            
+            
         }
         
         
@@ -130,8 +132,19 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         refresh()
     }
 
-    @IBAction func mul(_ sender: Any) {
+    @IBAction func matrixResizeMode(_ sender: Any) {
+        self.matrixDrags.forEach({v in
+            self.view.willRemoveSubview(v)
+            v.removeFromSuperview()
+        })
+        let matriViews = self.mathView?.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden}) ?? []
+        self.matrixDrags = matriViews.map({ v in
+            CGRect(origin: v.convert(v.bounds.origin, to: self.view), size: v.bounds.size)
+        }).map({UIView(frame: $0)})
         
+        self.matrixDrags.forEach({ v in
+            v.backgroundColor = UIColor.purple
+            self.view.addSubview(v)
+        })
     }
 }
-

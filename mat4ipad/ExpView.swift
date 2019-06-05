@@ -22,6 +22,10 @@ class ExpView: UIView, ExpViewable {
     
     var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
+    var allSubExpViews:[ExpView] {
+        let directSubviews = stack.arrangedSubviews.compactMap({$0 as? ExpView})
+        return directSubviews + directSubviews.map({$0.allSubExpViews}).flatMap({$0})
+    }
     @IBOutlet weak var latexWrap: UIView!
     @IBOutlet weak var latexView: LatexView!
     
