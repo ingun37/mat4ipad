@@ -18,7 +18,7 @@ protocol ExpViewableDelegate {
 import RxSwift
 import RxCocoa
 
-class ExpTreeView: UIView, ExpViewable {
+class ExpView: UIView, ExpViewable {
     
     var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
@@ -65,10 +65,10 @@ class ExpTreeView: UIView, ExpViewable {
         
 //        layer.masksToBounds = false
     }
-    static func loadViewFromNib() -> ExpTreeView {
+    static func loadViewFromNib() -> ExpView {
         let bundle = Bundle(for: self)
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
-        return nib.instantiate(withOwner: nil, options: nil).first as! ExpTreeView
+        return nib.instantiate(withOwner: nil, options: nil).first as! ExpView
     }
     
     var exp:Exp = Unassigned("z")
@@ -88,7 +88,7 @@ class ExpTreeView: UIView, ExpViewable {
             stack.isHidden = false
             
             exp.kids.forEach({e in
-                let v = ExpTreeView.loadViewFromNib()
+                let v = ExpView.loadViewFromNib()
                 v.setExp(exp: e, del:del)
                 stack.addArrangedSubview(v)
             })

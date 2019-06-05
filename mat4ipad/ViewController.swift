@@ -65,7 +65,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             guard let vc = segue.destination as? ApplyTableVC else { return }
             guard let expview = sender as? ExpViewable else {return}
 
-            if let expview = expview as? ExpTreeView {
+            if let expview = expview as? ExpView {
                 anchorView.frame.origin = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
             } else if let matcell = expview as? MatrixCell {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
@@ -93,7 +93,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     @IBOutlet weak var mathScrollContentWidth: NSLayoutConstraint!
     @IBOutlet weak var mathScrollContentHeight: NSLayoutConstraint!
     
-    var mathView:ExpTreeView?
+    var mathView:ExpView?
     
     func refresh() {
         if let mv = mathView {
@@ -101,7 +101,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             mv.removeFromSuperview()
         }
         
-        mathView = ExpTreeView.loadViewFromNib()
+        mathView = ExpView.loadViewFromNib()
         guard let mathView = mathView else {return}
         mathView.setExp(exp: exp, del:self)
         mathScrollContentView.addSubview(mathView)
