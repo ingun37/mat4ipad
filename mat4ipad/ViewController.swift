@@ -88,7 +88,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         return Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).subtracting(occupiedLetters(e: exp))
     }
     
-    @IBOutlet weak var mathScrollViewHeight: NSLayoutConstraint!
+    
     @IBOutlet weak var mathScrollContentView: UIView!
     @IBOutlet weak var mathScrollContentWidth: NSLayoutConstraint!
     @IBOutlet weak var mathScrollContentHeight: NSLayoutConstraint!
@@ -109,9 +109,6 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             let size = mathView.frame.size
             self.mathScrollContentWidth.constant = size.width
             self.mathScrollContentHeight.constant = size.height
-            self.mathScrollViewHeight.constant = size.height
-            
-            
         }
         
         
