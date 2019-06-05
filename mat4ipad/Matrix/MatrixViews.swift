@@ -56,6 +56,7 @@ class MatrixView:UIView {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
     }
+    var mat:Mat!
     @IBOutlet weak var stack: UIStackView!
     func set(_ m:Mat, del:ExpViewableDelegate?) {
         for ri in (0..<m.rows) {
@@ -67,10 +68,12 @@ class MatrixView:UIView {
             }
             stack.addArrangedSubview(rowView)
         }
+        self.mat = m
     }
     static func loadViewFromNib() -> MatrixView {
         let bundle = Bundle(for: self)
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
         return nib.instantiate(withOwner: nil, options: nil).first as! MatrixView
     }
+    @IBOutlet weak var dragHandlePlaceHolder:UIView!
 }

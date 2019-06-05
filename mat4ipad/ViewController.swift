@@ -8,6 +8,8 @@
 
 import UIKit
 import iosMath
+import RxSwift
+import RxCocoa
 
 class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate {
     @IBOutlet weak var anchorView: UIView!
@@ -93,7 +95,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     @IBOutlet weak var mathScrollContentView: UIView!
     
     var mathView:ExpView?
-    var matrixDrags:[UIView] = []
+    var matrixDrags:[MatrixDragHandleView] = []
     func setBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
@@ -144,15 +146,44 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         self.matrixDrags.forEach({v in
             self.view.willRemoveSubview(v)
             v.removeFromSuperview()
+            v.removeGestureRecognizer(panGesture)
         })
         let matriViews = self.mathView?.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden}) ?? []
-        self.matrixDrags = matriViews.map({ v in
-            CGRect(origin: v.convert(v.bounds.origin, to: self.view), size: v.bounds.size)
-        }).map({UIView(frame: $0)})
+        for matrixView in matriViews {
+            let placeholder = matrixView.dragHandlePlaceHolder!
+            placeholder.backgroundColor = UIColor.green
+            let rect = CGRect(origin: placeholder.convert(CGPoint.zero, to: self.view), size: placeholder.bounds.size)
+            let handle = MatrixDragHandleView(frame: rect)
+            handle.set(matView: matrixView)
+            handle.addGestureRecognizer(self.panGesture)
+            self.view.addSubview(handle)
+            panGesture.rx.event.subscribe(onNext: { (rec) in
+                handle.frame.origin = handle.matView.dragHandlePlaceHolder.convert(rec.translation(in: nil), to: self.view)
+            }).disposed(by: handle.disposeBag)
+            
+            panGesture.rx.event.map({rec-> (Int, Int) in
+                let sz = matrixView.stack.bounds.size
+                let cellHeight = Int(sz.height) / matrixView.mat.rows
+                let cellWidth = Int(sz.width) / matrixView.mat.cols
+                let tran:CGPoint = rec.translation(in: nil)
+                let deltaRow = Int(tran.y) / cellHeight
+                let deltaCol = Int(tran.x) / cellWidth
+                return (deltaRow, deltaCol)
+            }).distinctUntilChanged({$0.0 == $1.0 && $0.1 == $1.1}).subscribe(onNext: { (deltaBy) in
+                print(deltaBy)
+            }).disposed(by: handle.disposeBag)
+        }
         
-        self.matrixDrags.forEach({ v in
-            v.backgroundColor = UIColor.purple
-            self.view.addSubview(v)
-        })
+    }
+    let disposeBag = DisposeBag()
+    @IBOutlet var panGesture: UIPanGestureRecognizer!
+
+}
+class MatrixDragHandleView:UIView {
+    let disposeBag = DisposeBag()
+    var matView:MatrixView!
+    func set(matView:MatrixView) {
+        self.matView = matView
+        backgroundColor = UIColor.red
     }
 }

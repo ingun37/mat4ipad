@@ -52,19 +52,34 @@
                             <rect key="frame" x="0.0" y="851" width="557" height="369"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
-                                    <rect key="frame" x="0.0" y="0.0" width="557" height="369"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="541" height="353"/>
                                     <constraints>
                                         <constraint firstAttribute="height" priority="500" constant="369" id="bz0-kf-Fck"/>
                                     </constraints>
                                 </stackView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jw9-Dx-svM">
+                                    <rect key="frame" x="541" y="353" width="16" height="16"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="16" id="Hvu-nh-r6F"/>
+                                        <constraint firstAttribute="height" constant="16" id="kaT-gt-01P"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </view>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
-                                <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" id="QvT-zN-vgc"/>
-                                <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" id="aAv-3P-xix"/>
+                                <constraint firstAttribute="bottom" secondItem="jw9-Dx-svM" secondAttribute="bottom" id="LFA-By-AnH"/>
+                                <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" constant="16" id="QvT-zN-vgc"/>
+                                <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" constant="16" id="aAv-3P-xix"/>
+                                <constraint firstAttribute="trailing" secondItem="jw9-Dx-svM" secondAttribute="trailing" id="ntz-I2-6s3"/>
                                 <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="xBq-ap-dVY"/>
                             </constraints>
                             <connections>
+                                <outlet property="dragHandlePlaceHolder" destination="jw9-Dx-svM" id="3zM-qn-eXR"/>
                                 <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
                             </connections>
                         </view>

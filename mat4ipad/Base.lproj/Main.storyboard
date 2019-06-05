@@ -131,6 +131,7 @@
                     <connections>
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
                         <outlet property="mathScrollContentView" destination="rMw-In-n6T" id="f4j-bu-j0X"/>
+                        <outlet property="panGesture" destination="OeJ-xl-ZcO" id="fJu-bj-CKC"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">
@@ -139,6 +140,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="OeJ-xl-ZcO"/>
             </objects>
             <point key="canvasLocation" x="130.46875" y="113.67187499999999"/>
         </scene>
