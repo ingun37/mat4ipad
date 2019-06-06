@@ -179,7 +179,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
                 let deltaCol = Int(tran.x) / cellWidth
                 return (deltaRow, deltaCol)
             }).distinctUntilChanged({$0.0 == $1.0 && $0.1 == $1.1}).subscribe(onNext: { [unowned self] (deltaBy) in
-                
+                self.previewResizedMatrix(matView: matrixView, rowBy: deltaBy.0, colBy: deltaBy.1)
                 print(deltaBy)
             }).disposed(by: handle.disposeBag)
         }
@@ -190,6 +190,25 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     func previewResizedMatrix(matView:MatrixView, rowBy:Int, colBy:Int) {
         let preview = matrixResizePreview!
         preview.isHidden = false
+        preview.subviews.forEach({v in
+            preview.willRemoveSubview(v)
+            v.removeFromSuperview()
+        })
+        let rows = matView.mat.rows + rowBy
+        let cols = matView.mat.cols + colBy
+        let stackFrame = matView.stack.frame
+        let cellw = stackFrame.size.width / CGFloat(matView.mat.rows)
+        let cellh = stackFrame.size.height / CGFloat(matView.mat.cols)
+        (0..<rows+1).forEach({ ri in
+            let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(cols)*cellw, height: 1))
+            line.backgroundColor = UIColor.white
+            preview.addSubview(line)
+        })
+        (0..<cols+1).forEach({ ci in
+            let line = UIView(frame: CGRect(x: CGFloat(ci)*cellw, y: 0, width: 1, height: CGFloat(rows)*cellh))
+            line.backgroundColor = UIColor.white
+            preview.addSubview(line)
+        })
 //        matView.stack.convert(CGPoint.zero, to: <#T##UICoordinateSpace#>)
     }
 }
