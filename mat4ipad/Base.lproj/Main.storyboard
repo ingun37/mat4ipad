@@ -118,6 +118,11 @@
                                     </view>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="565-nQ-vhJ">
+                                <rect key="frame" x="264" y="448" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.29590988381053018" green="0.70952833469291432" blue="1" alpha="0.49173266267123278" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -131,6 +136,7 @@
                     <connections>
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
                         <outlet property="mathScrollContentView" destination="rMw-In-n6T" id="f4j-bu-j0X"/>
+                        <outlet property="matrixResizePreview" destination="565-nQ-vhJ" id="yRk-Eu-cFP"/>
                         <outlet property="panGesture" destination="OeJ-xl-ZcO" id="fJu-bj-CKC"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>

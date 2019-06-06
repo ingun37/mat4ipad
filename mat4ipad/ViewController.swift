@@ -142,6 +142,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         refresh()
     }
 
+    @IBOutlet weak var matrixResizePreview: UIView!
     @IBAction func matrixResizeMode(_ sender: Any) {
         self.matrixDrags.forEach({v in
             self.view.willRemoveSubview(v)
@@ -158,7 +159,15 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             handle.addGestureRecognizer(self.panGesture)
             self.view.addSubview(handle)
             panGesture.rx.event.subscribe(onNext: { (rec) in
-                handle.frame.origin = handle.matView.dragHandlePlaceHolder.convert(rec.translation(in: nil), to: self.view)
+                self.matrixResizePreview.isHidden = false
+                
+                let tran = rec.translation(in: nil)
+                handle.frame.origin = handle.matView.dragHandlePlaceHolder.convert(tran, to: self.view)
+                
+                let matrixOrigin = handle.matView.stack.convert(CGPoint.zero, to: self.view)
+                let originalMatrixFrame = handle.matView.stack.frame
+                let newSize = CGSize(width: originalMatrixFrame.size.width + tran.x, height: originalMatrixFrame.size.height + tran.y)
+                self.matrixResizePreview.frame = CGRect(origin: matrixOrigin, size: newSize)
             }).disposed(by: handle.disposeBag)
             
             panGesture.rx.event.map({rec-> (Int, Int) in
@@ -169,7 +178,8 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
                 let deltaRow = Int(tran.y) / cellHeight
                 let deltaCol = Int(tran.x) / cellWidth
                 return (deltaRow, deltaCol)
-            }).distinctUntilChanged({$0.0 == $1.0 && $0.1 == $1.1}).subscribe(onNext: { (deltaBy) in
+            }).distinctUntilChanged({$0.0 == $1.0 && $0.1 == $1.1}).subscribe(onNext: { [unowned self] (deltaBy) in
+                
                 print(deltaBy)
             }).disposed(by: handle.disposeBag)
         }
@@ -177,8 +187,13 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     }
     let disposeBag = DisposeBag()
     @IBOutlet var panGesture: UIPanGestureRecognizer!
-
+    func previewResizedMatrix(matView:MatrixView, rowBy:Int, colBy:Int) {
+        let preview = matrixResizePreview!
+        preview.isHidden = false
+//        matView.stack.convert(CGPoint.zero, to: <#T##UICoordinateSpace#>)
+    }
 }
+
 class MatrixDragHandleView:UIView {
     let disposeBag = DisposeBag()
     var matView:MatrixView!
