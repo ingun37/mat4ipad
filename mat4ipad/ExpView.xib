@@ -45,7 +45,7 @@
                                 <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="etj-In-jbc"/>
                             </connections>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
                             <rect key="frame" x="0.0" y="84" width="557" height="719"/>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Lu-OR-Zf8">

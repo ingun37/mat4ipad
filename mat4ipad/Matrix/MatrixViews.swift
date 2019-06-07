@@ -13,11 +13,6 @@ class MatrixCell: UIView, ExpViewable {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
 
-        layer.cornerRadius = 8;
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
-        layer.shadowRadius = 1
         
     }
     var exp:Exp = Unassigned("z")
