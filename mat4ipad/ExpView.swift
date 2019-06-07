@@ -74,6 +74,10 @@ class ExpView: UIView, ExpViewable {
                 self.previewHeightEqual.isActive = false
                 self.previewWidth.isActive = true
                 self.previewHeight.isActive = true
+                self.matrixWidth.isActive = true
+                self.matrixWidth.constant = matrixFrame.width
+                self.matrixHeight.isActive = true
+                self.matrixHeight.constant = matrixFrame.height
             }
             let tran = rec.translation(in: nil)
             self.previewWidth.constant = tran.x + matrixFrame.width
@@ -181,6 +185,8 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var previewHeightEqual: NSLayoutConstraint!
     @IBOutlet weak var previewWidth: NSLayoutConstraint!
     @IBOutlet weak var previewHeight: NSLayoutConstraint!
+    @IBOutlet weak var matrixHeight: NSLayoutConstraint!
+    @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
 
 
