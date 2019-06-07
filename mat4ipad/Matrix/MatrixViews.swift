@@ -75,5 +75,4 @@ class MatrixView:UIView {
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
         return nib.instantiate(withOwner: nil, options: nil).first as! MatrixView
     }
-    @IBOutlet weak var dragHandlePlaceHolder:UIView!
 }

@@ -129,7 +129,6 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             }
         }
         
-        matrixResizePreview.isHidden = true
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,84 +140,5 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         refresh()
-    }
-
-    @IBOutlet weak var matrixResizePreview: UIView!
-    @IBAction func matrixResizeMode(_ sender: Any) {
-        let matriViews = self.mathView?.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden}) ?? []
-        for matrixView in matriViews {
-            let placeholder = matrixView.dragHandlePlaceHolder!
-            placeholder.backgroundColor = UIColor.green
-            let rect = CGRect(origin: placeholder.convert(CGPoint.zero, to: self.view), size: placeholder.bounds.size)
-            let handle = MatrixDragHandleView(frame: rect)
-            handle.set(matView: matrixView)
-            handle.addGestureRecognizer(self.panGesture)
-            self.view.addSubview(handle)
-            panGesture.rx.event.subscribe(onNext: { (rec) in
-                self.matrixResizePreview.isHidden = false
-                
-                let tran = rec.translation(in: nil)
-                handle.frame.origin = handle.matView.dragHandlePlaceHolder.convert(tran, to: self.view)
-                
-                let matrixOrigin = handle.matView.stack.convert(CGPoint.zero, to: self.view)
-                let originalMatrixFrame = handle.matView.stack.frame
-                let newSize = CGSize(width: originalMatrixFrame.size.width + tran.x, height: originalMatrixFrame.size.height + tran.y)
-                self.matrixResizePreview.frame = CGRect(origin: matrixOrigin, size: newSize)
-            }).disposed(by: handle.disposeBag)
-            
-            panGesture.rx.event.map({rec-> (Int, Int, UIGestureRecognizer.State) in
-                let sz:CGSize = matrixView.stack.bounds.size
-                let cellHeight = Int(sz.height) / matrixView.mat.rows
-                let cellWidth = Int(sz.width) / matrixView.mat.cols
-                let tran:CGPoint = rec.translation(in: nil)
-                
-                return (Int(sz.height + tran.y) / cellHeight, Int(sz.width + tran.x) / cellWidth, rec.state)
-            }).distinctUntilChanged({ (l:(Int, Int, UIGestureRecognizer.State), r:(Int, Int, UIGestureRecognizer.State))-> Bool in
-                return l.0 == r.0 && l.1 == r.1 && l.2 == r.2
-            }).subscribe(onNext: { [unowned self] (newSz) in
-                let (newRow, newCol, state) = newSz
-                let oldrow = matrixView.mat.rows
-                let oldcol = matrixView.mat.cols
-                self.previewResizedMatrix(matView: matrixView, newRow: newRow, newCol: newCol)
-                if state == .ended {
-                    self.expandBy(mat: matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
-                }
-            }).disposed(by: handle.disposeBag)
-        }
-        
-    }
-    let disposeBag = DisposeBag()
-    @IBOutlet var panGesture: UIPanGestureRecognizer!
-    func previewResizedMatrix(matView:MatrixView, newRow:Int, newCol:Int) {
-        let preview = matrixResizePreview!
-        preview.isHidden = false
-        preview.subviews.forEach({v in
-            preview.willRemoveSubview(v)
-            v.removeFromSuperview()
-        })
-
-        let stackFrame = matView.stack.frame
-        let cellw = stackFrame.size.width / CGFloat(matView.mat.rows)
-        let cellh = stackFrame.size.height / CGFloat(matView.mat.cols)
-        (0..<newRow+1).forEach({ ri in
-            let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(newCol)*cellw, height: 1))
-            line.backgroundColor = UIColor.white
-            preview.addSubview(line)
-        })
-        (0..<newCol+1).forEach({ ci in
-            let line = UIView(frame: CGRect(x: CGFloat(ci)*cellw, y: 0, width: 1, height: CGFloat(newRow)*cellh))
-            line.backgroundColor = UIColor.white
-            preview.addSubview(line)
-        })
-//        matView.stack.convert(CGPoint.zero, to: <#T##UICoordinateSpace#>)
-    }
-}
-
-class MatrixDragHandleView:UIView {
-    let disposeBag = DisposeBag()
-    var matView:MatrixView!
-    func set(matView:MatrixView) {
-        self.matView = matView
-        backgroundColor = UIColor.red
     }
 }

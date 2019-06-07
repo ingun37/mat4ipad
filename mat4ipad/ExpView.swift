@@ -8,14 +8,17 @@
 
 import UIKit
 import iosMath
+import RxSwift
+import RxCocoa
+
 protocol ExpViewable:UIView {
     var exp:Exp {get}
 }
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
+    func expandBy(mat: Mat, row: Int, col: Int)
 }
-import RxSwift
-import RxCocoa
+
 
 class ExpView: UIView, ExpViewable {
     
@@ -47,12 +50,8 @@ class ExpView: UIView, ExpViewable {
         super.init(frame: frame)
         commonInit()
     }
-    var onLayoutSubviews:()->Void = {}
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        onLayoutSubviews()
-    }
     
+    private var dragStartPosition:CGPoint = CGPoint.zero
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = 8;
@@ -63,11 +62,49 @@ class ExpView: UIView, ExpViewable {
         latexWrap.layer.shadowOffset = CGSize(width: 1, height: 1)
         latexWrap.layer.shadowRadius = 1
         
+        dragPan.rx.event.subscribe(onNext: {[unowned self] (rec) in
+            self.matrixResizePreviewBox.isHidden = false
+            let handle = self.dragHandle!
+            if rec.state == .began {
+                self.dragStartPosition = handle.frame.origin
+            }
+            let tran = rec.translation(in: nil)
+            handle.frame.origin = tran + self.dragStartPosition
+            
+            let matrixOrigin = self.matrixView.convert(CGPoint.zero, to: self.matrixWrapper)
+            self.matrixResizePreviewBox.frame = CGRect(origin: matrixOrigin, size: self.matrixView.frame.size + tran)
+        }).disposed(by: self.disposeBag)
+        
+        dragPan.rx.event.map({[unowned self] rec-> (Int, Int, UIGestureRecognizer.State) in
+            let sz:CGSize = self.matrixView.bounds.size
+            let cellHeight = Int(sz.height) / self.matrixView.mat.rows
+            let cellWidth = Int(sz.width) / self.matrixView.mat.cols
+            let tran:CGPoint = rec.translation(in: nil)
+
+            return (Int(sz.height + tran.y) / cellHeight, Int(sz.width + tran.x) / cellWidth, rec.state)
+        }).distinctUntilChanged({ (l:(Int, Int, UIGestureRecognizer.State), r:(Int, Int, UIGestureRecognizer.State))-> Bool in
+            return l.0 == r.0 && l.1 == r.1 && l.2 == r.2
+        }).subscribe(onNext: { [unowned self] (newSz) in
+            let (newRow, newCol, state) = newSz
+            let oldrow = self.matrixView.mat.rows
+            let oldcol = self.matrixView.mat.cols
+            self.previewResizedMatrix(newRow: newRow, newCol: newCol)
+            if state == .ended {
+            self.del?.expandBy(mat: self.matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
+            }
+            if state == .began {
+                self.matrixView.layer.borderWidth = 0
+            }
+        }).disposed(by: disposeBag)
+        
+        matrixResizePreviewBox.isHidden = true
+        matrixView.layer.borderColor = dragHandle.backgroundColor?.cgColor
+        matrixView.layer.borderWidth = 2
+        matrixResizePreviewBox.layer.borderColor = dragHandle.backgroundColor?.cgColor
+        matrixResizePreviewBox.layer.borderWidth = 2
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
-        
-        
 //        layer.masksToBounds = false
     }
     static func loadViewFromNib() -> ExpView {
@@ -82,14 +119,14 @@ class ExpView: UIView, ExpViewable {
         self.del = del
         latexView.set(exp.latex())
         if let exp = exp as? Mat {
-            matrixView.isHidden = false
+            matrixWrapper.isHidden = false
             stack.isHidden = true
             matrixView.set(exp, del:del)
         } else if exp.kids.isEmpty {
-            matrixView.isHidden = true
+            matrixWrapper.isHidden = true
             stack.isHidden = false
         } else {
-            matrixView.isHidden = true
+            matrixWrapper.isHidden = true
             stack.isHidden = false
             
             exp.kids.forEach({e in
@@ -99,17 +136,54 @@ class ExpView: UIView, ExpViewable {
             })
         }
     }
-    @IBAction func increaseCol(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-    }
-    @IBAction func decreaseCol(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-    }
-    @IBAction func increaseRow(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-    }
-    @IBAction func decreaseRow(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-    }
     
+    @IBOutlet weak var dragPan: UIPanGestureRecognizer!
+    
+    
+    @IBOutlet weak var matrixWrapper: UIView!
+    @IBOutlet weak var dragHandle: UIView!
+    @IBOutlet weak var matrixResizePreviewBox: UIView!
+    
+    func previewResizedMatrix(newRow:Int, newCol:Int) {
+        let preview = matrixResizePreviewBox!
+        preview.isHidden = false
+        preview.subviews.forEach({v in
+            preview.willRemoveSubview(v)
+            v.removeFromSuperview()
+        })
+        
+        let stackFrame = matrixView.frame
+        let cellw = stackFrame.size.width / CGFloat(matrixView.mat.rows)
+        let cellh = stackFrame.size.height / CGFloat(matrixView.mat.cols)
+        (0..<newRow+1).forEach({ ri in
+            let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(newCol)*cellw, height: 1))
+            line.backgroundColor = UIColor.white
+            preview.addSubview(line)
+        })
+        (0..<newCol+1).forEach({ ci in
+            let line = UIView(frame: CGRect(x: CGFloat(ci)*cellw, y: 0, width: 1, height: CGFloat(newRow)*cellh))
+            line.backgroundColor = UIColor.white
+            preview.addSubview(line)
+        })
+    }
+}
+
+
+
+func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x + right.x, y: left.y + right.y)
+}
+func + (left: CGSize, right: CGPoint) -> CGSize {
+    return (left.point + right).size
+}
+extension CGSize {
+    var point:CGPoint {
+        return CGPoint(x:width, y:height)
+    }
+}
+
+extension CGPoint {
+    var size:CGSize {
+        return CGSize(width: x, height: y)
+    }
 }

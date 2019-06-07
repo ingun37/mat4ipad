@@ -46,19 +46,35 @@
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="84" width="557" height="759"/>
+                            <rect key="frame" x="0.0" y="84" width="557" height="719"/>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="851" width="557" height="369"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Lu-OR-Zf8">
+                            <rect key="frame" x="0.0" y="811" width="557" height="409"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
-                                    <rect key="frame" x="0.0" y="0.0" width="541" height="353"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="549" height="401"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
+                                            <rect key="frame" x="2" y="2" width="545" height="397"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" priority="500" constant="369" id="bz0-kf-Fck"/>
+                                            </constraints>
+                                        </stackView>
+                                    </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="height" priority="500" constant="369" id="bz0-kf-Fck"/>
+                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" constant="2" id="KJS-4p-uLH"/>
+                                        <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" constant="2" id="QvT-zN-vgc"/>
+                                        <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" constant="2" id="aAv-3P-xix"/>
+                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" constant="2" id="xBq-ap-dVY"/>
                                     </constraints>
-                                </stackView>
+                                    <connections>
+                                        <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
+                                    </connections>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jw9-Dx-svM">
-                                    <rect key="frame" x="541" y="353" width="16" height="16"/>
+                                    <rect key="frame" x="541" y="393" width="16" height="16"/>
+                                    <color key="backgroundColor" red="0.28235294119999998" green="0.40784313729999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    <gestureRecognizers/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="16" id="Hvu-nh-r6F"/>
                                         <constraint firstAttribute="height" constant="16" id="kaT-gt-01P"/>
@@ -68,20 +84,25 @@
                                             <integer key="value" value="8"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="eXo-Kv-059" appends="YES" id="57K-E8-nDS"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KtN-DS-rX5">
+                                    <rect key="frame" x="158" y="140" width="240" height="128"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.2959098838" green="0.70952833469999999" blue="1" alpha="0.49173266269999999" colorSpace="custom" customColorSpace="displayP3"/>
                                 </view>
                             </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="KJS-4p-uLH"/>
-                                <constraint firstAttribute="bottom" secondItem="jw9-Dx-svM" secondAttribute="bottom" id="LFA-By-AnH"/>
-                                <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" constant="16" id="QvT-zN-vgc"/>
-                                <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" constant="16" id="aAv-3P-xix"/>
-                                <constraint firstAttribute="trailing" secondItem="jw9-Dx-svM" secondAttribute="trailing" id="ntz-I2-6s3"/>
-                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="xBq-ap-dVY"/>
+                                <constraint firstAttribute="bottom" secondItem="KrO-lo-Eyg" secondAttribute="bottom" constant="8" id="5En-LD-oW3"/>
+                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="leading" secondItem="6Lu-OR-Zf8" secondAttribute="leading" id="JMq-rf-eLb"/>
+                                <constraint firstAttribute="bottom" secondItem="jw9-Dx-svM" secondAttribute="bottom" id="QG3-uz-yMQ"/>
+                                <constraint firstAttribute="trailing" secondItem="jw9-Dx-svM" secondAttribute="trailing" id="g4r-mR-0jo"/>
+                                <constraint firstAttribute="trailing" secondItem="KrO-lo-Eyg" secondAttribute="trailing" constant="8" id="gzF-CV-qef"/>
+                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="top" secondItem="6Lu-OR-Zf8" secondAttribute="top" id="uwx-Vg-0FM"/>
                             </constraints>
-                            <connections>
-                                <outlet property="dragHandlePlaceHolder" destination="jw9-Dx-svM" id="3zM-qn-eXR"/>
-                                <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
-                            </connections>
                         </view>
                     </subviews>
                 </stackView>
@@ -99,9 +120,13 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="dragHandle" destination="jw9-Dx-svM" id="ceW-9e-Bq1"/>
+                <outlet property="dragPan" destination="eXo-Kv-059" id="G2l-2Z-8Jg"/>
                 <outlet property="latexView" destination="sa2-S3-OQh" id="0ou-j7-F7x"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="Q2R-bZ-76Z"/>
+                <outlet property="matrixResizePreviewBox" destination="KtN-DS-rX5" id="12y-RE-cjS"/>
                 <outlet property="matrixView" destination="KrO-lo-Eyg" id="Dou-3d-UnW"/>
+                <outlet property="matrixWrapper" destination="6Lu-OR-Zf8" id="0jz-2b-yFb"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>
             <point key="canvasLocation" x="252.89855072463769" y="235.04464285714283"/>
@@ -111,5 +136,6 @@
                 <action selector="ontap:" destination="iN0-l3-epB" id="sdG-62-9rE"/>
             </connections>
         </tapGestureRecognizer>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="eXo-Kv-059"/>
     </objects>
 </document>
