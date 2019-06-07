@@ -58,7 +58,6 @@
                                             <rect key="frame" x="2" y="2" width="46" height="46"/>
                                         </stackView>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.89411764709999997" green="0.3921568627" blue="0.4431372549" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <constraints>
                                         <constraint firstAttribute="height" priority="900" constant="50" id="1jS-oO-f1b"/>
                                         <constraint firstAttribute="width" priority="900" constant="50" id="6lZ-Ny-GkX"/>
@@ -103,7 +102,6 @@
                                     </variation>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="KtN-DS-rX5" firstAttribute="height" secondItem="KrO-lo-Eyg" secondAttribute="height" id="0SA-IS-VfJ"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="KrO-lo-Eyg" secondAttribute="bottom" constant="8" id="5En-LD-oW3"/>
