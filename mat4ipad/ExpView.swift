@@ -65,23 +65,33 @@ class ExpView: UIView, ExpViewable {
         dragPan.rx.event.subscribe(onNext: {[unowned self] (rec) in
             self.matrixResizePreviewBox.isHidden = false
             let handle = self.dragHandle!
+            let matrixFrame = self.matrixView.frame
             if rec.state == .began {
                 self.dragStartPosition = handle.frame.origin
+//                self.previewHeight.priority = UILayoutPriority(rawValue: 1000)
+//                self.previewWidth.priority = UILayoutPriority(rawValue: 1000)
+                self.previewWidthEqual.isActive = false
+                self.previewHeightEqual.isActive = false
+                self.previewWidth.isActive = true
+                self.previewHeight.isActive = true
             }
             let tran = rec.translation(in: nil)
-            handle.frame.origin = tran + self.dragStartPosition
-            
-            let matrixOrigin = self.matrixView.convert(CGPoint.zero, to: self.matrixWrapper)
-            self.matrixResizePreviewBox.frame = CGRect(origin: matrixOrigin, size: self.matrixView.frame.size + tran)
+            self.previewWidth.constant = tran.x + matrixFrame.width
+            self.previewHeight.constant = tran.y + matrixFrame.height
+//            handle.frame.origin = tran + self.dragStartPosition
+//            
+//            let matrixOrigin = self.matrixView.convert(CGPoint.zero, to: self.matrixWrapper)
+//            self.matrixResizePreviewBox.frame = CGRect(origin: matrixOrigin, size: self.matrixView.frame.size + tran)
         }).disposed(by: self.disposeBag)
         
         dragPan.rx.event.map({[unowned self] rec-> (Int, Int, UIGestureRecognizer.State) in
-            let sz:CGSize = self.matrixView.bounds.size
-            let cellHeight = Int(sz.height) / self.matrixView.mat.rows
-            let cellWidth = Int(sz.width) / self.matrixView.mat.cols
+            let matrixFrame = self.matrixView.frame
+            let cellHeight = Int(matrixFrame.height) / self.matrixView.mat.rows
+            let cellWidth = Int(matrixFrame.width) / self.matrixView.mat.cols
+            print("a: \(matrixFrame)")
             let tran:CGPoint = rec.translation(in: nil)
 
-            return (Int(sz.height + tran.y) / cellHeight, Int(sz.width + tran.x) / cellWidth, rec.state)
+            return (Int(matrixFrame.height + tran.y) / cellHeight, Int(matrixFrame.width + tran.x) / cellWidth, rec.state)
         }).distinctUntilChanged({ (l:(Int, Int, UIGestureRecognizer.State), r:(Int, Int, UIGestureRecognizer.State))-> Bool in
             return l.0 == r.0 && l.1 == r.1 && l.2 == r.2
         }).subscribe(onNext: { [unowned self] (newSz) in
@@ -90,7 +100,7 @@ class ExpView: UIView, ExpViewable {
             let oldcol = self.matrixView.mat.cols
             self.previewResizedMatrix(newRow: newRow, newCol: newCol)
             if state == .ended {
-            self.del?.expandBy(mat: self.matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
+                self.del?.expandBy(mat: self.matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
             }
             if state == .began {
                 self.matrixView.layer.borderWidth = 0
@@ -153,8 +163,9 @@ class ExpView: UIView, ExpViewable {
         })
         
         let stackFrame = matrixView.frame
-        let cellw = stackFrame.size.width / CGFloat(matrixView.mat.rows)
-        let cellh = stackFrame.size.height / CGFloat(matrixView.mat.cols)
+        
+        let cellw = stackFrame.size.width / CGFloat(matrixView.mat.cols)
+        let cellh = stackFrame.size.height / CGFloat(matrixView.mat.rows)
         (0..<newRow+1).forEach({ ri in
             let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(newCol)*cellw, height: 1))
             line.backgroundColor = UIColor.white
@@ -166,6 +177,10 @@ class ExpView: UIView, ExpViewable {
             preview.addSubview(line)
         })
     }
+    @IBOutlet weak var previewWidthEqual: NSLayoutConstraint!
+    @IBOutlet weak var previewHeightEqual: NSLayoutConstraint!
+    @IBOutlet weak var previewWidth: NSLayoutConstraint!
+    @IBOutlet weak var previewHeight: NSLayoutConstraint!
 }
 
 
