@@ -95,7 +95,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
     @IBOutlet weak var mathScrollContentView: UIView!
     
     var mathView:ExpView?
-    var matrixDrags:[MatrixDragHandleView] = []
+    
     func setBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
@@ -129,6 +129,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
             }
         }
         
+        matrixResizePreview.isHidden = true
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,11 +145,6 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
 
     @IBOutlet weak var matrixResizePreview: UIView!
     @IBAction func matrixResizeMode(_ sender: Any) {
-        self.matrixDrags.forEach({v in
-            self.view.willRemoveSubview(v)
-            v.removeFromSuperview()
-            v.removeGestureRecognizer(panGesture)
-        })
         let matriViews = self.mathView?.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden}) ?? []
         for matrixView in matriViews {
             let placeholder = matrixView.dragHandlePlaceHolder!
@@ -170,42 +166,47 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
                 self.matrixResizePreview.frame = CGRect(origin: matrixOrigin, size: newSize)
             }).disposed(by: handle.disposeBag)
             
-            panGesture.rx.event.map({rec-> (Int, Int) in
-                let sz = matrixView.stack.bounds.size
+            panGesture.rx.event.map({rec-> (Int, Int, UIGestureRecognizer.State) in
+                let sz:CGSize = matrixView.stack.bounds.size
                 let cellHeight = Int(sz.height) / matrixView.mat.rows
                 let cellWidth = Int(sz.width) / matrixView.mat.cols
                 let tran:CGPoint = rec.translation(in: nil)
-                let deltaRow = Int(tran.y) / cellHeight
-                let deltaCol = Int(tran.x) / cellWidth
-                return (deltaRow, deltaCol)
-            }).distinctUntilChanged({$0.0 == $1.0 && $0.1 == $1.1}).subscribe(onNext: { [unowned self] (deltaBy) in
-                self.previewResizedMatrix(matView: matrixView, rowBy: deltaBy.0, colBy: deltaBy.1)
-                print(deltaBy)
+                
+                return (Int(sz.height + tran.y) / cellHeight, Int(sz.width + tran.x) / cellWidth, rec.state)
+            }).distinctUntilChanged({ (l:(Int, Int, UIGestureRecognizer.State), r:(Int, Int, UIGestureRecognizer.State))-> Bool in
+                return l.0 == r.0 && l.1 == r.1 && l.2 == r.2
+            }).subscribe(onNext: { [unowned self] (newSz) in
+                let (newRow, newCol, state) = newSz
+                let oldrow = matrixView.mat.rows
+                let oldcol = matrixView.mat.cols
+                self.previewResizedMatrix(matView: matrixView, newRow: newRow, newCol: newCol)
+                if state == .ended {
+                    self.expandBy(mat: matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
+                }
             }).disposed(by: handle.disposeBag)
         }
         
     }
     let disposeBag = DisposeBag()
     @IBOutlet var panGesture: UIPanGestureRecognizer!
-    func previewResizedMatrix(matView:MatrixView, rowBy:Int, colBy:Int) {
+    func previewResizedMatrix(matView:MatrixView, newRow:Int, newCol:Int) {
         let preview = matrixResizePreview!
         preview.isHidden = false
         preview.subviews.forEach({v in
             preview.willRemoveSubview(v)
             v.removeFromSuperview()
         })
-        let rows = matView.mat.rows + rowBy
-        let cols = matView.mat.cols + colBy
+
         let stackFrame = matView.stack.frame
         let cellw = stackFrame.size.width / CGFloat(matView.mat.rows)
         let cellh = stackFrame.size.height / CGFloat(matView.mat.cols)
-        (0..<rows+1).forEach({ ri in
-            let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(cols)*cellw, height: 1))
+        (0..<newRow+1).forEach({ ri in
+            let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(newCol)*cellw, height: 1))
             line.backgroundColor = UIColor.white
             preview.addSubview(line)
         })
-        (0..<cols+1).forEach({ ci in
-            let line = UIView(frame: CGRect(x: CGFloat(ci)*cellw, y: 0, width: 1, height: CGFloat(rows)*cellh))
+        (0..<newCol+1).forEach({ ci in
+            let line = UIView(frame: CGRect(x: CGFloat(ci)*cellw, y: 0, width: 1, height: CGFloat(newRow)*cellh))
             line.backgroundColor = UIColor.white
             preview.addSubview(line)
         })
