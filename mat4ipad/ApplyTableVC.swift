@@ -18,7 +18,7 @@ protocol ApplyTableDelegate {
     func expandBy(mat:Mat, row:Int, col:Int)
 
 }
-class ApplyTableVC: UIViewController, UITextFieldDelegate {
+class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var matrixPanel: UIStackView!
     
@@ -60,7 +60,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
                 self.del?.changeto(uid:exp.uid, to: value)
             })
         }).disposed(by: disposeBag)
-        matrixPanel.isHidden = !(exp is Mat)
+        popoverPresentationController?.delegate = self
+//        matrixPanel.isHidden = !(exp is Mat)
     }
     
     @IBAction func removeClick(_ sender: Any) {
@@ -71,28 +72,33 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
         }
     }
 
+    func applyExpression(txt:String) {
+        guard let exp = exp else {return}
+        
+        if let value = Int(txt) {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: value.exp)
+            })
+        } else if let value = Float(txt) {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: NumExp(value))
+            })
+        } else if let r = Rational<Int>(from: txt){
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: NumExp(r))
+            })
+        } else if txt.isAlphanumeric {
+            self.dismiss(animated: true, completion: {
+                self.del?.changeto(uid:exp.uid, to: Unassigned(txt))
+            })
+        }
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
         guard let exp = exp else {return true}
         guard let valueTxt = textField.text else {return true}
-        if let value = Int(valueTxt) {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: value.exp)
-            })
-        } else if let value = Float(valueTxt) {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: NumExp(value))
-            })
-        } else if let r = Rational<Int>(from: valueTxt){
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: NumExp(r))
-            })
-        } else if valueTxt.isAlphanumeric {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: Unassigned(valueTxt))
-            })
-        }
+        applyExpression(txt: valueTxt)
         
         return true
     }
@@ -106,27 +112,17 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-    @IBAction func rowIncrease(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 1, col: 0)
-        dismiss(animated: true, completion: nil)
-    }
-    @IBAction func rowDecrease(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: -1, col: 0)
-        dismiss(animated: true, completion: nil)
-    }
-    @IBAction func columnIncrease(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 0, col: 1)
-        dismiss(animated: true, completion: nil)
-    }
-    @IBAction func columnDecrease(_ sender: Any) {
-        guard let mat = exp as? Mat else {return}
-        del?.expandBy(mat: mat, row: 0, col: -1)
-        dismiss(animated: true, completion: nil)
+    @IBOutlet weak var numberTextField: UITextField!
+    
+    @IBAction func numberClick(_ sender: UIButton) {
+        numberTextField.text = (numberTextField.text ?? "") + (sender.title(for: UIControl.State.normal) ?? "")
     }
     
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        guard let txt = numberTextField.text else {return true}
+        applyExpression(txt: txt)
+        return true
+    }
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!
