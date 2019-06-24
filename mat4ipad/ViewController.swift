@@ -129,6 +129,8 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate,
             }
         }
         
+        self.view.layoutIfNeeded()
+        makeResizers()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,12 +141,14 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate,
         
         history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         refresh()
     }
-    
     private var matrixResizePreviews:[ResizePreview] = []
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    func makeResizers() {
         matrixResizePreviews.forEach { (preview) in
             self.view.willRemoveSubview(preview)
             preview.removeFromSuperview()
