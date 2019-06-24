@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ResizePreview: UIView {
     
+    @IBOutlet weak var dragPan: UIPanGestureRecognizer!
     @IBOutlet weak var blue: UIView!
     /*
     // Only override draw() if you perform custom drawing.
@@ -29,6 +32,21 @@ class ResizePreview: UIView {
         view.frame = resizingFrame.insetBy(dx: -5, dy: -5).offsetBy(dx: 5, dy: 5)
         
         return view
+    }
+    let disposeBag = DisposeBag()
+
+    var startFrame:CGRect = CGRect.zero
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        dragPan.rx.event.subscribe(onNext: {[unowned self] (rec) in
+                        if rec.state == .began {
+                            self.startFrame = self.frame
+                        }
+                        let tran = rec.translation(in: nil)
+            self.frame = self.startFrame.insetBy(dx: -tran.x/2, dy: -tran.y/2).offsetBy(dx: tran.x/2, dy: tran.y/2)
+            
+                    }).disposed(by: self.disposeBag)
     }
 }
 

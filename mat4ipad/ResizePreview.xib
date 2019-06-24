@@ -25,19 +25,25 @@
                     <rect key="frame" x="280" y="280" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.28235294119999998" green="0.40784313729999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                             <integer key="value" value="10"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="2aL-Ky-6Yt" appends="YES" id="NYn-uT-8uN"/>
+                    </connections>
                 </view>
             </subviews>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="blue" destination="Cxa-BP-K2E" id="osR-I1-8af"/>
+                <outlet property="dragPan" destination="2aL-Ky-6Yt" id="qsK-3R-Jyj"/>
             </connections>
             <point key="canvasLocation" x="118.84057971014494" y="299.33035714285711"/>
         </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="2aL-Ky-6Yt"/>
     </objects>
 </document>
