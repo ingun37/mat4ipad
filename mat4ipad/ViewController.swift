@@ -141,4 +141,9 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         refresh()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("dam")
+    }
 }

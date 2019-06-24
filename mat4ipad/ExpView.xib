@@ -45,84 +45,33 @@
                                 <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="etj-In-jbc"/>
                             </connections>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="84" width="557" height="719"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" ambiguous="YES" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
+                            <rect key="frame" x="0.0" y="84" width="557" height="727"/>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Lu-OR-Zf8">
-                            <rect key="frame" x="0.0" y="811" width="557" height="409"/>
+                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="819" width="557" height="401"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="549" height="401"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
-                                            <rect key="frame" x="2" y="2" width="545" height="397"/>
-                                        </stackView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="50" id="1jS-oO-f1b"/>
-                                        <constraint firstAttribute="width" constant="50" id="6lZ-Ny-GkX"/>
-                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" constant="2" id="KJS-4p-uLH"/>
-                                        <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" constant="2" id="QvT-zN-vgc"/>
-                                        <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" constant="2" id="aAv-3P-xix"/>
-                                        <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" constant="2" id="xBq-ap-dVY"/>
-                                    </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="1jS-oO-f1b"/>
-                                            <exclude reference="6lZ-Ny-GkX"/>
-                                        </mask>
-                                    </variation>
-                                    <connections>
-                                        <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
-                                    </connections>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jw9-Dx-svM">
-                                    <rect key="frame" x="541" y="393" width="16" height="16"/>
-                                    <color key="backgroundColor" red="0.28235294119999998" green="0.40784313729999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
-                                    <gestureRecognizers/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="16" id="Hvu-nh-r6F"/>
-                                        <constraint firstAttribute="height" constant="16" id="kaT-gt-01P"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="8"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <outletCollection property="gestureRecognizers" destination="eXo-Kv-059" appends="YES" id="57K-E8-nDS"/>
-                                    </connections>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KtN-DS-rX5">
-                                    <rect key="frame" x="0.0" y="0.0" width="549" height="401"/>
-                                    <color key="backgroundColor" red="0.2959098838" green="0.70952833469999999" blue="1" alpha="0.49173266269999999" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="50" id="rbe-DS-Atg"/>
-                                        <constraint firstAttribute="height" constant="50" id="ywu-Ul-8RH"/>
-                                    </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="rbe-DS-Atg"/>
-                                            <exclude reference="ywu-Ul-8RH"/>
-                                        </mask>
-                                    </variation>
-                                </view>
+                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
+                                    <rect key="frame" x="2" y="2" width="553" height="397"/>
+                                </stackView>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="height" secondItem="KrO-lo-Eyg" secondAttribute="height" id="0SA-IS-VfJ"/>
-                                <constraint firstAttribute="bottom" secondItem="KrO-lo-Eyg" secondAttribute="bottom" priority="900" constant="8" id="5En-LD-oW3"/>
-                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="KtN-DS-rX5" secondAttribute="bottom" id="A9D-Qo-S6T"/>
-                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="leading" secondItem="6Lu-OR-Zf8" secondAttribute="leading" id="JMq-rf-eLb"/>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" id="Pjg-Ui-NkD"/>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="bottom" secondItem="jw9-Dx-svM" secondAttribute="bottom" constant="-8" id="QG3-uz-yMQ"/>
-                                <constraint firstAttribute="height" constant="409" placeholder="YES" id="TNe-iy-8Ju"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="KtN-DS-rX5" secondAttribute="trailing" id="VEz-IE-ica"/>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="trailing" secondItem="jw9-Dx-svM" secondAttribute="trailing" constant="-8" id="g4r-mR-0jo"/>
-                                <constraint firstAttribute="trailing" secondItem="KrO-lo-Eyg" secondAttribute="trailing" priority="900" constant="8" id="gzF-CV-qef"/>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="width" secondItem="KrO-lo-Eyg" secondAttribute="width" id="qCr-Fm-pME"/>
-                                <constraint firstItem="KrO-lo-Eyg" firstAttribute="top" secondItem="6Lu-OR-Zf8" secondAttribute="top" id="uwx-Vg-0FM"/>
-                                <constraint firstItem="KtN-DS-rX5" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" id="xOF-2b-Xcl"/>
+                                <constraint firstAttribute="height" constant="50" id="1jS-oO-f1b"/>
+                                <constraint firstAttribute="width" constant="50" id="6lZ-Ny-GkX"/>
+                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="leading" secondItem="KrO-lo-Eyg" secondAttribute="leading" constant="2" id="KJS-4p-uLH"/>
+                                <constraint firstAttribute="trailing" secondItem="dfD-Y6-fbF" secondAttribute="trailing" constant="2" id="QvT-zN-vgc"/>
+                                <constraint firstAttribute="bottom" secondItem="dfD-Y6-fbF" secondAttribute="bottom" constant="2" id="aAv-3P-xix"/>
+                                <constraint firstItem="dfD-Y6-fbF" firstAttribute="top" secondItem="KrO-lo-Eyg" secondAttribute="top" constant="2" id="xBq-ap-dVY"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="1jS-oO-f1b"/>
+                                    <exclude reference="6lZ-Ny-GkX"/>
+                                </mask>
+                            </variation>
+                            <connections>
+                                <outlet property="stack" destination="dfD-Y6-fbF" id="Jta-Md-hQE"/>
+                            </connections>
                         </view>
                     </subviews>
                 </stackView>
@@ -140,19 +89,11 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="dragHandle" destination="jw9-Dx-svM" id="ceW-9e-Bq1"/>
-                <outlet property="dragPan" destination="eXo-Kv-059" id="G2l-2Z-8Jg"/>
                 <outlet property="latexView" destination="sa2-S3-OQh" id="0ou-j7-F7x"/>
                 <outlet property="latexWrap" destination="cJF-Qu-Dom" id="Q2R-bZ-76Z"/>
                 <outlet property="matrixHeight" destination="1jS-oO-f1b" id="dzh-Se-Ur4"/>
-                <outlet property="matrixResizePreviewBox" destination="KtN-DS-rX5" id="12y-RE-cjS"/>
                 <outlet property="matrixView" destination="KrO-lo-Eyg" id="Dou-3d-UnW"/>
                 <outlet property="matrixWidth" destination="6lZ-Ny-GkX" id="tdp-W7-hJV"/>
-                <outlet property="matrixWrapper" destination="6Lu-OR-Zf8" id="0jz-2b-yFb"/>
-                <outlet property="previewHeight" destination="ywu-Ul-8RH" id="JWF-jY-ulZ"/>
-                <outlet property="previewHeightEqual" destination="0SA-IS-VfJ" id="1wp-aE-DeK"/>
-                <outlet property="previewWidth" destination="rbe-DS-Atg" id="aJc-mF-TE0"/>
-                <outlet property="previewWidthEqual" destination="qCr-Fm-pME" id="RRr-Mf-7iJ"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>
             <point key="canvasLocation" x="252.89855072463769" y="235.04464285714283"/>
@@ -162,6 +103,5 @@
                 <action selector="ontap:" destination="iN0-l3-epB" id="sdG-62-9rE"/>
             </connections>
         </tapGestureRecognizer>
-        <panGestureRecognizer minimumNumberOfTouches="1" id="eXo-Kv-059"/>
     </objects>
 </document>
