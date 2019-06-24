@@ -17,18 +17,26 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxa-BP-K2E">
-                    <rect key="frame" x="0.0" y="0.0" width="280" height="280"/>
+                    <rect key="frame" x="0.0" y="0.0" width="290" height="290"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.2959098838" green="0.70952833469999999" blue="1" alpha="0.49173266269999999" colorSpace="custom" customColorSpace="displayP3"/>
                 </view>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HX0-4Z-miW">
-                    <rect key="frame" x="270" y="270" width="30" height="30"/>
+                    <rect key="frame" x="280" y="280" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" red="0.28235294119999998" green="0.40784313729999999" blue="0.67843137249999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="blue" destination="Cxa-BP-K2E" id="osR-I1-8af"/>
+            </connections>
             <point key="canvasLocation" x="118.84057971014494" y="299.33035714285711"/>
         </view>
     </objects>

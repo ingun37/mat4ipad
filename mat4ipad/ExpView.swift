@@ -183,22 +183,3 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
 
-
-
-func + (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x + right.x, y: left.y + right.y)
-}
-func + (left: CGSize, right: CGPoint) -> CGSize {
-    return (left.point + right).size
-}
-extension CGSize {
-    var point:CGPoint {
-        return CGPoint(x:width, y:height)
-    }
-}
-
-extension CGPoint {
-    var size:CGSize {
-        return CGSize(width: x, height: y)
-    }
-}

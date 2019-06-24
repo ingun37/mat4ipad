@@ -9,6 +9,8 @@
 import UIKit
 
 class ResizePreview: UIView {
+    
+    @IBOutlet weak var blue: UIView!
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -23,7 +25,28 @@ class ResizePreview: UIView {
     }
     static func newWith(resizingFrame:CGRect) -> ResizePreview {
         let view = loadViewFromNib()
-        view.frame = resizingFrame
+        
+        view.frame = resizingFrame.insetBy(dx: -5, dy: -5).offsetBy(dx: 5, dy: 5)
+        
         return view
+    }
+}
+
+
+func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x + right.x, y: left.y + right.y)
+}
+func + (left: CGSize, right: CGPoint) -> CGSize {
+    return (left.point + right).size
+}
+extension CGSize {
+    var point:CGPoint {
+        return CGPoint(x:width, y:height)
+    }
+}
+
+extension CGPoint {
+    var size:CGSize {
+        return CGSize(width: x, height: y)
     }
 }
