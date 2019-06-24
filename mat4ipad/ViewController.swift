@@ -142,8 +142,21 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         refresh()
     }
     
+    private var matrixResizePreviews:[ResizePreview] = []
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("dam")
+        matrixResizePreviews.forEach { (preview) in
+            self.view.willRemoveSubview(preview)
+            preview.removeFromSuperview()
+        }
+        matrixResizePreviews.removeAll()
+        guard let mathView = mathView else {return}
+        let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
+        matrixResizePreviews = mats.map({
+            $0.convert($0.bounds, to: self.view)
+        }).map({
+            ResizePreview.newWith(resizingFrame:$0)
+        })
+        matrixResizePreviews.forEach({self.view.addSubview($0)})
     }
 }
