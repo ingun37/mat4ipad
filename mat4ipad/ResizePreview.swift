@@ -41,9 +41,14 @@ class ResizePreview: UIView {
     let disposeBag = DisposeBag()
 
     var startFrame:CGRect = CGRect.zero
-    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        return view == self ? nil : view
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        blue.isHidden = true
         dragPan.rx.event.subscribe(onNext: {[unowned self] (rec) in
                         if rec.state == .began {
                             self.startFrame = self.frame
