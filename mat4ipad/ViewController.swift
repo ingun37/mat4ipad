@@ -11,7 +11,7 @@ import iosMath
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate {
+class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
     
     @IBOutlet weak var undoButton: UIButton!
@@ -153,9 +153,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate 
         guard let mathView = mathView else {return}
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
         matrixResizePreviews = mats.map({
-            $0.convert($0.bounds, to: self.view)
-        }).map({
-            ResizePreview.newWith(resizingFrame:$0)
+            ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
     }
