@@ -579,3 +579,45 @@ struct RowEchelonForm:Exp {
         kids = [mat]
     }
 }
+
+struct GaussJordanElimination:Exp {
+    var uid: String = UUID().uuidString
+
+    var kids: [Exp]
+    
+    func latex() -> String {
+        return "\\text{GJE}(\(kids[0].latex()))"
+    }
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return false
+    }
+    
+    func eval() throws -> Exp {
+        guard let m = kids[0] as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        guard var ech = try RowEchelonForm(mat: m).eval() as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        for i in 1..<ech.rows {
+            if let leftmostIdx = ech.row(i).firstIndex(where: {($0 as! NumExp).isZero == false}) {
+                for j in 0..<i {
+                    let a = ech.row(j)[leftmostIdx] as! NumExp
+                    ech = try ech.rowAddToOther(from: i, to: j, by: a.minus)
+                }
+            } else {
+                break
+            }
+        }
+        return ech
+    }
+    
+    init(mat:Mat) {
+        kids = [mat]
+    }
+}
