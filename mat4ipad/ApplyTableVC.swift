@@ -58,7 +58,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }).disposed(by: disposeBag)
         
         tv.rx.modelSelected(Exp.self).subscribe(onNext:  { value in
-            self.dismiss(animated: true, completion: {
+            self.dismiss(animated: false, completion: {
                 print("sending to value \(value.uid): \(value.latex())")
                 self.del?.changeto(uid:exp.uid, to: value)
             })
@@ -96,6 +96,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             })
         }
     }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
@@ -120,10 +121,11 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     @IBAction func numberClick(_ sender: UIButton) {
         numberTextField.text = (numberTextField.text ?? "") + (sender.title(for: UIControl.State.normal) ?? "")
     }
-    
+
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
         guard let txt = numberTextField.text else {return true}
         applyExpression(txt: txt)
+        
         return true
     }
 }

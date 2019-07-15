@@ -130,7 +130,7 @@
                         <outlet property="mathScrollContentView" destination="rMw-In-n6T" id="f4j-bu-j0X"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
-                        <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">
+                        <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" animates="NO" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                     </connections>
