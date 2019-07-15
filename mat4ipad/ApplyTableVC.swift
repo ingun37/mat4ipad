@@ -36,6 +36,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         if exp is Unassigned {
             options.append(Mat.identityOf(2, 2))
         }
+        if let exp = exp as? Mat {
+            options.append(RowEchelonForm(mat: exp))
+        }
         options.append(Mul([exp, Unassigned("Z")]).associated())
         options.append(Add([exp, Unassigned("Z")]).associated())
         options.append(Power(exp, Unassigned("n")))

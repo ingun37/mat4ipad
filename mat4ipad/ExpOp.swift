@@ -79,6 +79,13 @@ func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
     }) ?? if2(a, b, { (a:NumExp, b:NumExp) -> Exp in
         return a * b
     }) ?? if1(a, b, { (a:NumExp, b) -> Exp? in
-        return a.isIdentity ? b : nil
+        if a.isIdentity {
+            return b
+        }
+        if let b = b as? Mat {
+            let rows = try (0..<b.rows).map({try b.row($0).map({try mul($0, a)})})
+            return Mat(rows)
+        }
+        return nil
     }) ?? Mul([a, b])
 }

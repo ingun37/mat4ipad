@@ -43,6 +43,9 @@ enum evalErr:Error {
     case matrixSizeNotMatch(Mat, Mat)
     case multiplyNotSupported(Exp, Exp)
     case invalidExponent(Exp, Exp)
+    case RowEcheloningWrongExp
+    case InvalidMatrixToRowEchelon
+    case ZeroRowEchelon
 }
 extension evalErr {
     func describeInLatex() -> String {
@@ -55,6 +58,12 @@ extension evalErr {
             return "\\text{multiply not supported} {\(a.latex())} * {\(b.latex())}"
         case let .invalidExponent(b, x):
             return "\\text{invalid exponent} {{\(b.latex())}^{\(x.latex())}}"
+        case .RowEcheloningWrongExp:
+            return "asfd"
+        case .InvalidMatrixToRowEchelon:
+            return "asdfasfd"
+        case .ZeroRowEchelon:
+            return "asdfasdfasdf"
         }
     }
 }
@@ -184,6 +193,37 @@ struct Mat:VectorSpace {
     func col(_ j:Int)->[Exp] {
         return (0..<rows).map({$0*cols + j}).map({kids[$0]})
     }
+    func rowDropped(first:Int)->Mat {
+        let restRows = (first..<rows).map({row($0)})
+        return Mat(restRows)
+    }
+    var rowArr:[[Exp]] {
+        return (0..<rows).map({self.row($0)})
+    }
+    func rowMultiply(by:NumExp, at:Int)throws->Mat {
+        var rs = rowArr
+        guard let multipliedRow = try mul(rs[at].asMat, by) as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        rs[at] = multipliedRow.kids
+        return Mat(rs)
+    }
+    func rowAddToOther(from:Int, to:Int, by:NumExp)throws ->Mat {
+        var rs = rowArr
+        guard let multipliedRow = try mul(rs[from].asMat, by) as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        guard let addedRow = try add(multipliedRow, rs[to].asMat) as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        rs[to] = addedRow.kids
+        return Mat(rs)
+    }
+}
+extension Array where Element == Exp {
+    var asMat:Mat {
+        return Mat([self])
+    }
 }
 struct Unassigned:Exp {
     func eval() throws -> Exp {
@@ -223,14 +263,19 @@ struct NumExp:VectorSpace {
             case let .Int(w):
                 return NumExp(v * w)
             case let .Rational(w):
-                return NumExp(w * Rational(v))
+                let mul = w * Rational(v)
+                if let iv = mul.intValue {
+                    return NumExp(iv)
+                } else {
+                    return NumExp(mul)
+                }
             }
         case let .Rational(v):
             switch right.num {
-            case let .Float(w):
-                return NumExp(v.floatValue * w)
-            case let .Int(w):
-                return NumExp(v * Rational(w))
+            case .Float(_):
+                return right * left
+            case .Int(_):
+                return right * left
             case let .Rational(w):
                 return NumExp(v * w)
             }
@@ -297,6 +342,28 @@ struct NumExp:VectorSpace {
             return i
         case let .Rational(r):
             return r.numerator % r.denominator == 0 ? r.numerator/r.denominator : nil
+        }
+    }
+    
+    var inverse:NumExp {
+        switch num {
+        case let .Int(i):
+            return NumExp(1, i)
+        case let .Float(f):
+            return NumExp(1/f)
+        case let .Rational(r):
+            return NumExp(r.denominator, r.numerator)
+        }
+    }
+    
+    var minus:NumExp {
+        switch num {
+        case let .Int(i):
+            return NumExp(-i)
+        case let .Float(f):
+            return NumExp(-f)
+        case let .Rational(r):
+            return NumExp(-r.numerator, r.denominator)
         }
     }
     enum NumType {
@@ -437,5 +504,78 @@ extension UIColor {
             
             return NSString(format:"#%06x", rgb) as String
         }
+    }
+}
+
+struct RowEchelonForm:Exp {
+    var uid: String = UUID().uuidString
+
+    var kids: [Exp]
+    
+    func latex() -> String {
+        return "\\text{REF}(\(kids[0].latex()))"
+    }
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return false
+    }
+    private func leftMostEntry(m:Mat) throws ->(Int, Int) {
+        for ci in 0..<m.cols {
+            for ri in 0..<m.rows {
+                guard let n = m.row(ri)[ci] as? NumExp else {
+                    throw evalErr.InvalidMatrixToRowEchelon
+                }
+                if !n.isZero {
+                    return (ri, ci)
+                }
+            }
+        }
+        return (m.rows-1, m.cols-1)
+    }
+    private func interchangeRow(m:Mat, r1:Int, r2:Int)->Mat {
+        var rows = (0..<m.rows).map({m.row($0)})
+        rows.swapAt(r1, r2)
+        return Mat(rows)
+    }
+
+    
+    
+    func eval() throws -> Exp {
+        guard let mat = try kids[0].eval() as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        let (row, col) = try leftMostEntry(m: mat)
+        let interchanged = interchangeRow(m: mat, r1: 0, r2: row)
+        guard let entry = mat.row(row)[col] as? NumExp else {
+            throw evalErr.InvalidMatrixToRowEchelon
+        }
+        guard !entry.isZero else {
+            return mat
+        }
+        var entryNormalized = try interchanged.rowMultiply(by: entry.inverse, at: 0)
+        for ri in 1..<entryNormalized.rows {
+            guard let e = entryNormalized.row(ri)[col] as? NumExp else {
+                throw evalErr.RowEcheloningWrongExp
+            }
+            entryNormalized = try entryNormalized.rowAddToOther(from: 0, to: ri, by: e.minus)
+        }
+        if entryNormalized.rows == 1 {
+            return entryNormalized
+        }
+        let top = entryNormalized.row(0)
+        let rest = Mat((1..<entryNormalized.rows).map({entryNormalized.row($0)}))
+        guard let echelon2 = try RowEchelonForm(mat: rest).eval() as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        return Mat([top] + echelon2.rowArr)
+        
+    }
+    
+    init(mat:Mat) {
+        kids = [mat]
     }
 }
