@@ -631,3 +631,32 @@ struct GaussJordanElimination:Exp {
         kids = [mat]
     }
 }
+
+struct Transpose:Exp {
+    var uid: String = UUID().uuidString
+
+    var kids: [Exp]
+    
+    func latex() -> String {
+        return "{\(kids[0].latex())}^\\top"
+    }
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return false
+    }
+    
+    func eval() throws -> Exp {
+        guard let m = kids[0] as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        let arr = (0..<m.cols).map({ m.col($0) })
+        return Mat(arr)
+    }
+    init(_ m:Mat) {
+        kids = [m]
+    }
+}
