@@ -46,6 +46,7 @@ enum evalErr:Error {
     case RowEcheloningWrongExp
     case InvalidMatrixToRowEchelon
     case ZeroRowEchelon
+    case InvertingNonSquareMatrix
 }
 extension evalErr {
     func describeInLatex() -> String {
@@ -64,6 +65,8 @@ extension evalErr {
             return "asdfasfd"
         case .ZeroRowEchelon:
             return "asdfasdfasdf"
+        case .InvertingNonSquareMatrix:
+            return "inverting non square matrix"
         }
     }
 }
@@ -218,6 +221,40 @@ struct Mat:VectorSpace {
         }
         rs[to] = addedRow.kids
         return Mat(rs)
+    }
+    func drop(row:Int)-> Mat {
+        let rs = (0..<rows).filter({$0 != row}).map({self.row($0)})
+        return Mat(rs)
+    }
+    func transpose()->Mat {
+        let arr = (0..<cols).map({ col($0) })
+        return Mat(arr)
+    }
+    func drop(col:Int)-> Mat {
+        let cs = (0..<cols).filter({$0 != col}).map({self.col($0)})
+        return Mat(cs).transpose()
+    }
+    func determinant()throws -> Exp {
+        if cols == 1 && rows == 1 {
+            return row(0)[0]
+        }
+        let entries = row(0)
+        let cofactors = try (0..<cols).map({try self.cofactor(row: 0, col: $0)})
+        let p = try zip(entries, cofactors).map({try mul($0.0, $0.1)})
+        let first = p[0]
+        let rest = p.dropFirst()
+        let sum = try rest.reduce(first, {
+            try add($0, $1)
+        })
+        return sum
+    }
+    func minor(row:Int, col:Int)throws -> Exp {
+        let dropped = drop(row: row).drop(col: col)
+        return try dropped.determinant()
+    }
+    func cofactor(row:Int, col:Int)throws -> Exp {
+        let m = try minor(row: row, col: col)
+        return (row + col).isOdd ? try mul(NumExp(-1), m) : m
     }
 }
 extension Array where Element == Exp {
@@ -659,4 +696,37 @@ struct Transpose:Exp {
     init(_ m:Mat) {
         kids = [m]
     }
+}
+
+struct Determinant:Exp {
+    var uid: String = UUID().uuidString
+
+    var kids: [Exp]
+    
+    func latex() -> String {
+        return "det{\(kids[0].latex())}"
+    }
+    
+    func needRetire() -> Int? {
+        return nil
+    }
+    
+    func needRemove() -> Bool {
+        return false
+    }
+    
+    func eval() throws -> Exp {
+        guard let m = try kids[0].eval() as? Mat else {
+            throw evalErr.RowEcheloningWrongExp
+        }
+        guard m.cols == m.rows else {
+            throw evalErr.InvertingNonSquareMatrix
+        }
+        return try m.determinant().eval()
+        
+    }
+    init(_ m:Mat) {
+        kids = [m]
+    }
+    
 }

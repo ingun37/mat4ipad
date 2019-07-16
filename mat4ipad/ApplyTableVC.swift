@@ -41,6 +41,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(RowEchelonForm(mat: exp))
             options.append(GaussJordanElimination(mat: exp))
             options.append(Transpose(exp))
+            options.append(Determinant(exp))
         }
         options.append(Mul([exp, Unassigned("Z")]).associated())
         options.append(Add([exp, Unassigned("Z")]).associated())
