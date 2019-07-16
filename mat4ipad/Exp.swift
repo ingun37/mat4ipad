@@ -384,6 +384,16 @@ struct NumExp:VectorSpace {
     init(_ r:Rational<Int>) {
         num = .Rational(r)
     }
+    init(_ num:NumType) {
+        switch num {
+        case let .Int(i):
+            self.init(i)
+        case let .Float(f):
+            self.init(f)
+        case let .Rational(r):
+            self.init(r)
+        }
+    }
     func identity() -> NumExp {
         return NumExp(1)
     }

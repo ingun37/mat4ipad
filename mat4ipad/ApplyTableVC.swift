@@ -19,6 +19,7 @@ protocol ApplyTableDelegate {
 
 }
 class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
+    @IBOutlet weak var fillBtn: UIButton!
     
     @IBOutlet weak var matrixPanel: UIStackView!
     
@@ -46,6 +47,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         
         return options
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let exp = exp else {
@@ -66,42 +68,52 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }).disposed(by: disposeBag)
         popoverPresentationController?.delegate = self
 //        matrixPanel.isHidden = !(exp is Mat)
+        
+        let fillingValueOb = numberTextField.rx.text.startWith("0").map({ $0 ?? "0"}).map({$0 == "" ? "0" : $0})
+        
+        fillingValueOb.subscribe(onNext: { [unowned self] (str) in
+            self.fillBtn.setTitle("Fill matrix with \(str)", for: .normal)
+        }).disposed(by: disposeBag)
+    }
+    @IBAction func fillMatrixClick(_ sender: Any) {
+        guard let mat = exp as? Mat else {return}
+        guard let txt = numberTextField.text else {return}
+        guard let _ = txt2exp(txt: txt) else {return}
+        let exparr = (0..<mat.rows).map({_ in (0..<mat.cols).map({_ in txt2exp(txt: txt)! })})
+        dismiss(animated: false) {
+            self.del?.changeto(uid:mat.uid, to: Mat(exparr))
+        }
     }
     
     @IBAction func removeClick(_ sender: Any) {
-        dismiss(animated: true) {
+        dismiss(animated: false) {
             if let uid = self.exp?.uid {
                 self.del?.remove(uid: uid)
             }
         }
     }
 
+    func txt2exp(txt:String)->Exp? {
+        if let value = Int(txt) {
+            return value.exp
+        } else if let value = Float(txt) {
+            return NumExp(value)
+        } else if let r = Rational<Int>(from: txt){
+            return NumExp(r)
+        } else if txt.isAlphanumeric {
+            return Unassigned(txt)
+        }
+        return nil
+    }
     func applyExpression(txt:String) {
         guard let exp = exp else {return}
-        
-        if let value = Int(txt) {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: value.exp)
-            })
-        } else if let value = Float(txt) {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: NumExp(value))
-            })
-        } else if let r = Rational<Int>(from: txt){
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: NumExp(r))
-            })
-        } else if txt.isAlphanumeric {
-            self.dismiss(animated: true, completion: {
-                self.del?.changeto(uid:exp.uid, to: Unassigned(txt))
-            })
-        }
+        guard let newExp = txt2exp(txt: txt) else {return}
+        self.del?.changeto(uid:exp.uid, to: newExp)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        guard let exp = exp else {return true}
         guard let valueTxt = textField.text else {return true}
         applyExpression(txt: valueTxt)
         
@@ -121,6 +133,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     
     @IBAction func numberClick(_ sender: UIButton) {
         numberTextField.text = (numberTextField.text ?? "") + (sender.title(for: UIControl.State.normal) ?? "")
+        numberTextField.sendActions(for: .valueChanged)
     }
 
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {

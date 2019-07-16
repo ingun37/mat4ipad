@@ -218,10 +218,10 @@
                                         <rect key="frame" x="0.0" y="90" width="304" height="276"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="GH7-bs-MK9">
-                                                <rect key="frame" x="0.0" y="0.0" width="304" height="212"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="180"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-BL-mgL">
-                                                        <rect key="frame" x="0.0" y="91" width="202" height="30"/>
+                                                        <rect key="frame" x="0.0" y="75" width="202" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>
@@ -230,7 +230,7 @@
                                                         </connections>
                                                     </textField>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="TA1-g6-UH4">
-                                                        <rect key="frame" x="210" y="27" width="94" height="158"/>
+                                                        <rect key="frame" x="210" y="11" width="94" height="158"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3W-lK-ZAT">
                                                                 <rect key="frame" x="0.0" y="0.0" width="94" height="30"/>
@@ -361,7 +361,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="HwU-fN-5cI">
-                                                <rect key="frame" x="0.0" y="214" width="304" height="30"/>
+                                                <rect key="frame" x="0.0" y="182" width="304" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PsQ-aF-3Do">
                                                         <rect key="frame" x="0.0" y="0.0" width="59" height="30"/>
@@ -406,7 +406,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="sQY-OD-JWT">
-                                                <rect key="frame" x="0.0" y="246" width="304" height="30"/>
+                                                <rect key="frame" x="0.0" y="214" width="304" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ih2-Mn-l5s">
                                                         <rect key="frame" x="0.0" y="0.0" width="59" height="30"/>
@@ -450,6 +450,14 @@
                                                     </button>
                                                 </subviews>
                                             </stackView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CEE-AY-gRx">
+                                                <rect key="frame" x="0.0" y="246" width="304" height="30"/>
+                                                <color key="backgroundColor" white="0.94596354169999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Fill matrix with"/>
+                                                <connections>
+                                                    <action selector="fillMatrixClick:" destination="Zc6-Oj-lwd" eventType="touchUpInside" id="3lQ-oz-7xv"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="bR7-rT-cCf">
@@ -536,6 +544,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="fillBtn" destination="CEE-AY-gRx" id="pAQ-IE-BMH"/>
                         <outlet property="numberTextField" destination="GAz-BL-mgL" id="aBA-ue-Rb0"/>
                         <outlet property="tv" destination="AIL-5f-GND" id="pCm-Cw-ezb"/>
                     </connections>
