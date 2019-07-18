@@ -13,19 +13,91 @@ func replaced(e:Exp, uid:String, to:Exp)-> Exp {
     o.kids = o.kids.map({$0.uid == uid ? to : $0})
     return o
 }
-func removed(e:Exp, uid:String)-> Exp {
-    var o = e
-    o.kids.removeAll(where: {$0.uid == uid})
-    o.kids = o.kids.map({removed(e: $0, uid: uid)})
-    o.kids.removeAll(where: {$0.needRemove()})
-    o.kids = o.kids.map({ e in
-        if let successor = e.needRetire() {
-            return e.kids[successor]
+func removed(e:Exp, uid:String)-> Exp? {
+    if e.uid == uid {
+        return nil
+    }
+    if e is Add {
+        let newkids = e.kids.compactMap({removed(e: $0, uid: uid)})
+        if newkids.count == 1 {
+            return newkids[0]
+        } else if newkids.isEmpty {
+            return nil
         } else {
-            return e
+            return Add(newkids)
         }
-    })
-    return o
+    } else if e is Mul {
+        let newkids = e.kids.compactMap({removed(e: $0, uid: uid)})
+        if newkids.count == 1 {
+            return newkids[0]
+        } else if newkids.isEmpty {
+            return nil
+        } else {
+            return Mul(newkids)
+        }
+    } else if let e = e as? Mat {
+        let newkids = e.kids.map({removed(e: $0, uid: uid)})
+        let newkids2 = newkids.map({ $0 ?? NumExp(0)})
+        let newkids2D = (0..<e.rows).map({ri in
+            (0..<e.cols).map({ci in
+                newkids2[ri*e.cols + ci]
+            })
+        })
+        return Mat(newkids2D)
+    } else if e is Unassigned {
+        return e
+    } else if e is NumExp {
+        return e
+    } else if let e = e as? Power {
+        if let newbase = removed(e: e.base, uid: uid) {
+            if let newExponent = removed(e: e.exponent, uid: uid) {
+                return Power(newbase, newExponent)
+            } else {
+                return newbase
+            }
+        } else {
+            return nil
+        }
+        
+    } else if let e = e as? RowEchelonForm {
+        if let newMat = removed(e: e.mat, uid: uid) {
+            guard let newMat = newMat as? Mat else {
+                fatalError()
+            }
+            return RowEchelonForm(mat: newMat)
+        } else {
+            return nil
+        }
+    } else if let e = e as? GaussJordanElimination {
+        if let newMat = removed(e: e.mat, uid: uid) {
+            guard let newMat = newMat as? Mat else {
+                fatalError()
+            }
+            return GaussJordanElimination(mat: newMat)
+        } else {
+            return nil
+        }
+    } else if let e = e as? Transpose {
+        if let newMat = removed(e: e.mat, uid: uid) {
+            guard let newMat = newMat as? Mat else {
+                fatalError()
+            }
+            return Transpose(newMat)
+        } else {
+            return nil
+        }
+    } else if let e = e as? Determinant {
+        if let newMat = removed(e: e.mat, uid: uid) {
+            guard let newMat = newMat as? Mat else {
+                fatalError()
+            }
+            return Determinant(newMat)
+        } else {
+            return nil
+        }
+    } else {
+        fatalError()
+    }
 }
 func if2<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, T) throws ->Exp) throws ->Exp? {
     if let a = a as? T, let b = b as? T {

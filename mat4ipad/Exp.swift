@@ -14,14 +14,7 @@ protocol Exp{
     var uid: String {get}
     var kids:[Exp] {get set}
     func latex() -> String
-    /**
-     Aware that kids could be missing in this function
-     */
-    func needRetire()->Int?
-    /**
-     Aware that kids could be missing in this function
-     */
-    func needRemove()->Bool
+
     /**
      Don't call eval of a newly created object inside of eval which is a possible !!!!
      */
@@ -69,18 +62,6 @@ struct Add:Exp {
         return kids.map({"{\($0.latex())}"}).joined(separator: " + ")
     }
     
-    func needRetire() -> Int? {
-        if kids.count == 1 {
-            return 0
-        } else {
-            return nil
-        }
-    }
-    
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
-    
     func eval() throws -> Exp {
         let kds = try kids.map({try $0.eval()})
         return try kds.dropFirst().reduce(kds[0], {try add($0, $1)})
@@ -112,16 +93,7 @@ struct Mul: Exp {
     init(_ operands:[Exp]) {
         kids = operands
     }
-    func needRetire() -> Int? {
-        if kids.count == 1 {
-            return 0
-        } else {
-            return nil
-        }
-    }
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
+    
 }
 protocol VectorSpace: Exp {
     func identity()-> Self
@@ -160,8 +132,6 @@ struct Mat:VectorSpace {
     
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
-    func needRetire() -> Int? { return nil }
-    func needRemove() -> Bool { return kids.isEmpty }
     func associative() { }
     
     let rows, cols:Int
@@ -260,8 +230,6 @@ struct Unassigned:Exp {
     
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
-    func needRetire() -> Int? { return nil }
-    func needRemove() -> Bool { return false }
     
     func latex() -> String {
         return letter
@@ -443,8 +411,6 @@ struct NumExp:VectorSpace {
     
     var uid: String  = UUID().uuidString
     var kids: [Exp] = []
-    func needRetire() -> Int? { return nil }
-    func needRemove() -> Bool { return false }
 }
 struct Power: Exp {
     var base:Exp {
@@ -492,15 +458,6 @@ struct Power: Exp {
         return "{\(base)}^{\(exponent.latex())}"
     }
     
-    func needRetire() -> Int? {
-        if kids.count == 1 {
-            return 0
-        }
-        return ((exponent as? NumExp)?.isIdentity ?? false) ? 0 : nil
-    }
-    func needRemove() -> Bool {
-        return kids.isEmpty
-    }
 }
 extension Int {
     var exp:Exp {
@@ -554,13 +511,6 @@ struct RowEchelonForm:Exp {
         return "\\text{REF}(\(kids[0].latex()))"
     }
     
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return false
-    }
     private func leftMostEntry(m:Mat) throws ->(Int, Int) {
         for ci in 0..<m.cols {
             for ri in 0..<m.rows {
@@ -616,6 +566,9 @@ struct RowEchelonForm:Exp {
     init(mat:Mat) {
         kids = [mat]
     }
+    var mat:Mat {
+        return kids[0] as! Mat
+    }
 }
 
 struct GaussJordanElimination:Exp {
@@ -625,14 +578,6 @@ struct GaussJordanElimination:Exp {
     
     func latex() -> String {
         return "\\text{GJE}(\(kids[0].latex()))"
-    }
-    
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return false
     }
     
     func eval() throws -> Exp {
@@ -658,6 +603,9 @@ struct GaussJordanElimination:Exp {
     init(mat:Mat) {
         kids = [mat]
     }
+    var mat:Mat {
+        return kids[0] as! Mat
+    }
 }
 
 struct Transpose:Exp {
@@ -669,13 +617,6 @@ struct Transpose:Exp {
         return "{\(kids[0].latex())}^\\top"
     }
     
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return false
-    }
     
     func eval() throws -> Exp {
         guard let m = kids[0] as? Mat else {
@@ -686,6 +627,9 @@ struct Transpose:Exp {
     }
     init(_ m:Mat) {
         kids = [m]
+    }
+    var mat:Mat {
+        return kids[0] as! Mat
     }
 }
 
@@ -698,13 +642,6 @@ struct Determinant:Exp {
         return "det{\(kids[0].latex())}"
     }
     
-    func needRetire() -> Int? {
-        return nil
-    }
-    
-    func needRemove() -> Bool {
-        return false
-    }
     
     func eval() throws -> Exp {
         guard let m = try kids[0].eval() as? Mat else {
@@ -719,5 +656,7 @@ struct Determinant:Exp {
     init(_ m:Mat) {
         kids = [m]
     }
-    
+    var mat:Mat {
+        return kids[0] as! Mat
+    }
 }
