@@ -8,9 +8,12 @@
 
 import Foundation
 func replaced(e:Exp, uid:String, to:Exp)-> Exp {
+    if e.uid == uid {
+        return to
+    }
+    
     var o = e
     o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
-    o.kids = o.kids.map({$0.uid == uid ? to : $0})
     return o
 }
 func removed(e:Exp, uid:String)-> Exp? {
