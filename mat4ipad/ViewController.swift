@@ -11,7 +11,7 @@ import iosMath
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate, ResizePreviewDelegate {
+class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
     
     @IBOutlet weak var undoButton: UIButton!
@@ -75,7 +75,16 @@ class ViewController: UIViewController, ExpViewableDelegate, ApplyTableDelegate,
             }
             
             print("\(anchorView.frame.origin.x), \(anchorView.frame.origin.y)")
-            vc.set(exp: expview.exp, del:self)
+            vc.set(exp: expview.exp)
+            vc.promise.then { (r) in
+                switch r {
+                    
+                case let .changed(uid, to):
+                    self.changeto(uid: uid, to: to)
+                case let .removed(uid):
+                    self.remove(uid: uid)
+                }
+            }
         }
     }
     

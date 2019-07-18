@@ -11,26 +11,28 @@ import iosMath
 import RxSwift
 import RxCocoa
 import NumberKit
-
-protocol ApplyTableDelegate {
-    func changeto(uid:String, to:Exp)
-    func remove(uid:String)
-    func expandBy(mat:Mat, row:Int, col:Int)
-
-}
+import Promises
+//
+//protocol ApplyTableDelegate {
+//    func changeto(uid:String, to:Exp)
+//    func remove(uid:String)
+//}
 class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
+    enum Result {
+        case changed(String, Exp)
+        case removed(String)
+    }
+    let promise = Promise<Result>.pending()
     @IBOutlet weak var fillBtn: UIButton!
     
     @IBOutlet weak var matrixPanel: UIStackView!
     
-    var del:ApplyTableDelegate?
+//    var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
     var exp:Exp?
-    func set(exp:Exp, del:ApplyTableDelegate?) {
+    func set(exp:Exp) {
         self.exp = exp
-        self.del = del
-        
     }
     func optionsFor(exp:Exp)-> [Exp] {
         var options:[Exp] = []
@@ -65,7 +67,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         tv.rx.modelSelected(Exp.self).subscribe(onNext:  { value in
             self.dismiss(animated: false, completion: {
                 print("sending to value \(value.uid): \(value.latex())")
-                self.del?.changeto(uid:exp.uid, to: value)
+                self.promise.fulfill(.changed(exp.uid, value))
             })
         }).disposed(by: disposeBag)
         popoverPresentationController?.delegate = self
@@ -83,14 +85,14 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         guard let _ = txt2exp(txt: txt) else {return}
         let exparr = (0..<mat.rows).map({_ in (0..<mat.cols).map({_ in txt2exp(txt: txt)! })})
         dismiss(animated: false) {
-            self.del?.changeto(uid:mat.uid, to: Mat(exparr))
+            self.promise.fulfill(.changed(mat.uid, Mat(exparr)))
         }
     }
     
     @IBAction func removeClick(_ sender: Any) {
         dismiss(animated: false) {
             if let uid = self.exp?.uid {
-                self.del?.remove(uid: uid)
+                self.promise.fulfill(.removed(uid))
             }
         }
     }
@@ -110,7 +112,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     func applyExpression(txt:String) {
         guard let exp = exp else {return}
         guard let newExp = txt2exp(txt: txt) else {return}
-        self.del?.changeto(uid:exp.uid, to: newExp)
+        self.promise.fulfill(.changed(exp.uid, newExp))
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

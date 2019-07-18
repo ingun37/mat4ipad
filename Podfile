@@ -9,6 +9,7 @@ target 'mat4ipad' do
   pod 'iosMath', :git => 'https://github.com/kostub/iosMath', :commit => 'e9b6ec66911089ca0673dd0034715652e71420c9'
   pod 'RxSwift', '~> 5'
   pod 'RxCocoa', '~> 5'
+  pod 'PromisesSwift'
   
   target 'mat4ipadTests' do
     inherit! :search_paths
