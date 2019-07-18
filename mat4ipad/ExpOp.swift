@@ -11,9 +11,6 @@ func replaced(e:Exp, uid:String, to:Exp)-> Exp {
     var o = e
     o.kids = o.kids.map({replaced(e: $0, uid: uid, to: to)})
     o.kids = o.kids.map({$0.uid == uid ? to : $0})
-    if let o = o as? AssociativeExp {
-        return o.associated()
-    }
     return o
 }
 func removed(e:Exp, uid:String)-> Exp {
@@ -28,9 +25,6 @@ func removed(e:Exp, uid:String)-> Exp {
             return e
         }
     })
-    if let o = o as? AssociativeExp {
-        return o.associated()
-    }
     return o
 }
 func if2<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, T) throws ->Exp) throws ->Exp? {

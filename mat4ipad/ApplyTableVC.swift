@@ -45,8 +45,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(Transpose(exp))
             options.append(Determinant(exp))
         }
-        options.append(Mul([exp, Unassigned("Z")]).associated())
-        options.append(Add([exp, Unassigned("Z")]).associated())
+        options.append(Mul([exp, Unassigned("Z")]))
+        options.append(Add([exp, Unassigned("Z")]))
         options.append(Power(exp, Unassigned("n")))
         
         return options

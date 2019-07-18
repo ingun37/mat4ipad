@@ -27,16 +27,7 @@ protocol Exp{
      */
     func eval() throws ->Exp
 }
-protocol AssociativeExp:Exp {
-    func associated()->Exp
-}
-extension AssociativeExp {
-    func associated()->Exp {
-        var o = self
-        o.kids = kids.flatMap({ $0 is Self ? $0.kids : [$0]})
-        return o
-    }
-}
+
 
 enum evalErr:Error {
     case operandIsNotMatrix(Exp)
@@ -71,7 +62,7 @@ extension evalErr {
     }
 }
 
-struct Add:AssociativeExp {
+struct Add:Exp {
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -99,7 +90,7 @@ struct Add:AssociativeExp {
         kids = operands
     }
 }
-struct Mul: AssociativeExp {
+struct Mul: Exp {
     func eval() throws -> Exp {
         let kds = try kids.map({try $0.eval()})
         return try kds.dropFirst().reduce(kds[0], {try mul($0, $1)})
