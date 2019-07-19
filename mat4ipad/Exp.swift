@@ -217,6 +217,14 @@ struct Mat:VectorSpace {
         let m = try minor(row: row, col: col)
         return (row + col).isOdd ? try mul(NumExp(-1), m) : m
     }
+    func adjoint()throws -> Mat {
+        let arr2d = try (0..<rows).map({ri in
+            try (0..<cols).map({ci in
+                try cofactor(row: ri, col: ci)
+            })
+        })
+        return Mat(arr2d)
+    }
 }
 extension Array where Element == Exp {
     var asMat:Mat {
@@ -658,5 +666,34 @@ struct Determinant:Exp {
     }
     var mat:Mat {
         return kids[0] as! Mat
+    }
+}
+
+struct Fraction:Exp {
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp] = [Unassigned("N"), Unassigned("D")]
+    var numerator:Exp {
+        get { return kids[0] }
+        set { kids[0] = newValue }
+    }
+    var denominator:Exp {
+        get { return kids[1] }
+        set { kids[1] = newValue }
+    }
+    func latex() -> String {
+        return "\\frac{\(numerator.latex())}{\(denominator.latex())}"
+    }
+    
+    func eval() throws -> Exp {
+        if let n = numerator as? NumExp, let d = denominator as? NumExp {
+            return try mul(n, d.inverse)
+        }
+        return self
+    }
+    
+    init(numerator:Exp, denominator:Exp) {
+        self.numerator = numerator
+        self.denominator = denominator
     }
 }
