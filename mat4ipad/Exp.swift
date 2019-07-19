@@ -11,7 +11,7 @@ import UIKit
 import NumberKit
 
 protocol Exp{
-    var uid: String {get}
+    var uid: String {get set}
     var kids:[Exp] {get set}
     func latex() -> String
 

@@ -37,25 +37,34 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         let newMat = Mat(kids2d)
         changeto(uid: mat.uid, to: newMat)
     }
-    var history:[Exp] = []
-    var exp:Exp {
-        if history.isEmpty {
-            history.append(Unassigned("A"))
+    private func withRandomUID(exp:Exp)->Exp {
+        var e = exp
+        e.uid = UUID().uuidString
+        e.kids = e.kids.map({self.withRandomUID(exp: $0)})
+        return e
+    }
+    private func push(exp:Exp) {
+        _history.append(withRandomUID(exp: exp))
+    }
+    private var _history:[Exp] = []
+    private var exp:Exp {
+        if _history.isEmpty {
+            _history.append(Unassigned("A"))
         }
-        return history.last!
+        return _history.last!
     }
     func remove(uid: String) {
-        history.append(removed(e: exp, uid: uid) ?? Unassigned("A"))
+        push(exp: removed(e: exp, uid: uid) ?? Unassigned("A"))
         refresh()
     }
     
     
     func changeto(uid:String, to: Exp) {
-        history.append(replaced(e: exp, uid: uid, to: to))
+        push(exp:replaced(e: exp, uid: uid, to: to))
         refresh()
     }
     @IBAction func undo(_ sender: Any) {
-        let _ = history.popLast()
+        let _ = _history.popLast()
         refresh()
     }
     
@@ -147,8 +156,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         undoButton.layer.shadowOpacity = 0.5
         undoButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         undoButton.layer.shadowRadius = 1
-        
-        history = [Mul([Mat.identityOf(2, 2), Unassigned("A")])]
+        push(exp: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         
     }
