@@ -31,6 +31,7 @@ enum evalErr:Error {
     case InvalidMatrixToRowEchelon
     case ZeroRowEchelon
     case InvertingNonSquareMatrix
+    case invertingDeterminantZero
 }
 extension evalErr {
     func describeInLatex() -> String {
@@ -51,6 +52,8 @@ extension evalErr {
             return "asdfasdfasdf"
         case .InvertingNonSquareMatrix:
             return "inverting non square matrix"
+        case .invertingDeterminantZero:
+            return "inverting a matrix with determinant of zero"
         }
     }
 }
@@ -223,7 +226,7 @@ struct Mat:VectorSpace {
                 try cofactor(row: ri, col: ci)
             })
         })
-        return Mat(arr2d)
+        return Mat(arr2d).transpose()
     }
 }
 extension Array where Element == Exp {
@@ -401,7 +404,9 @@ struct NumExp:VectorSpace {
     func identity() -> NumExp {
         return NumExp(1)
     }
-    
+    static func identity() -> NumExp {
+        return NumExp(1)
+    }
     func eval() throws -> Exp {
         return self
     }
@@ -695,5 +700,34 @@ struct Fraction:Exp {
     init(numerator:Exp, denominator:Exp) {
         self.numerator = numerator
         self.denominator = denominator
+    }
+}
+
+struct Inverse:Exp {
+    var uid: String = UUID().uuidString
+    
+    var kids: [Exp]
+    
+    func latex() -> String {
+        return "{\(kids[0].latex())}^{-1}"
+    }
+    
+    func eval() throws -> Exp {
+        let m = mat
+        guard m.rows == m.cols else {
+            throw evalErr.InvertingNonSquareMatrix
+        }
+        let det = try m.determinant()
+        if (det as? NumExp)?.isZero ?? false {
+            throw evalErr.invertingDeterminantZero
+        }
+        let invdet = (det as? NumExp)?.inverse ?? Fraction(numerator: NumExp.identity(), denominator: det) as Exp
+        return try mul(invdet, m.adjoint())
+    }
+    init(_ m:Mat) {
+        kids = [m]
+    }
+    var mat:Mat {
+        return kids[0] as! Mat
     }
 }

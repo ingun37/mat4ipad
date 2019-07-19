@@ -98,6 +98,15 @@ func removed(e:Exp, uid:String)-> Exp? {
         } else {
             return nil
         }
+    } else if let e = e as? Inverse {
+        if let newMat = removed(e: e.mat, uid: uid) {
+            guard let newMat = newMat as? Mat else {
+                fatalError()
+            }
+            return Inverse(newMat)
+        } else {
+            return nil
+        }
     } else {
         fatalError()
     }

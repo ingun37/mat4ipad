@@ -44,6 +44,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(GaussJordanElimination(mat: exp))
             options.append(Transpose(exp))
             options.append(Determinant(exp))
+            options.append(Inverse(exp))
         } else {
             options.append(Fraction(numerator: exp, denominator: Unassigned("D")))
         }
