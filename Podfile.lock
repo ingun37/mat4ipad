@@ -9,12 +9,16 @@ PODS:
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
+  - TensorFlowLiteC (0.2.0)
+  - TensorFlowLiteSwift (0.2.0):
+    - TensorFlowLiteC (= 0.2.0)
 
 DEPENDENCIES:
   - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
   - PromisesSwift
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
+  - TensorFlowLiteSwift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -23,6 +27,8 @@ SPEC REPOS:
     - RxCocoa
     - RxRelay
     - RxSwift
+    - TensorFlowLiteC
+    - TensorFlowLiteSwift
 
 EXTERNAL SOURCES:
   iosMath:
@@ -41,7 +47,9 @@ SPEC CHECKSUMS:
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
+  TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
 
-PODFILE CHECKSUM: 8b901f55854477b60eea22ddf0ccc7dfb5154655
+PODFILE CHECKSUM: 5450af1b654fa942c05191390477c4551b5a0735
 
 COCOAPODS: 1.7.1

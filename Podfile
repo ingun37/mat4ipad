@@ -10,6 +10,7 @@ target 'mat4ipad' do
   pod 'RxSwift', '~> 5'
   pod 'RxCocoa', '~> 5'
   pod 'PromisesSwift'
+  pod 'TensorFlowLiteSwift'
   
   target 'mat4ipadTests' do
     inherit! :search_paths
