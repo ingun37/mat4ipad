@@ -21,18 +21,18 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     }
     
     var drawing:CGMutablePath = CGMutablePath()
-    func drawTo(context: CGContext) {
+    func drawTo(context: CGContext, strokeColor:UIColor) {
         context.addPath(drawing)
         context.setLineCap(.round)
         context.setBlendMode(.normal)
         context.setLineWidth(2)
-        context.setStrokeColor(UIColor.black.cgColor)
+        context.setStrokeColor(strokeColor.cgColor)
         context.strokePath()
     }
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context: CGContext = UIGraphicsGetCurrentContext() else { return }
-        drawTo(context: context)
+        drawTo(context: context, strokeColor: UIColor.black)
     }
     enum TouchState {
         case Began
@@ -92,16 +92,17 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         let from = CGPoint(x: bbox.midX * scale, y: bbox.midY * scale)
         let vecX = to.x - from.x
         let vecY = to.y - from.y
+        
         UIGraphicsBeginImageContext(CGSize(width: toSize, height: toSize))
 //        UIGraphicsBeginImageContext(imgView.bounds.size)
         guard let context = UIGraphicsGetCurrentContext() else {return nil}
         
-        context.setFillColor(UIColor.white.cgColor)
+        context.setFillColor(UIColor.black.cgColor)
         context.fill(CGRect(x: 0, y: 0, width: toSize, height: toSize))
         let t = CGAffineTransform(translationX: vecX, y: vecY).scaledBy(x: scale, y: scale)
 //        let t = CGAffineTransform(scaleX: scale, y: scale).translatedBy(x: vecX, y: vecY)
         context.concatenate(t)
-        drawTo(context: context)
+        drawTo(context: context, strokeColor: UIColor.white)
         
         let img = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
