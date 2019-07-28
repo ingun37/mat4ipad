@@ -63,45 +63,49 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-            self.flushDrawing()
+            guard let img = self.exportDrawing(toSize: 28.0) else {return}
+            self.discardDrawing()
+            print("fuck")
         })
         if touchState == .Began {
             drawing.addEllipse(in: CGRect(origin: lastPoint, size: CGSize(width: 2, height: 2)))
         }
         touchState = .End
-        
-        
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
-        flushDrawing()
+        discardDrawing()
     }
-    func flushDrawing() {
+    func discardDrawing() {
+        drawing = CGMutablePath()
+        setNeedsDisplay()
+    }
+    func exportDrawing(toSize:CGFloat)->UIImage? {
         print(imgView.bounds)
         let bbox = drawing.boundingBoxOfPath
         let fitEdge = max(bbox.size.width, bbox.size.height)
         let pad = fitEdge * 0.15
         let edge = 2*pad + fitEdge
-        let to = CGPoint(x: edge/2, y: edge/2)
-        let from = CGPoint(x: bbox.midX, y: bbox.midY)
+        let scale = toSize / edge
+        print("scale: \(scale)")
+        let to = CGPoint(x: toSize/2, y: toSize/2)
+        let from = CGPoint(x: bbox.midX * scale, y: bbox.midY * scale)
         let vecX = to.x - from.x
         let vecY = to.y - from.y
-        UIGraphicsBeginImageContext(CGSize(width: edge, height: edge))
-        guard let context = UIGraphicsGetCurrentContext() else {return}
+        UIGraphicsBeginImageContext(CGSize(width: toSize, height: toSize))
+//        UIGraphicsBeginImageContext(imgView.bounds.size)
+        guard let context = UIGraphicsGetCurrentContext() else {return nil}
         
         context.setFillColor(UIColor.white.cgColor)
-        context.fill(imgView.bounds)
-        
-        let t = CGAffineTransform(translationX: vecX, y: vecY)
+        context.fill(CGRect(x: 0, y: 0, width: toSize, height: toSize))
+        let t = CGAffineTransform(translationX: vecX, y: vecY).scaledBy(x: scale, y: scale)
+//        let t = CGAffineTransform(scaleX: scale, y: scale).translatedBy(x: vecX, y: vecY)
         context.concatenate(t)
         drawTo(context: context)
         
         let img = UIGraphicsGetImageFromCurrentImageContext()
-        
         UIGraphicsEndImageContext()
-        
-        drawing = CGMutablePath()
-        setNeedsDisplay()
+        return img
     }
     
     var exp:Exp = Unassigned("z")
