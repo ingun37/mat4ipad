@@ -20,47 +20,42 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
 //        isMultipleTouchEnabled = true
     }
     
-    var drawings:[[CGPoint]] = []
+    var drawing:CGMutablePath = CGMutablePath()
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         guard let context: CGContext = UIGraphicsGetCurrentContext() else { return }
         
-        for drawing in drawings {
-            if drawing.count == 1 {
-                print("dfghjk")
-                context.addEllipse(in: CGRect(origin: drawing[0], size: CGSize(width: 2, height: 2)))
-            } else {
-                context.addLines(between: drawing)
-            }
-        }
+        context.addPath(drawing)
         context.setLineCap(.round)
         context.setBlendMode(.normal)
         context.setLineWidth(2)
         context.setStrokeColor(UIColor.black.cgColor)
         context.strokePath()
-        context.setFillColor(UIColor.red.cgColor)
-        context.drawPath(using: .fillStroke)
     }
+    enum TouchState {
+        case Began
+        case Moved
+        case End
+    }
+    var touchState:TouchState = .Began
+    var lastPoint = CGPoint.zero
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        print("fuck!")
-        drawings.append([touches.first!.location(in: self)])
+        guard let loc = touches.first?.location(in: self) else {return}
+        drawing.move(to: loc)
+        
         setNeedsDisplay()
         timer?.invalidate()
+        lastPoint = loc
+        touchState = .Began
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         super.touchesMoved(touches, with: event)
-        guard !drawings.isEmpty else {return}
         guard let loc = touches.first?.location(in: self) else {return}
-        if let p = drawings.last?.last {
-            if 1 > abs(p.x - loc.x) + abs(p.y - loc.y) {
-                return
-            }
-        }
-        print("move")
-        drawings[drawings.count-1].append(loc)
+        drawing.addLine(to: loc)
         setNeedsDisplay()
+        touchState = .Moved
+        lastPoint = loc
     }
     var timer:Timer? = nil
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -68,13 +63,17 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
             self.flushDrawing()
         })
+        if touchState == .Began {
+            drawing.addEllipse(in: CGRect(origin: lastPoint, size: CGSize(width: 2, height: 2)))
+        }
+        touchState = .End
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
         flushDrawing()
     }
     func flushDrawing() {
-        drawings = []
+        drawing = CGMutablePath()
         setNeedsDisplay()
     }
     
