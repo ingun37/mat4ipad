@@ -21,16 +21,18 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     }
     
     var drawing:CGMutablePath = CGMutablePath()
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        guard let context: CGContext = UIGraphicsGetCurrentContext() else { return }
-        
+    func drawTo(context: CGContext) {
         context.addPath(drawing)
         context.setLineCap(.round)
         context.setBlendMode(.normal)
         context.setLineWidth(2)
         context.setStrokeColor(UIColor.black.cgColor)
         context.strokePath()
+    }
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        guard let context: CGContext = UIGraphicsGetCurrentContext() else { return }
+        drawTo(context: context)
     }
     enum TouchState {
         case Began
@@ -67,12 +69,37 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
             drawing.addEllipse(in: CGRect(origin: lastPoint, size: CGSize(width: 2, height: 2)))
         }
         touchState = .End
+        
+        
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
         flushDrawing()
     }
     func flushDrawing() {
+        print(imgView.bounds)
+        let bbox = drawing.boundingBoxOfPath
+        let fitEdge = max(bbox.size.width, bbox.size.height)
+        let pad = fitEdge * 0.15
+        let edge = 2*pad + fitEdge
+        let to = CGPoint(x: edge/2, y: edge/2)
+        let from = CGPoint(x: bbox.midX, y: bbox.midY)
+        let vecX = to.x - from.x
+        let vecY = to.y - from.y
+        UIGraphicsBeginImageContext(CGSize(width: edge, height: edge))
+        guard let context = UIGraphicsGetCurrentContext() else {return}
+        
+        context.setFillColor(UIColor.white.cgColor)
+        context.fill(imgView.bounds)
+        
+        let t = CGAffineTransform(translationX: vecX, y: vecY)
+        context.concatenate(t)
+        drawTo(context: context)
+        
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
         drawing = CGMutablePath()
         setNeedsDisplay()
     }
