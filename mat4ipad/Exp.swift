@@ -17,7 +17,7 @@ protocol Exp{
     func clone()->Exp
     
     func changeKid(from:String, to:Exp)->Exp
-    
+    func removeKid(of:String)->Exp?
     var kids:[Exp] {get}
     func latex() -> String
 
@@ -33,7 +33,12 @@ extension Exp {
         }
         return changeKid(from: from, to: to)
     }
-    
+    func removed(of:String)-> Exp? {
+        if uid == of {
+            return nil
+        }
+        return removeKid(of: of)
+    }
 }
 
 
@@ -74,6 +79,17 @@ extension evalErr {
 }
 
 struct Add:Exp {
+    func removeKid(of: String) -> Exp? {
+        let newkids = kids.compactMap({$0.removed(of: of)})
+        if newkids.count == 1 {
+            return newkids[0]
+        } else if newkids.isEmpty {
+            return nil
+        } else {
+            return Add(newkids)
+        }
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return Add(kids.map({$0.changed(from: from, to: to)}))
     }
@@ -98,6 +114,17 @@ struct Add:Exp {
     }
 }
 struct Mul: Exp {
+    func removeKid(of: String) -> Exp? {
+        let newkids = kids.compactMap({$0.removed(of: of)})
+        if newkids.count == 1 {
+            return newkids[0]
+        } else if newkids.isEmpty {
+            return nil
+        } else {
+            return Mul(newkids)
+        }
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return Mul(kids.map({$0.changed(from: from, to: to)}))
     }
@@ -135,6 +162,17 @@ protocol VectorSpace: Exp {
     var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    func removeKid(of: String) -> Exp? {
+        let newkids = kids.map({$0.removed(of: of)})
+        let newkids2 = newkids.map({ $0 ?? NumExp(0)})
+        let newkids2D = (0..<rows).map({ri in
+            (0..<cols).map({ci in
+                newkids2[ri*cols + ci]
+            })
+        })
+        return Mat(newkids2D)
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return Mat(rowArr.map({
             $0.map({$0.changed(from: from, to: to)})
@@ -278,6 +316,10 @@ extension Array where Element == Exp {
     }
 }
 struct Unassigned:Exp {
+    func removeKid(of: String) -> Exp? {
+        return self
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return self
     }
@@ -303,6 +345,10 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    func removeKid(of: String) -> Exp? {
+        return self
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return self
     }
@@ -485,6 +531,18 @@ struct NumExp:VectorSpace {
     var kids: [Exp] = []
 }
 struct Power: Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newbase = base.removed(of: of) {
+            if let newExponent = exponent.removed(of: of) {
+                return Power(newbase, newExponent)
+            } else {
+                return newbase
+            }
+        } else {
+            return nil
+        }
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return Power(base.changed(from: from, to: to), exponent.changed(from: from, to: to))
     }
@@ -583,6 +641,14 @@ extension UIColor {
 }
 
 struct RowEchelonForm:Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newMat = mat.removed(of: of) {
+            return RowEchelonForm(mat: newMat as! Mat)
+        } else {
+            return nil
+        }
+    }
+    
     func changeKid(from: String, to: Exp) -> Exp {
         return RowEchelonForm(mat: mat.changed(from: from, to: to) as! Mat)
     }
@@ -660,6 +726,13 @@ struct RowEchelonForm:Exp {
 }
 
 struct GaussJordanElimination:Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newMat = mat.removed(of: of) {
+            return GaussJordanElimination(mat: newMat as! Mat)
+        } else {
+            return nil
+        }
+    }
     func changeKid(from: String, to: Exp) -> Exp {
         return GaussJordanElimination(mat: mat.changed(from: from, to: to) as! Mat)
     }
@@ -705,6 +778,13 @@ struct GaussJordanElimination:Exp {
 }
 
 struct Transpose:Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newMat = mat.removed(of: of) {
+            return Transpose(newMat as! Mat)
+        } else {
+            return nil
+        }
+    }
     func changeKid(from: String, to: Exp) -> Exp {
         return Transpose(mat.changed(from: from, to: to) as! Mat)
     }
@@ -738,6 +818,13 @@ struct Transpose:Exp {
 }
 
 struct Determinant:Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newMat = mat.removed(of: of) {
+            return Determinant(newMat as! Mat)
+        } else {
+            return nil
+        }
+    }
     func changeKid(from: String, to: Exp) -> Exp {
         return Determinant(mat.changed(from: from, to: to) as! Mat)
     }
@@ -774,6 +861,11 @@ struct Determinant:Exp {
 }
 
 struct Fraction:Exp {
+    func removeKid(of: String) -> Exp? {
+        let newN = numerator.removed(of: of) ?? NumExp(1)
+        let newD = denominator.removed(of: of) ?? NumExp(1)
+        return Fraction(numerator: newN, denominator: newD)
+    }
     func changeKid(from: String, to: Exp) -> Exp {
         return Fraction(numerator: numerator.changed(from: from, to: to), denominator: denominator.changed(from: from, to: to))
     }
@@ -813,6 +905,13 @@ struct Fraction:Exp {
 }
 
 struct Inverse:Exp {
+    func removeKid(of: String) -> Exp? {
+        if let newMat = mat.removed(of: of) {
+            return Inverse(newMat as! Mat)
+        } else {
+            return nil
+        }
+    }
     func changeKid(from: String, to: Exp) -> Exp {
         return Inverse(mat.changed(from: from, to: to) as! Mat)
     }

@@ -50,7 +50,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         return _history.last!
     }
     func remove(uid: String) {
-        push(exp: removed(e: exp, uid: uid) ?? Unassigned("A"))
+        push(exp: exp.removed(of: uid) ?? Unassigned("A"))
         refresh()
     }
     
