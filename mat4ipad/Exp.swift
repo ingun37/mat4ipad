@@ -16,13 +16,24 @@ protocol Exp{
     /// Clone itself with different UID. Kids must have all new UIDs.
     func clone()->Exp
     
-    var kids:[Exp] {get set}
+    func changeKid(from:String, to:Exp)->Exp
+    
+    var kids:[Exp] {get}
     func latex() -> String
 
     /**
      Don't call eval of a newly created object inside of eval which is a possible !!!!
      */
     func eval() throws ->Exp
+}
+extension Exp {
+    func changed(from:String, to:Exp)-> Exp {
+        if uid == from {
+            return to
+        }
+        return changeKid(from: from, to: to)
+    }
+    
 }
 
 
@@ -63,6 +74,10 @@ extension evalErr {
 }
 
 struct Add:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Add(kids.map({$0.changed(from: from, to: to)}))
+    }
+    
     func clone() -> Exp {
         return Add(kids.map({$0.clone()}))
     }
@@ -83,6 +98,10 @@ struct Add:Exp {
     }
 }
 struct Mul: Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Mul(kids.map({$0.changed(from: from, to: to)}))
+    }
+    
     func clone() -> Exp {
         return Mul(kids.map({$0.clone()}))
     }
@@ -116,6 +135,12 @@ protocol VectorSpace: Exp {
     var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Mat(rowArr.map({
+            $0.map({$0.changed(from: from, to: to)})
+        }))
+    }
+    
     func clone() -> Exp {
         return Mat(rowArr.map({
             $0.map({$0.clone()})
@@ -253,6 +278,10 @@ extension Array where Element == Exp {
     }
 }
 struct Unassigned:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return self
+    }
+    
     func clone() -> Exp {
         return Unassigned(letter)
     }
@@ -274,6 +303,10 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return self
+    }
+    
     func clone() -> Exp {
         return NumExp(num)
     }
@@ -452,6 +485,10 @@ struct NumExp:VectorSpace {
     var kids: [Exp] = []
 }
 struct Power: Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Power(base.changed(from: from, to: to), exponent.changed(from: from, to: to))
+    }
+    
     func clone() -> Exp {
         return Power(base.clone(), exponent.clone())
     }
@@ -546,6 +583,10 @@ extension UIColor {
 }
 
 struct RowEchelonForm:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return RowEchelonForm(mat: mat.changed(from: from, to: to) as! Mat)
+    }
+    
     func clone() -> Exp {
         return RowEchelonForm(mat: mat.clone() as! Mat)
     }
@@ -619,6 +660,10 @@ struct RowEchelonForm:Exp {
 }
 
 struct GaussJordanElimination:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return GaussJordanElimination(mat: mat.changed(from: from, to: to) as! Mat)
+    }
+    
     func clone() -> Exp {
         return GaussJordanElimination(mat: mat.clone() as! Mat)
     }
@@ -660,6 +705,10 @@ struct GaussJordanElimination:Exp {
 }
 
 struct Transpose:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Transpose(mat.changed(from: from, to: to) as! Mat)
+    }
+    
     func clone() -> Exp {
         return Transpose(mat.clone() as! Mat)
     }
@@ -689,6 +738,10 @@ struct Transpose:Exp {
 }
 
 struct Determinant:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Determinant(mat.changed(from: from, to: to) as! Mat)
+    }
+    
     func clone() -> Exp {
         return Determinant(mat.clone() as! Mat)
     }
@@ -721,6 +774,10 @@ struct Determinant:Exp {
 }
 
 struct Fraction:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Fraction(numerator: numerator.changed(from: from, to: to), denominator: denominator.changed(from: from, to: to))
+    }
+    
     func clone() -> Exp {
         return Fraction(numerator: numerator.clone(), denominator: denominator.clone())
     }
@@ -756,6 +813,10 @@ struct Fraction:Exp {
 }
 
 struct Inverse:Exp {
+    func changeKid(from: String, to: Exp) -> Exp {
+        return Inverse(mat.changed(from: from, to: to) as! Mat)
+    }
+    
     func clone() -> Exp {
         return Inverse(mat.clone() as! Mat)
     }

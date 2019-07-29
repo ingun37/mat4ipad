@@ -56,7 +56,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     
     
     func changeto(uid:String, to: Exp) {
-        push(exp:replaced(e: exp, uid: uid, to: to))
+        push(exp: exp.changed(from: uid, to: to))
         refresh()
     }
     @IBAction func undo(_ sender: Any) {
