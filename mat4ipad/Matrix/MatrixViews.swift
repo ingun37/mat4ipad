@@ -20,10 +20,10 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         
 //        isMultipleTouchEnabled = true
     }
+    let overwriter = Overwriter()
     
-    var drawing:CGMutablePath = CGMutablePath()
     func drawTo(context: CGContext, strokeColor:UIColor) {
-        context.addPath(drawing)
+        context.addPath(overwriter.drawing)
         context.setLineCap(.round)
         context.setBlendMode(.normal)
         context.setLineWidth(2)
@@ -35,55 +35,41 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         guard let context: CGContext = UIGraphicsGetCurrentContext() else { return }
         drawTo(context: context, strokeColor: UIColor.black)
     }
-    enum TouchState {
-        case Began
-        case Moved
-        case End
-    }
-    var touchState:TouchState = .Began
-    var lastPoint = CGPoint.zero
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        guard let loc = touches.first?.location(in: self) else {return}
-        drawing.move(to: loc)
-        
+        guard let touch = touches.first else {return}
+        overwriter.follow(touch: touch, anchorView: self)
         setNeedsDisplay()
         timer?.invalidate()
-        lastPoint = loc
-        touchState = .Began
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        guard let loc = touches.first?.location(in: self) else {return}
-        drawing.addLine(to: loc)
+        guard let touch = touches.first else {return}
+        overwriter.follow(touch: touch, anchorView: self)
         setNeedsDisplay()
-        touchState = .Moved
-        lastPoint = loc
     }
     var timer:Timer? = nil
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
+        guard let touch = touches.first else {return}
+        overwriter.follow(touch: touch, anchorView: self)
+        self.setNeedsDisplay()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-            guard let img = CGPath2SquareImage(path: self.drawing, toSize: 28) else {return}
+            guard let img = CGPath2SquareImage(path: self.overwriter.drawing, toSize: 28) else {return}
             
             let model = ModelDataHandler(modelFileInfo: ByClass.modelInfo, labelsFileInfo: ByClass.labelsInfo)
             if let res = model?.runModel(onFrame: img) {
                 print(res.inferences.map({$0.label}))
             }
-            self.discardDrawing()
+            self.overwriter.reset()
+            self.setNeedsDisplay()
             print("fuck")
         })
-        if touchState == .Began {
-            drawing.addEllipse(in: CGRect(origin: lastPoint, size: CGSize(width: 2, height: 2)))
-        }
-        touchState = .End
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
-        discardDrawing()
-    }
-    func discardDrawing() {
-        drawing = CGMutablePath()
+        overwriter.reset()
         setNeedsDisplay()
     }
     

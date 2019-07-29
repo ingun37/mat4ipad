@@ -27,6 +27,7 @@
 		6B83576E22EE5FAE003C6C48 /* labels.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6B83576D22EE5FAE003C6C48 /* labels.txt */; };
 		6B83579A22EE83C2003C6C48 /* SingleRecognizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */; };
 		6B83579B22EE83C2003C6C48 /* SingleRecognizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6B83579F22EE8FA5003C6C48 /* OverWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B83579E22EE8FA5003C6C48 /* OverWriter.swift */; };
 		6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */; };
 		6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA2229D9A77006A56D8 /* ViewController.swift */; };
 		6BBE5BA6229D9A77006A56D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA4229D9A77006A56D8 /* Main.storyboard */; };
@@ -93,6 +94,7 @@
 		6B83576B22EDEABB003C6C48 /* converted_model.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = converted_model.tflite; sourceTree = "<group>"; };
 		6B83576D22EE5FAE003C6C48 /* labels.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = labels.txt; sourceTree = "<group>"; };
 		6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SingleRecognizer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B83579E22EE8FA5003C6C48 /* OverWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverWriter.swift; sourceTree = "<group>"; };
 		6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mat4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BBE5BA2229D9A77006A56D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				6B2F5C2E229E939500A634B3 /* ApplyTableVC.swift */,
 				6B83576922EDEA8B003C6C48 /* ModelDataHandler.swift */,
 				6B49898022A2FFB000F47A5E /* LatexView.swift */,
+				6B83579E22EE8FA5003C6C48 /* OverWriter.swift */,
 				6B2F5C26229E64DC00A634B3 /* ExpView.swift */,
 				6B2F5C2C229E6E5000A634B3 /* ExpView.xib */,
 				6BBE5BA7229D9A77006A56D8 /* Assets.xcassets */,
@@ -468,6 +471,7 @@
 			files = (
 				6B4989A522A6B85B00F47A5E /* MatrixViews.swift in Sources */,
 				6B2F5C27229E64DC00A634B3 /* ExpView.swift in Sources */,
+				6B83579F22EE8FA5003C6C48 /* OverWriter.swift in Sources */,
 				6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */,
 				6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */,
 				6B49899022A5056E00F47A5E /* ExpOp.swift in Sources */,
