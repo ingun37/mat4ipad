@@ -37,14 +37,10 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         let newMat = Mat(kids2d)
         changeto(uid: mat.uid, to: newMat)
     }
-    private func withRandomUID(exp:Exp)->Exp {
-        var e = exp
-        e.uid = UUID().uuidString
-        e.kids = e.kids.map({self.withRandomUID(exp: $0)})
-        return e
-    }
+    
     private func push(exp:Exp) {
-        _history.append(withRandomUID(exp: exp))
+        //by cloning exp, every single sub expressions has it's unique UID
+        _history.append(exp.clone())
     }
     private var _history:[Exp] = []
     private var exp:Exp {

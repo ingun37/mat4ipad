@@ -11,7 +11,11 @@ import UIKit
 import NumberKit
 
 protocol Exp{
-    var uid: String {get set}
+    var uid: String {get}
+    
+    /// Clone itself with different UID. Kids must have all new UIDs.
+    func clone()->Exp
+    
     var kids:[Exp] {get set}
     func latex() -> String
 
@@ -59,6 +63,10 @@ extension evalErr {
 }
 
 struct Add:Exp {
+    func clone() -> Exp {
+        return Add(kids.map({$0.clone()}))
+    }
+    
     var uid: String = UUID().uuidString
     var kids: [Exp] = []
     func latex() -> String {
@@ -75,6 +83,10 @@ struct Add:Exp {
     }
 }
 struct Mul: Exp {
+    func clone() -> Exp {
+        return Mul(kids.map({$0.clone()}))
+    }
+    
     func eval() throws -> Exp {
         let kds = try kids.map({try $0.eval()})
         return try kds.dropFirst().reduce(kds[0], {try mul($0, $1)})
@@ -104,6 +116,12 @@ protocol VectorSpace: Exp {
     var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    func clone() -> Exp {
+        return Mat(rowArr.map({
+            $0.map({$0.clone()})
+        }))
+    }
+    
     var isZero: Bool {
         return kids.allSatisfy({ ($0 as? NumExp)?.isZero ?? false})
     }
@@ -235,6 +253,10 @@ extension Array where Element == Exp {
     }
 }
 struct Unassigned:Exp {
+    func clone() -> Exp {
+        return Unassigned(letter)
+    }
+    
     func eval() throws -> Exp {
         return self
     }
@@ -252,6 +274,10 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    func clone() -> Exp {
+        return NumExp(num)
+    }
+    
     static func * (left: NumExp, right: NumExp) -> NumExp {
         switch left.num {
         case let .Float(v):
@@ -426,6 +452,10 @@ struct NumExp:VectorSpace {
     var kids: [Exp] = []
 }
 struct Power: Exp {
+    func clone() -> Exp {
+        return Power(base.clone(), exponent.clone())
+    }
+    
     var base:Exp {
         return kids[0]
     }
@@ -516,6 +546,10 @@ extension UIColor {
 }
 
 struct RowEchelonForm:Exp {
+    func clone() -> Exp {
+        return RowEchelonForm(mat: mat.clone() as! Mat)
+    }
+    
     var uid: String = UUID().uuidString
 
     var kids: [Exp]
@@ -585,6 +619,10 @@ struct RowEchelonForm:Exp {
 }
 
 struct GaussJordanElimination:Exp {
+    func clone() -> Exp {
+        return GaussJordanElimination(mat: mat.clone() as! Mat)
+    }
+    
     var uid: String = UUID().uuidString
 
     var kids: [Exp]
@@ -622,6 +660,10 @@ struct GaussJordanElimination:Exp {
 }
 
 struct Transpose:Exp {
+    func clone() -> Exp {
+        return Transpose(mat.clone() as! Mat)
+    }
+    
     var uid: String = UUID().uuidString
 
     var kids: [Exp]
@@ -647,6 +689,10 @@ struct Transpose:Exp {
 }
 
 struct Determinant:Exp {
+    func clone() -> Exp {
+        return Determinant(mat.clone() as! Mat)
+    }
+    
     var uid: String = UUID().uuidString
 
     var kids: [Exp]
@@ -675,6 +721,10 @@ struct Determinant:Exp {
 }
 
 struct Fraction:Exp {
+    func clone() -> Exp {
+        return Fraction(numerator: numerator.clone(), denominator: denominator.clone())
+    }
+    
     var uid: String = UUID().uuidString
     
     var kids: [Exp] = [Unassigned("N"), Unassigned("D")]
@@ -706,6 +756,10 @@ struct Fraction:Exp {
 }
 
 struct Inverse:Exp {
+    func clone() -> Exp {
+        return Inverse(mat.clone() as! Mat)
+    }
+    
     var uid: String = UUID().uuidString
     
     var kids: [Exp]
