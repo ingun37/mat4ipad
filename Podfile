@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '12.2'
+platform :ios, '12.4'
 
 target 'mat4ipad' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -11,6 +11,7 @@ target 'mat4ipad' do
   pod 'RxCocoa', '~> 5'
   pod 'PromisesSwift'
   pod 'TensorFlowLiteSwift'
+  pod 'ByClassRecognizer', :git => 'https://github.com/ingun37/ByClassRecognizer.git'
   
   target 'mat4ipadTests' do
     inherit! :search_paths

@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SingleRecognizer/SingleRecognizer.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:swift-numberkit-master/NumberKit.xcodeproj">
    </FileRef>
    <FileRef

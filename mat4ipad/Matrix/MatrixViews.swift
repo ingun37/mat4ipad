@@ -9,7 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
-import SingleRecognizer
+import ByClassRecognizer
 
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     @IBOutlet weak var imgView: UIImageView!
@@ -56,10 +56,7 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         overwriter.follow(touch: touch, anchorView: self)
         self.setNeedsDisplay()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-            guard let img = CGPath2SquareImage(path: self.overwriter.drawing, toSize: 28) else {return}
-            
-            let model = ModelDataHandler(modelFileInfo: ByClass.modelInfo, labelsFileInfo: ByClass.labelsInfo)
-            if let res = model?.runModel(onFrame: img) {
+            if let res = recognize(path: self.overwriter.drawing) {
                 print(res.inferences.map({$0.label}))
             }
             self.overwriter.reset()

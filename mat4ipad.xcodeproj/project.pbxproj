@@ -25,8 +25,6 @@
 		6B83576A22EDEA8B003C6C48 /* ModelDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B83576922EDEA8B003C6C48 /* ModelDataHandler.swift */; };
 		6B83576C22EDEABB003C6C48 /* converted_model.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 6B83576B22EDEABB003C6C48 /* converted_model.tflite */; };
 		6B83576E22EE5FAE003C6C48 /* labels.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6B83576D22EE5FAE003C6C48 /* labels.txt */; };
-		6B83579A22EE83C2003C6C48 /* SingleRecognizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */; };
-		6B83579B22EE83C2003C6C48 /* SingleRecognizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B83579F22EE8FA5003C6C48 /* OverWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B83579E22EE8FA5003C6C48 /* OverWriter.swift */; };
 		6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */; };
 		6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BA2229D9A77006A56D8 /* ViewController.swift */; };
@@ -62,7 +60,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				6B83579B22EE83C2003C6C48 /* SingleRecognizer.framework in Embed Frameworks */,
 				6B49899F22A57D3300F47A5E /* NumberKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -93,7 +90,6 @@
 		6B83576922EDEA8B003C6C48 /* ModelDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDataHandler.swift; sourceTree = "<group>"; };
 		6B83576B22EDEABB003C6C48 /* converted_model.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = converted_model.tflite; sourceTree = "<group>"; };
 		6B83576D22EE5FAE003C6C48 /* labels.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = labels.txt; sourceTree = "<group>"; };
-		6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SingleRecognizer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B83579E22EE8FA5003C6C48 /* OverWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverWriter.swift; sourceTree = "<group>"; };
 		6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mat4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -124,7 +120,6 @@
 			files = (
 				6B49899E22A57D3300F47A5E /* NumberKit.framework in Frameworks */,
 				F14B9F209542616905EC0C20 /* Pods_mat4ipad.framework in Frameworks */,
-				6B83579A22EE83C2003C6C48 /* SingleRecognizer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +168,6 @@
 		6BBE5B94229D9A77006A56D8 = {
 			isa = PBXGroup;
 			children = (
-				6B83579922EE83C2003C6C48 /* SingleRecognizer.framework */,
 				6BBE5BCE229E292F006A56D8 /* Podfile */,
 				6BBE5B9F229D9A77006A56D8 /* mat4ipad */,
 				6BBE5BB4229D9A77006A56D8 /* mat4ipadTests */,
@@ -266,6 +260,7 @@
 				6BBE5B9B229D9A77006A56D8 /* Resources */,
 				3FB74C3448C13DF983083D27 /* [CP] Embed Pods Frameworks */,
 				6B4989A022A57D3300F47A5E /* Embed Frameworks */,
+				7728C4C322ED918FA9480F82 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -424,6 +419,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7728C4C322ED918FA9480F82 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C825BE6A4255F56AC0F5EFD2 /* [CP] Check Pods Manifest.lock */ = {
