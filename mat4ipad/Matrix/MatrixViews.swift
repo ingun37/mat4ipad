@@ -64,6 +64,10 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         super.touchesEnded(touches, with: event)
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
             guard let img = self.exportDrawing(toSize: 28.0) else {return}
+            let model = ModelDataHandler(modelFileInfo: ByClass.modelInfo, labelsFileInfo: ByClass.labelsInfo)
+            if let res = model?.runModel(onFrame: img) {
+                print(res.inferences.map({$0.label}))
+            }
             self.discardDrawing()
             print("fuck")
         })
@@ -165,3 +169,4 @@ class MatrixView:UIView {
         return nib.instantiate(withOwner: nil, options: nil).first as! MatrixView
     }
 }
+
