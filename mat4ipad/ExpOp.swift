@@ -151,6 +151,11 @@ func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
                 return try products.dropFirst().reduce(products[0], {try add($0, $1)})
             })
         })
+        if new2d.count == 1 {
+            if new2d.first?.count == 1 {
+                return new2d[0][0]
+            }
+        }
         return Mat(new2d)
     }) ?? if2(a, b, { (a:Unassigned, b:Unassigned) -> Exp in
         return Unassigned("\(a.letter)\(b.letter)")

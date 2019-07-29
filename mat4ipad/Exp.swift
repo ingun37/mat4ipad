@@ -691,10 +691,12 @@ struct Fraction:Exp {
     }
     
     func eval() throws -> Exp {
-        if let n = numerator as? NumExp, let d = denominator as? NumExp {
+        let n = try numerator.eval()
+        let d = try denominator.eval()
+        if let n = n as? NumExp, let d = d as? NumExp {
             return try mul(n, d.inverse)
         }
-        return self
+        return Fraction(numerator: n, denominator: d)
     }
     
     init(numerator:Exp, denominator:Exp) {
