@@ -16,7 +16,7 @@ protocol ExpViewable:UIView {
 }
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
-    func expandBy(mat: Mat, row: Int, col: Int)
+    func changeto(uid:String, to: Exp)
 }
 
 

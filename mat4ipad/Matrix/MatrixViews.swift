@@ -53,16 +53,29 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         guard let touch = touches.first else {return}
-        overwriter.follow(touch: touch, anchorView: self)
-        self.setNeedsDisplay()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-            if let res = recognize(path: self.overwriter.drawing) {
-                print(res.inferences.map({$0.label}))
-            }
+        if overwriter.lastPhase == .began {
             self.overwriter.reset()
             self.setNeedsDisplay()
-            print("fuck")
-        })
+            del?.onTap(view: self)
+        } else {
+            overwriter.follow(touch: touch, anchorView: self)
+            self.setNeedsDisplay()
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
+                if let res = recognize(path: self.overwriter.drawing) {
+                    if let most = res.inferences.first {
+                        if let i = Int(most.label) {
+                            self.del?.changeto(uid: self.exp.uid, to: NumExp(i))
+                        } else {
+                            self.del?.changeto(uid: self.exp.uid, to: Unassigned(most.label))
+                        }
+                        return
+                    }
+                }
+                self.overwriter.reset()
+                self.setNeedsDisplay()
+            })
+        }
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
