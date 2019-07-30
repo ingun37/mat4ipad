@@ -643,18 +643,18 @@ extension UIColor {
 struct RowEchelonForm:Exp {
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
-            return RowEchelonForm(mat: newMat as! Mat)
+            return RowEchelonForm(mat: newMat)
         } else {
             return nil
         }
     }
     
     func changeKid(from: String, to: Exp) -> Exp {
-        return RowEchelonForm(mat: mat.changed(from: from, to: to) as! Mat)
+        return RowEchelonForm(mat: mat.changed(from: from, to: to))
     }
     
     func clone() -> Exp {
-        return RowEchelonForm(mat: mat.clone() as! Mat)
+        return RowEchelonForm(mat: mat.clone())
     }
     
     var uid: String = UUID().uuidString
@@ -717,28 +717,28 @@ struct RowEchelonForm:Exp {
         
     }
     
-    init(mat:Mat) {
+    init(mat:Exp) {
         kids = [mat]
     }
-    var mat:Mat {
-        return kids[0] as! Mat
+    var mat:Exp {
+        return kids[0]
     }
 }
 
 struct GaussJordanElimination:Exp {
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
-            return GaussJordanElimination(mat: newMat as! Mat)
+            return GaussJordanElimination(mat: newMat)
         } else {
             return nil
         }
     }
     func changeKid(from: String, to: Exp) -> Exp {
-        return GaussJordanElimination(mat: mat.changed(from: from, to: to) as! Mat)
+        return GaussJordanElimination(mat: mat.changed(from: from, to: to))
     }
     
     func clone() -> Exp {
-        return GaussJordanElimination(mat: mat.clone() as! Mat)
+        return GaussJordanElimination(mat: mat.clone())
     }
     
     var uid: String = UUID().uuidString
@@ -769,28 +769,28 @@ struct GaussJordanElimination:Exp {
         return ech
     }
     
-    init(mat:Mat) {
+    init(mat:Exp) {
         kids = [mat]
     }
-    var mat:Mat {
-        return kids[0] as! Mat
+    var mat:Exp {
+        return kids[0]
     }
 }
 
 struct Transpose:Exp {
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
-            return Transpose(newMat as! Mat)
+            return Transpose(newMat)
         } else {
             return nil
         }
     }
     func changeKid(from: String, to: Exp) -> Exp {
-        return Transpose(mat.changed(from: from, to: to) as! Mat)
+        return Transpose(mat.changed(from: from, to: to))
     }
     
     func clone() -> Exp {
-        return Transpose(mat.clone() as! Mat)
+        return Transpose(mat.clone())
     }
     
     var uid: String = UUID().uuidString
@@ -809,28 +809,28 @@ struct Transpose:Exp {
         let arr = (0..<m.cols).map({ m.col($0) })
         return Mat(arr)
     }
-    init(_ m:Mat) {
+    init(_ m:Exp) {
         kids = [m]
     }
-    var mat:Mat {
-        return kids[0] as! Mat
+    var mat:Exp {
+        return kids[0]
     }
 }
 
 struct Determinant:Exp {
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
-            return Determinant(newMat as! Mat)
+            return Determinant(newMat)
         } else {
             return nil
         }
     }
     func changeKid(from: String, to: Exp) -> Exp {
-        return Determinant(mat.changed(from: from, to: to) as! Mat)
+        return Determinant(mat.changed(from: from, to: to))
     }
     
     func clone() -> Exp {
-        return Determinant(mat.clone() as! Mat)
+        return Determinant(mat.clone())
     }
     
     var uid: String = UUID().uuidString
@@ -852,11 +852,11 @@ struct Determinant:Exp {
         return try m.determinant().eval()
         
     }
-    init(_ m:Mat) {
+    init(_ m:Exp) {
         kids = [m]
     }
-    var mat:Mat {
-        return kids[0] as! Mat
+    var mat:Exp {
+        return kids[0]
     }
 }
 
@@ -907,17 +907,17 @@ struct Fraction:Exp {
 struct Inverse:Exp {
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
-            return Inverse(newMat as! Mat)
+            return Inverse(newMat)
         } else {
             return nil
         }
     }
     func changeKid(from: String, to: Exp) -> Exp {
-        return Inverse(mat.changed(from: from, to: to) as! Mat)
+        return Inverse(mat.changed(from: from, to: to))
     }
     
     func clone() -> Exp {
-        return Inverse(mat.clone() as! Mat)
+        return Inverse(mat.clone())
     }
     
     var uid: String = UUID().uuidString
@@ -929,21 +929,25 @@ struct Inverse:Exp {
     }
     
     func eval() throws -> Exp {
-        let m = mat
-        guard m.rows == m.cols else {
-            throw evalErr.InvertingNonSquareMatrix
+        let m = try mat.eval()
+        if let m = m as? Mat {
+            guard m.rows == m.cols else {
+                throw evalErr.InvertingNonSquareMatrix
+            }
+            let det = try m.determinant()
+            if (det as? NumExp)?.isZero ?? false {
+                throw evalErr.invertingDeterminantZero
+            }
+            let invdet = (det as? NumExp)?.inverse ?? Fraction(numerator: NumExp.identity(), denominator: det) as Exp
+            return try mul(invdet, m.adjoint())
+        } else {
+            return Inverse(m)
         }
-        let det = try m.determinant()
-        if (det as? NumExp)?.isZero ?? false {
-            throw evalErr.invertingDeterminantZero
-        }
-        let invdet = (det as? NumExp)?.inverse ?? Fraction(numerator: NumExp.identity(), denominator: det) as Exp
-        return try mul(invdet, m.adjoint())
     }
-    init(_ m:Mat) {
+    init(_ m:Exp) {
         kids = [m]
     }
-    var mat:Mat {
-        return kids[0] as! Mat
+    var mat:Exp {
+        return kids[0]
     }
 }
