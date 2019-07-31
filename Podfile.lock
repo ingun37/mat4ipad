@@ -1,5 +1,5 @@
 PODS:
-  - ByClassRecognizer (0.1.0):
+  - ByClassRecognizer (0.1.2):
     - PromisesSwift
     - TensorFlowLiteSwift
   - iosMath (0.9.4)
@@ -17,7 +17,7 @@ PODS:
     - TensorFlowLiteC (= 0.2.0)
 
 DEPENDENCIES:
-  - ByClassRecognizer (from `https://github.com/ingun37/ByClassRecognizer.git`)
+  - ByClassRecognizer (from `https://github.com/ingun37/ByClassRecognizer.git`, commit `e727612f`)
   - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
   - PromisesSwift
   - RxCocoa (~> 5)
@@ -36,6 +36,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   ByClassRecognizer:
+    :commit: e727612f
     :git: https://github.com/ingun37/ByClassRecognizer.git
   iosMath:
     :commit: e9b6ec66911089ca0673dd0034715652e71420c9
@@ -43,14 +44,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ByClassRecognizer:
-    :commit: 88cd6d0978d51e3fb2f0032a6f0ff2903e229d53
+    :commit: e727612f
     :git: https://github.com/ingun37/ByClassRecognizer.git
   iosMath:
     :commit: e9b6ec66911089ca0673dd0034715652e71420c9
     :git: https://github.com/kostub/iosMath
 
 SPEC CHECKSUMS:
-  ByClassRecognizer: c5518a2719dbe2ff160f56c9fdd67be7dcbb24ce
+  ByClassRecognizer: 367ceeca46c8f98b7950e3795856b6ac26ff1845
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PromisesSwift: 37bad6f4daddb02f7c9c531efe91e8b21c13ee2f
@@ -60,6 +61,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
   TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
 
-PODFILE CHECKSUM: 8e69d7e7e84fd6c2f8127dcdd7703cff451fa80c
+PODFILE CHECKSUM: 2537260cc7531308d9346dbfe08c86aeb79c9fbe
 
 COCOAPODS: 1.7.1

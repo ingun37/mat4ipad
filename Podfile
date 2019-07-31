@@ -11,7 +11,7 @@ target 'mat4ipad' do
   pod 'RxCocoa', '~> 5'
   pod 'PromisesSwift'
   pod 'TensorFlowLiteSwift'
-  pod 'ByClassRecognizer', :git => 'https://github.com/ingun37/ByClassRecognizer.git'
+  pod 'ByClassRecognizer', :git => 'https://github.com/ingun37/ByClassRecognizer.git', :commit => 'e727612f'
   
   target 'mat4ipadTests' do
     inherit! :search_paths

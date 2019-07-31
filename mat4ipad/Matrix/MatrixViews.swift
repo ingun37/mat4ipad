@@ -62,16 +62,14 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
             self.setNeedsDisplay()
             
             timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-                if let res = recognize(path: self.overwriter.drawing) {
-                    if let most = res.inferences.first {
-                        if let i = Int(most.label) {
-                            self.del?.changeto(uid: self.exp.uid, to: NumExp(i))
-                        } else {
-                            self.del?.changeto(uid: self.exp.uid, to: Unassigned(most.label))
-                        }
-                        return
-                    }
+                let res = recognize(paths: seperate(path: self.overwriter.drawing))
+                let most = mostLikely(sign: res.0, results: res.1)
+                
+                if let i = Int(most) {
+                    self.del?.changeto(uid: self.exp.uid, to: NumExp(i))
+                    return
                 }
+                
                 self.overwriter.reset()
                 self.setNeedsDisplay()
             })
