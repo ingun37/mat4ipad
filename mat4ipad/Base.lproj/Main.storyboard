@@ -74,9 +74,18 @@
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rMw-In-n6T">
                                                 <rect key="frame" x="4" y="4" width="240" height="128"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
+                                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    </stackView>
+                                                </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="rMw-In-n6T" secondAttribute="top" id="18S-v8-iF2"/>
+                                                    <constraint firstAttribute="bottom" secondItem="5MG-ib-mfE" secondAttribute="bottom" id="22a-Yk-voP"/>
                                                     <constraint firstAttribute="width" priority="800" constant="240" id="9KC-bg-Dus"/>
+                                                    <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="rMw-In-n6T" secondAttribute="leading" id="fbX-az-7N0"/>
                                                     <constraint firstAttribute="height" priority="800" constant="128" id="lF4-By-zKw"/>
+                                                    <constraint firstAttribute="trailing" secondItem="5MG-ib-mfE" secondAttribute="trailing" id="ypm-h1-z8h"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -127,7 +136,7 @@
                     </view>
                     <connections>
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
-                        <outlet property="mathScrollContentView" destination="rMw-In-n6T" id="f4j-bu-j0X"/>
+                        <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" animates="NO" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">

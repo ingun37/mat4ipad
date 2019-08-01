@@ -106,8 +106,8 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     }
     
     
-    @IBOutlet weak var mathScrollContentView: UIView!
     
+    @IBOutlet weak var mathStackView:UIStackView!
     var mathView:ExpView?
     
     func setBG(e:ExpView, f:CGFloat) {
@@ -119,18 +119,14 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     }
     func refresh() {
         if let mv = mathView {
-            mathScrollContentView.willRemoveSubview(mv)
+            mathStackView.removeArrangedSubview(mv)
             mv.removeFromSuperview()
         }
         
         mathView = ExpView.loadViewFromNib()
         guard let mathView = mathView else {return}
         mathView.setExp(exp: exp, del:self)
-        mathScrollContentView.addSubview(mathView)
-        mathView.layoutMarginsGuide.leadingAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.leadingAnchor).isActive = true
-        mathView.layoutMarginsGuide.topAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.topAnchor).isActive = true
-        mathView.layoutMarginsGuide.trailingAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.trailingAnchor).isActive = true
-        mathView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: mathScrollContentView.layoutMarginsGuide.bottomAnchor).isActive = true
+        mathStackView.addArrangedSubview(mathView)
         
         setBG(e: mathView, f: 0.9)
         do {
