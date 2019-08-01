@@ -73,10 +73,30 @@
                                         <rect key="frame" x="0.0" y="56" width="768" height="144"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rMw-In-n6T">
-                                                <rect key="frame" x="4" y="4" width="240" height="128"/>
+                                                <rect key="frame" x="4" y="4" width="128" height="128"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
+                                                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSI-Rg-JFt">
+                                                                        <rect key="frame" x="43" y="54" width="42" height="20.5"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="128" id="FP1-3y-1BA"/>
+                                                                    <constraint firstAttribute="height" constant="128" id="HzA-3j-jkP"/>
+                                                                    <constraint firstItem="OSI-Rg-JFt" firstAttribute="centerY" secondItem="kh4-vC-Uuk" secondAttribute="centerY" id="QRg-q8-KB3"/>
+                                                                    <constraint firstItem="OSI-Rg-JFt" firstAttribute="centerX" secondItem="kh4-vC-Uuk" secondAttribute="centerX" id="WHv-xv-PFa"/>
+                                                                </constraints>
+                                                            </view>
+                                                        </subviews>
                                                     </stackView>
                                                 </subviews>
                                                 <constraints>

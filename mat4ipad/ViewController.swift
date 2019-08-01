@@ -126,7 +126,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         mathView = ExpView.loadViewFromNib()
         guard let mathView = mathView else {return}
         mathView.setExp(exp: exp, del:self)
-        mathStackView.addArrangedSubview(mathView)
+        mathStackView.insertArrangedSubview(mathView, at: 0)
         
         setBG(e: mathView, f: 0.9)
         do {
