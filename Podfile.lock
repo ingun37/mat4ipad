@@ -1,7 +1,4 @@
 PODS:
-  - ByClassRecognizer (0.1.2):
-    - PromisesSwift
-    - TensorFlowLiteSwift
   - iosMath (0.9.4)
   - PromisesObjC (1.2.8)
   - PromisesSwift (1.2.8):
@@ -12,16 +9,18 @@ PODS:
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
+  - SignedNumberRecognizer (0.1.0):
+    - TensorFlowLiteSwift
   - TensorFlowLiteC (0.2.0)
   - TensorFlowLiteSwift (0.2.0):
     - TensorFlowLiteC (= 0.2.0)
 
 DEPENDENCIES:
-  - ByClassRecognizer (from `https://github.com/ingun37/ByClassRecognizer.git`, commit `e727612f`)
   - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
   - PromisesSwift
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
+  - SignedNumberRecognizer
   - TensorFlowLiteSwift
 
 SPEC REPOS:
@@ -31,36 +30,31 @@ SPEC REPOS:
     - RxCocoa
     - RxRelay
     - RxSwift
+    - SignedNumberRecognizer
     - TensorFlowLiteC
     - TensorFlowLiteSwift
 
 EXTERNAL SOURCES:
-  ByClassRecognizer:
-    :commit: e727612f
-    :git: https://github.com/ingun37/ByClassRecognizer.git
   iosMath:
     :commit: e9b6ec66911089ca0673dd0034715652e71420c9
     :git: https://github.com/kostub/iosMath
 
 CHECKOUT OPTIONS:
-  ByClassRecognizer:
-    :commit: e727612f
-    :git: https://github.com/ingun37/ByClassRecognizer.git
   iosMath:
     :commit: e9b6ec66911089ca0673dd0034715652e71420c9
     :git: https://github.com/kostub/iosMath
 
 SPEC CHECKSUMS:
-  ByClassRecognizer: 367ceeca46c8f98b7950e3795856b6ac26ff1845
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PromisesSwift: 37bad6f4daddb02f7c9c531efe91e8b21c13ee2f
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  SignedNumberRecognizer: 66d876fa234b5cc2dc8e29a0fce03e393da471a2
   TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
   TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
 
-PODFILE CHECKSUM: 2537260cc7531308d9346dbfe08c86aeb79c9fbe
+PODFILE CHECKSUM: 61054df4fdbfa688d072d54433d358b240a2616c
 
 COCOAPODS: 1.7.1

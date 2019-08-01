@@ -9,7 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
-import ByClassRecognizer
+import SignedNumberRecognizer
 
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     
