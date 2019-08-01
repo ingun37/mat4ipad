@@ -171,4 +171,38 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
     }
+    
+    
+    @IBOutlet weak var newVarBtn: UIButton!
+    @IBOutlet weak var newVarTF: UITextField!
+    func resetNewVar() {
+        newVarTF.text = nil
+        newVarBtn.isEnabled = false
+    }
+    
+    @IBAction func newVarNameChanged(_ sender: UITextField) {
+        if sender.text?.first?.isNumber ?? false {
+            let alert = UIAlertController(title: "Invalid Variable Name", message: "Variable name can't start with number", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: false, completion: nil)
+            resetNewVar()
+        } else {
+            newVarBtn.isEnabled = sender.text?.count ?? 0 > 0
+        }
+        
+    }
+    @IBAction func addVariableClick(_ sender: Any) {
+        let varname = newVarTF.text ?? ""
+        guard !varname.isEmpty else {
+            resetNewVar()
+            return
+        }
+    }
+}
+
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
