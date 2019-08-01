@@ -9,7 +9,11 @@
 import Foundation
 import UIKit
 import NumberKit
-
+enum EvalType {
+    case Num
+    case Mat
+    case Unknown
+}
 protocol Exp{
     var uid: String {get}
     
@@ -20,11 +24,15 @@ protocol Exp{
     func removeKid(of:String)->Exp?
     var kids:[Exp] {get}
     func latex() -> String
-
-    /**
-     Don't call eval of a newly created object inside of eval which is a possible !!!!
-     */
+    
+    
+    /// Never call eval of a newly created object inside of eval which is a possible stack overflow
     func eval() throws ->Exp
+    
+    /// Estimate it's evaluation type
+    ///
+    /// Never call eval() in here
+    func evalType()-> EvalType
 }
 extension Exp {
     func changed(from:String, to:Exp)-> Exp {
@@ -79,6 +87,18 @@ extension evalErr {
 }
 
 struct Add:Exp {
+    func evalType() -> EvalType {
+        if kids.allSatisfy({$0.evalType() == .Mat}) {
+            return .Mat
+        } else if kids.allSatisfy({$0.evalType() == .Num}) {
+            return .Num
+        } else {
+            return .Unknown
+        }
+    }
+    
+    
+    
     func removeKid(of: String) -> Exp? {
         let newkids = kids.compactMap({$0.removed(of: of)})
         if newkids.count == 1 {
@@ -114,6 +134,16 @@ struct Add:Exp {
     }
 }
 struct Mul: Exp {
+    func evalType() -> EvalType {
+        // You can't know to what multiplication of matrices will evalutes.
+        // Because some multiplication of matrices will evalute numeric value.
+        if kids.allSatisfy({$0.evalType() == .Num}) {
+            return .Num
+        } else {
+            return .Unknown
+        }
+    }
+    
     func removeKid(of: String) -> Exp? {
         let newkids = kids.compactMap({$0.removed(of: of)})
         if newkids.count == 1 {
@@ -162,6 +192,10 @@ protocol VectorSpace: Exp {
     var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    func evalType() -> EvalType {
+        return .Mat
+    }
+    
     func removeKid(of: String) -> Exp? {
         let newkids = kids.map({$0.removed(of: of)})
         let newkids2 = newkids.map({ $0 ?? NumExp(0)})
@@ -316,6 +350,10 @@ extension Array where Element == Exp {
     }
 }
 struct Unassigned:Exp {
+    func evalType() -> EvalType {
+        return .Unknown
+    }
+    
     func removeKid(of: String) -> Exp? {
         return self
     }
@@ -345,6 +383,10 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    func evalType() -> EvalType {
+        return .Num
+    }
+    
     func removeKid(of: String) -> Exp? {
         return self
     }
@@ -531,6 +573,10 @@ struct NumExp:VectorSpace {
     var kids: [Exp] = []
 }
 struct Power: Exp {
+    func evalType() -> EvalType {
+        return base.evalType()
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newbase = base.removed(of: of) {
             if let newExponent = exponent.removed(of: of) {
@@ -641,6 +687,10 @@ extension UIColor {
 }
 
 struct RowEchelonForm:Exp {
+    func evalType() -> EvalType {
+        return .Mat
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
             return RowEchelonForm(mat: newMat)
@@ -726,6 +776,10 @@ struct RowEchelonForm:Exp {
 }
 
 struct GaussJordanElimination:Exp {
+    func evalType() -> EvalType {
+        return .Mat
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
             return GaussJordanElimination(mat: newMat)
@@ -778,6 +832,10 @@ struct GaussJordanElimination:Exp {
 }
 
 struct Transpose:Exp {
+    func evalType() -> EvalType {
+        return .Mat
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
             return Transpose(newMat)
@@ -818,6 +876,10 @@ struct Transpose:Exp {
 }
 
 struct Determinant:Exp {
+    func evalType() -> EvalType {
+        return .Num
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
             return Determinant(newMat)
@@ -861,6 +923,10 @@ struct Determinant:Exp {
 }
 
 struct Fraction:Exp {
+    func evalType() -> EvalType {
+        return .Num
+    }
+    
     func removeKid(of: String) -> Exp? {
         let newN = numerator.removed(of: of) ?? NumExp(1)
         let newD = denominator.removed(of: of) ?? NumExp(1)
@@ -905,6 +971,10 @@ struct Fraction:Exp {
 }
 
 struct Inverse:Exp {
+    func evalType() -> EvalType {
+        return mat.evalType()
+    }
+    
     func removeKid(of: String) -> Exp? {
         if let newMat = mat.removed(of: of) {
             return Inverse(newMat)
@@ -922,7 +992,10 @@ struct Inverse:Exp {
     
     var uid: String = UUID().uuidString
     
-    var kids: [Exp]
+    
+    var kids: [Exp] {
+        return [mat]
+    }
     
     func latex() -> String {
         return "{\(kids[0].latex())}^{-1}"
@@ -944,10 +1017,9 @@ struct Inverse:Exp {
             return Inverse(m)
         }
     }
+    let mat:Exp
     init(_ m:Exp) {
-        kids = [m]
+        mat = m
     }
-    var mat:Exp {
-        return kids[0]
-    }
+    
 }

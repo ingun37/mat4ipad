@@ -503,28 +503,40 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="304" height="85.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLG-L8-t66" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VN1-qr-oOp">
                                                             <rect key="frame" x="4" y="8" width="296" height="69.5"/>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="296" id="Elt-Vm-EO2"/>
-                                                                <constraint firstAttribute="height" priority="900" constant="50" id="dh9-GB-Fpx"/>
-                                                            </constraints>
-                                                            <connections>
-                                                                <outlet property="initialHeightCon" destination="dh9-GB-Fpx" id="3qV-gL-CQf"/>
-                                                                <outlet property="widthGreater" destination="Elt-Vm-EO2" id="24v-eR-tRG"/>
-                                                            </connections>
-                                                        </view>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kCu-7C-ebN">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="69.5"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLG-L8-t66" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="296" height="69.5"/>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="296" id="Elt-Vm-EO2"/>
+                                                                        <constraint firstAttribute="height" priority="900" constant="50" id="dh9-GB-Fpx"/>
+                                                                    </constraints>
+                                                                    <connections>
+                                                                        <outlet property="initialHeightCon" destination="dh9-GB-Fpx" id="3qV-gL-CQf"/>
+                                                                        <outlet property="widthGreater" destination="Elt-Vm-EO2" id="24v-eR-tRG"/>
+                                                                    </connections>
+                                                                </view>
+                                                            </subviews>
+                                                        </stackView>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="RLG-L8-t66" firstAttribute="leading" secondItem="H4h-Of-AXe" secondAttribute="leading" constant="4" id="BIM-rM-gvI"/>
-                                                        <constraint firstAttribute="bottom" secondItem="RLG-L8-t66" secondAttribute="bottom" constant="8" id="HG3-yV-oCF"/>
-                                                        <constraint firstAttribute="trailing" secondItem="RLG-L8-t66" secondAttribute="trailing" constant="4" id="w3m-od-7VR"/>
-                                                        <constraint firstItem="RLG-L8-t66" firstAttribute="top" secondItem="H4h-Of-AXe" secondAttribute="top" constant="8" id="xyj-KU-9x4"/>
+                                                        <constraint firstAttribute="trailing" secondItem="VN1-qr-oOp" secondAttribute="trailing" constant="4" id="0OT-Za-Yg8"/>
+                                                        <constraint firstItem="VN1-qr-oOp" firstAttribute="top" secondItem="H4h-Of-AXe" secondAttribute="top" constant="8" id="3lF-WF-Ft2"/>
+                                                        <constraint firstAttribute="bottom" secondItem="VN1-qr-oOp" secondAttribute="bottom" constant="8" id="DsP-Gv-dho"/>
+                                                        <constraint firstItem="VN1-qr-oOp" firstAttribute="leading" secondItem="H4h-Of-AXe" secondAttribute="leading" constant="4" id="aAM-vo-cSU"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>
                                                     <outlet property="latex" destination="RLG-L8-t66" id="ULj-Ik-4Aj"/>
+                                                    <outlet property="lbl" destination="kCu-7C-ebN" id="32H-MC-dDy"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>

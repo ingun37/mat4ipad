@@ -34,23 +34,39 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     func set(exp:Exp) {
         self.exp = exp
     }
-    func optionsFor(exp:Exp)-> [Exp] {
-        var options:[Exp] = []
-        if exp is Unassigned {
-            options.append(Mat.identityOf(2, 2))
+    struct Represent {
+        let exp:Exp
+        let showLatex:String
+        init(_ e:Exp) {
+            exp = e
+            showLatex = e.latex()
         }
-        if let exp = exp as? Mat {
-            options.append(RowEchelonForm(mat: exp))
-            options.append(GaussJordanElimination(mat: exp))
-            options.append(Transpose(exp))
-            options.append(Determinant(exp))
-            options.append(Inverse(exp))
-        } else {
-            options.append(Fraction(numerator: exp, denominator: Unassigned("D")))
+        init(_ e:Exp, show:String) {
+            exp = e
+            showLatex = show
         }
-        options.append(Mul([exp, Unassigned("Z")]))
-        options.append(Add([exp, Unassigned("Z")]))
-        options.append(Power(exp, Unassigned("n")))
+    }
+    func optionsFor(exp:Exp)-> [Represent] {
+        var options:[Represent] = []
+        let evalType = exp.evalType()
+        if evalType == .Mat || evalType == .Unknown {
+            options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}"))
+            options.append(Represent(GaussJordanElimination(mat: exp), show: "\\text{Gauss Jordan Elimination}"))
+            options.append(Represent(Transpose(exp)))
+            options.append(Represent(Determinant(exp)))
+            
+        }
+        
+        if evalType == .Num || evalType == .Unknown {
+            options.append(Represent(Fraction(numerator: exp, denominator: Unassigned("D"))))
+            options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
+        }
+        
+        options.append(Represent(Inverse(exp)))
+        options.append(Represent(Mat.identityOf(2, 2)))
+        options.append(Represent(Mul([exp, Unassigned("Z")])))
+        options.append(Represent(Add([exp, Unassigned("Z")])))
+        options.append(Represent(Power(exp, Unassigned("n"))))
         
         return options
     }
@@ -62,15 +78,16 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }
         let options = optionsFor(exp: exp)
         let oble = Observable.just(options)
-        let ct = UITableViewCell.self
-        oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ct), curriedArgument: { (row, element, cell) in
-            (cell as? ApplyTableCell)?.latex.set(element.latex())
+        
+        
+        oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ApplyTableCell.self), curriedArgument: { (row, element, cell) in
+            cell.latex.set(element.showLatex)
+            cell.lbl.text = "" //unused
         }).disposed(by: disposeBag)
         
-        tv.rx.modelSelected(Exp.self).subscribe(onNext:  { value in
+        tv.rx.modelSelected(Represent.self).subscribe(onNext:  { value in
             self.dismiss(animated: false, completion: {
-                print("sending to value \(value.uid): \(value.latex())")
-                self.promise.fulfill(.changed(exp.uid, value))
+                self.promise.fulfill(.changed(exp.uid, value.exp))
             })
         }).disposed(by: disposeBag)
         popoverPresentationController?.delegate = self
@@ -152,6 +169,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!
+    @IBOutlet weak var lbl:UILabel!
 }
 
 extension String {
