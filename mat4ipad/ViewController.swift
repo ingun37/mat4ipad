@@ -108,27 +108,28 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     
     
     @IBOutlet weak var mathStackView:UIStackView!
-    var mathView:ExpView?
+    var mainMathView:VarView?
     
-    func setBG(e:ExpView, f:CGFloat) {
+    func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
         e.directSubExpViews.forEach { (v) in
-            self.setBG(e: v, f:f - 0.1)
+            self.setHierarchyBG(e: v, f:f - 0.1)
         }
     }
     func refresh() {
-        if let mv = mathView {
+        if let mv = mainMathView {
             mathStackView.removeArrangedSubview(mv)
             mv.removeFromSuperview()
         }
         
-        mathView = ExpView.loadViewFromNib()
-        guard let mathView = mathView else {return}
-        mathView.setExp(exp: exp, del:self)
-        mathStackView.insertArrangedSubview(mathView, at: 0)
+        let v = VarView.loadViewFromNib()
+        mainMathView = v
         
-        setBG(e: mathView, f: 0.9)
+        let subExpView = v.set(name:"Main", exp: exp, del:self)
+        mathStackView.insertArrangedSubview(v, at: 0)
+        
+        setHierarchyBG(e: subExpView, f: 0.9)
         do {
             try preview.set("= {\(exp.eval().latex())}")
         } catch {
@@ -163,7 +164,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
             preview.removeFromSuperview()
         }
         matrixResizePreviews.removeAll()
-        guard let mathView = mathView else {return}
+        guard let mathView = mainMathView?.expView else {return}
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
         matrixResizePreviews = mats.map({
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
