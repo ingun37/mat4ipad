@@ -239,6 +239,10 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         history.push(main: last.main, vars: newVars)
         refresh()
     }
+    @IBAction func clearClick(_ sender: Any) {
+        history.push(main: Unassigned("A"), vars: [:])
+        refresh()
+    }
 }
 
 extension ViewController: UITextFieldDelegate {

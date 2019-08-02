@@ -29,7 +29,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GmD-Cc-c21">
                                         <rect key="frame" x="0.0" y="0.0" width="768" height="48"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
                                                 <rect key="frame" x="8" y="0.0" width="752" height="48"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo">
@@ -40,11 +40,8 @@
                                                             <constraint firstAttribute="width" secondItem="Fvt-Yj-Zgo" secondAttribute="height" multiplier="1:1" id="aeU-dQ-Wn7"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                        <color key="tintColor" red="0.89411764709999997" green="0.3921568627" blue="0.4431372549" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <inset key="titleEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
-                                                        <state key="normal" title="⃔">
-                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </state>
+                                                        <state key="normal" title="⃔"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                 <integer key="value" value="24"/>
@@ -54,8 +51,15 @@
                                                             <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tJ7-iD-jcT"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qVj-Df-3At">
-                                                        <rect key="frame" x="48" y="0.0" width="704" height="48"/>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ">
+                                                        <rect key="frame" x="52" y="0.0" width="36" height="48"/>
+                                                        <state key="normal" title="Clear"/>
+                                                        <connections>
+                                                            <action selector="clearClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="huT-Tl-iuE"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="247" horizontalCompressionResistancePriority="747" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qVj-Df-3At">
+                                                        <rect key="frame" x="92" y="0.0" width="660" height="48"/>
                                                         <state key="normal" title="Button"/>
                                                     </button>
                                                 </subviews>
