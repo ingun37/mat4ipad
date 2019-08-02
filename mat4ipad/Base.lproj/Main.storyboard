@@ -73,10 +73,10 @@
                                         <rect key="frame" x="0.0" y="56" width="768" height="144"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rMw-In-n6T">
-                                                <rect key="frame" x="4" y="4" width="256" height="128"/>
+                                                <rect key="frame" x="4" y="4" width="384" height="128"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="256" height="128"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="384" height="128"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="VarInitView" customModule="mat4ipad" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -85,8 +85,15 @@
                                                                     <constraint firstAttribute="height" constant="128" placeholder="YES" id="gSZ-Zf-tQz"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
+                                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cE-JV-GVH">
                                                                 <rect key="frame" x="128" y="0.0" width="128" height="128"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="128" placeholder="YES" id="14w-JG-4qR"/>
+                                                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="dDA-bP-Xro"/>
+                                                                </constraints>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
+                                                                <rect key="frame" x="256" y="0.0" width="128" height="128"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nhJ-kn-XZu">
                                                                         <rect key="frame" x="20.5" y="34" width="87" height="60"/>
@@ -191,6 +198,7 @@
                         <outlet property="newVarTF" destination="bgh-Ss-2Tx" id="GYn-k0-7Ob"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
+                        <outlet property="varStack" destination="1cE-JV-GVH" id="NRB-o0-J0u"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" animates="NO" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>

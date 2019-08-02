@@ -110,6 +110,8 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     @IBOutlet weak var mathStackView:UIStackView!
     @IBOutlet weak var mainVarView:VarInitView!
     
+    @IBOutlet weak var varStack: UIStackView!
+    
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
@@ -190,6 +192,9 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
             resetNewVar()
             return
         }
+        let varview = VarView.loadViewFromNib()
+        varview.set(name: varname, exp: Unassigned(varname), del: self)
+        varStack.addArrangedSubview(varview)
     }
 }
 
