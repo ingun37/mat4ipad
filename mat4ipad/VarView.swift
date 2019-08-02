@@ -43,3 +43,14 @@ class VarView: UIView, ExpViewable {
     */
 
 }
+
+class VarInitView:UIView {
+    var varview:VarView
+    
+    required init?(coder aDecoder: NSCoder) {
+        varview = VarView.loadViewFromNib()
+        super.init(coder: aDecoder)
+        varview.frame = bounds
+        addSubview(varview)
+    }
+}

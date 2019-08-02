@@ -108,7 +108,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     
     
     @IBOutlet weak var mathStackView:UIStackView!
-    var mainMathView:VarView?
+    @IBOutlet weak var mainVarView:VarInitView!
     
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
@@ -118,16 +118,9 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         }
     }
     func refresh() {
-        if let mv = mainMathView {
-            mathStackView.removeArrangedSubview(mv)
-            mv.removeFromSuperview()
-        }
+        let subExpView = mainVarView.varview.set(name: "Main", exp: exp, del: self)
         
-        let v = VarView.loadViewFromNib()
-        mainMathView = v
         
-        let subExpView = v.set(name:"Main", exp: exp, del:self)
-        mathStackView.insertArrangedSubview(v, at: 0)
         
         setHierarchyBG(e: subExpView, f: 0.9)
         do {
@@ -164,7 +157,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
             preview.removeFromSuperview()
         }
         matrixResizePreviews.removeAll()
-        guard let mathView = mainMathView?.expView else {return}
+        guard let mathView = mainVarView.varview.expView else {return}
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
         matrixResizePreviews = mats.map({
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
