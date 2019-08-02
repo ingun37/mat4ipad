@@ -34,6 +34,7 @@
 		6BBE5BC1229D9A77006A56D8 /* mat4ipadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE5BC0229D9A77006A56D8 /* mat4ipadUITests.swift */; };
 		6BDC97C022F34C11009BD451 /* VarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BDC97BF22F34C11009BD451 /* VarView.xib */; };
 		6BDC97C222F34D59009BD451 /* VarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDC97C122F34D59009BD451 /* VarView.swift */; };
+		6BFE54CB22F4A0E800476825 /* MathScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE54CA22F4A0E800476825 /* MathScrollView.swift */; };
 		F14B9F209542616905EC0C20 /* Pods_mat4ipad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCDAA1D25335F34931D38BA /* Pods_mat4ipad.framework */; };
 /* End PBXBuildFile section */
 
@@ -107,6 +108,7 @@
 		6BBE5BCE229E292F006A56D8 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		6BDC97BF22F34C11009BD451 /* VarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VarView.xib; sourceTree = "<group>"; };
 		6BDC97C122F34D59009BD451 /* VarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VarView.swift; sourceTree = "<group>"; };
+		6BFE54CA22F4A0E800476825 /* MathScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathScrollView.swift; sourceTree = "<group>"; };
 		6F24F6C796DEEA6B97B096B5 /* Pods-mat4ipadUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadUITests/Pods-mat4ipadUITests.release.xcconfig"; sourceTree = "<group>"; };
 		95799D30292970263F20A7CA /* Pods_mat4ipadUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mat4ipadUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41F4B3CD988DD2058B939AA /* Pods-mat4ipad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipad.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipad/Pods-mat4ipad.release.xcconfig"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				6BBE5BAC229D9A77006A56D8 /* Info.plist */,
 				6B39EC1B22C0BBFB001B25AB /* ResizePreview.xib */,
 				6B39EC1D22C0BC3F001B25AB /* ResizePreview.swift */,
+				6BFE54CA22F4A0E800476825 /* MathScrollView.swift */,
 			);
 			path = mat4ipad;
 			sourceTree = "<group>";
@@ -488,6 +491,7 @@
 				6B4989A522A6B85B00F47A5E /* MatrixViews.swift in Sources */,
 				6B2F5C27229E64DC00A634B3 /* ExpView.swift in Sources */,
 				6BBE5BA3229D9A77006A56D8 /* ViewController.swift in Sources */,
+				6BFE54CB22F4A0E800476825 /* MathScrollView.swift in Sources */,
 				6BBE5BA1229D9A77006A56D8 /* AppDelegate.swift in Sources */,
 				6B49899022A5056E00F47A5E /* ExpOp.swift in Sources */,
 				6B49898122A2FFB000F47A5E /* LatexView.swift in Sources */,
