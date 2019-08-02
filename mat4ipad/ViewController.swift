@@ -149,8 +149,19 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             setHierarchyBG(e: expview, f: 0.9)
         }
         
+        let mainExp = mainexpview.exp
+        let finalExp = history.top.vars.reduce(mainExp) { (lastExp, arg1) -> Exp in
+            let (varname, varExp) = arg1
+            let uids = self.findUIDs(from: lastExp, that: { (e) -> Bool in
+                return (e as? Unassigned)?.letter == varname
+            })
+            return uids.reduce(lastExp, { (a, b) -> Exp in
+                a.changed(from: b, to: varExp)
+            })
+        }
+        
         do {
-            try preview.set("= {\(exp.eval().latex())}")
+            try preview.set("= {\(finalExp.eval().latex())}")
         } catch {
             if let e = error as? evalErr {
                 preview.set("= {\(e.describeInLatex())}")
@@ -161,6 +172,14 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         
         self.view.layoutIfNeeded()
         makeResizers()
+    }
+    func findUIDs(from:Exp, that:(Exp)->Bool)->[String] {
+        let fromKids = from.kids.flatMap({findUIDs(from: $0, that: that)})
+        if that(from) {
+            return fromKids + [from.uid]
+        } else {
+            return fromKids
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
