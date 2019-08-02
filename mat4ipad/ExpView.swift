@@ -183,3 +183,36 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
 
+class ExpInitView:UIView {
+    var contentView:ExpView?
+    
+    required init?(coder aDecoder: NSCoder) {
+        
+        super.init(coder: aDecoder)
+        
+        translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func set(exp:Exp, del:ExpViewableDelegate)-> ExpView {
+        if let v = contentView {
+            willRemoveSubview(v)
+        }
+        contentView?.removeFromSuperview()
+        
+        let eview = ExpView.loadViewFromNib()
+        
+        eview.frame = bounds
+        addSubview(eview)
+        
+        eview.layoutMarginsGuide.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor).isActive = true
+        eview.layoutMarginsGuide.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor).isActive = true
+        eview.layoutMarginsGuide.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor).isActive = true
+        eview.layoutMarginsGuide.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
+        
+        contentView = eview
+        
+        
+        eview.setExp(exp: exp, del: del)
+        return eview
+    }
+}

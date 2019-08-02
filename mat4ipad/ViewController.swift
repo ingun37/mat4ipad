@@ -108,7 +108,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     
     
     @IBOutlet weak var mathStackView:UIStackView!
-    @IBOutlet weak var mainVarView:VarInitView!
+    @IBOutlet weak var mainExpView:ExpInitView!
     
     @IBOutlet weak var varStack: UIStackView!
     
@@ -120,11 +120,10 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         }
     }
     func refresh() {
-        let subExpView = mainVarView.varview.set(name: "Main", exp: exp, del: self)
+        mainExpView.set(exp: exp, del: self)
         
-        
-        
-        setHierarchyBG(e: subExpView, f: 0.9)
+        guard let expview = mainExpView.contentView else {return}
+        setHierarchyBG(e: expview, f: 0.9)
         do {
             try preview.set("= {\(exp.eval().latex())}")
         } catch {
@@ -159,7 +158,7 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
             preview.removeFromSuperview()
         }
         matrixResizePreviews.removeAll()
-        guard let mathView = mainVarView.varview.expView else {return}
+        guard let mathView = mainExpView.contentView else {return}
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
         matrixResizePreviews = mats.map({
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)

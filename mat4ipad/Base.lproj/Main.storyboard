@@ -78,7 +78,7 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
                                                         <rect key="frame" x="0.0" y="0.0" width="384" height="128"/>
                                                         <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="VarInitView" customModule="mat4ipad" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="ExpInitView" customModule="mat4ipad" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="128" placeholder="YES" id="d9t-Aw-hbA"/>
@@ -192,7 +192,7 @@
                     </view>
                     <connections>
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
-                        <outlet property="mainVarView" destination="WlF-gG-ROh" id="Hnl-Dl-6dS"/>
+                        <outlet property="mainExpView" destination="WlF-gG-ROh" id="YWv-LL-kMF"/>
                         <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
                         <outlet property="newVarBtn" destination="fFX-yB-t6a" id="1O8-GZ-McV"/>
                         <outlet property="newVarTF" destination="bgh-Ss-2Tx" id="GYn-k0-7Ob"/>
