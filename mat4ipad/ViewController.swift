@@ -11,7 +11,7 @@ import iosMath
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelegate {
+class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
     
     @IBOutlet weak var undoButton: UIButton!
@@ -55,19 +55,13 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
     }
     
     
-    func changeto(uid:String, to: Exp) {
-        push(exp: exp.changed(from: uid, to: to))
-        refresh()
-    }
+    
     @IBAction func undo(_ sender: Any) {
         let _ = _history.popLast()
         refresh()
     }
     
-    func onTap(view: ExpViewable) {
-        performSegue(withIdentifier: "op", sender: view)
-    }
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "op" {
             guard let vc = segue.destination as? ApplyTableVC else { return }
@@ -120,10 +114,14 @@ class ViewController: UIViewController, ExpViewableDelegate, ResizePreviewDelega
         }
     }
     func refresh() {
-        mainExpView.set(exp: exp, del: self)
+        let expview = mainExpView.set(exp: exp, del: self)
         
-        guard let expview = mainExpView.contentView else {return}
         setHierarchyBG(e: expview, f: 0.9)
+        
+        for v in varStack.arrangedSubviews.compactMap({($0 as? VarView)?.expView}) {
+            setHierarchyBG(e: v, f: 0.9)
+        }
+        
         do {
             try preview.set("= {\(exp.eval().latex())}")
         } catch {
@@ -201,5 +199,15 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension ViewController: ExpViewableDelegate {
+    func changeto(uid:String, to: Exp) {
+        push(exp: exp.changed(from: uid, to: to))
+        refresh()
+    }
+    func onTap(view: ExpViewable) {
+        performSegue(withIdentifier: "op", sender: view)
     }
 }
