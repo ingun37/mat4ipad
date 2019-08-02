@@ -73,10 +73,10 @@
                                         <rect key="frame" x="0.0" y="56" width="768" height="144"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rMw-In-n6T">
-                                                <rect key="frame" x="4" y="4" width="384" height="128"/>
+                                                <rect key="frame" x="4" y="4" width="392" height="128"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="384" height="128"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
+                                                        <rect key="frame" x="0.0" y="0.0" width="392" height="128"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="ExpInitView" customModule="mat4ipad" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -85,15 +85,15 @@
                                                                     <constraint firstAttribute="height" constant="128" placeholder="YES" id="gSZ-Zf-tQz"/>
                                                                 </constraints>
                                                             </view>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cE-JV-GVH">
-                                                                <rect key="frame" x="128" y="0.0" width="128" height="128"/>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="1cE-JV-GVH">
+                                                                <rect key="frame" x="132" y="0.0" width="128" height="128"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="128" placeholder="YES" id="14w-JG-4qR"/>
                                                                     <constraint firstAttribute="height" constant="128" placeholder="YES" id="dDA-bP-Xro"/>
                                                                 </constraints>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
-                                                                <rect key="frame" x="256" y="0.0" width="128" height="128"/>
+                                                                <rect key="frame" x="264" y="0.0" width="128" height="128"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nhJ-kn-XZu">
                                                                         <rect key="frame" x="20.5" y="34" width="87" height="60"/>
