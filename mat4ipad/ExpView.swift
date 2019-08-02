@@ -39,7 +39,6 @@ class ExpView: UIView, ExpViewable {
     let disposeBag = DisposeBag()
 
     @IBAction func ontap(_ sender: Any) {
-        print("sending \(exp.uid)")
         del?.onTap(view: self)
     }
     required init?(coder aDecoder: NSCoder) {

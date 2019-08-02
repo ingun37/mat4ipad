@@ -58,7 +58,6 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
                 timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
                     let res = recognize(paths: seperate(path: self.drawing))
                     let most = mostLikely(sign: res.0, results: res.1)
-                    print(most)
                     if let i = Int(most) {
                         self.del?.changeto(uid: self.exp.uid, to: NumExp(i))
                     } else {

@@ -10,7 +10,27 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
-
+struct History {
+    struct State {
+        let main:Exp
+        let vars:[String:Exp]
+    }
+    private var _history:[State] = []
+    mutating func push(main:Exp, vars:[String:Exp]) {
+        _history.append(State(main: main.clone(), vars: vars.mapValues({ $0.clone()
+        })))
+    }
+    mutating func push(main:Exp) {
+        _history.append(State(main: main.clone(), vars: top.vars))
+    }
+    var top:State {
+        return _history.last ?? State(main: Unassigned("A"), vars: [:])
+    }
+    @discardableResult
+    mutating func pop()-> State? {
+        return _history.popLast()
+    }
+}
 class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
     
@@ -38,26 +58,26 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         changeto(uid: mat.uid, to: newMat)
     }
     
-    private func push(exp:Exp) {
-        //by cloning exp, every single sub expressions has it's unique UID
-        _history.append(exp.clone())
-    }
-    private var _history:[Exp] = []
+    var history = History()
+    
     private var exp:Exp {
-        if _history.isEmpty {
-            _history.append(Unassigned("A"))
-        }
-        return _history.last!
+        return history.top.main
     }
     func remove(uid: String) {
-        push(exp: exp.removed(of: uid) ?? Unassigned("A"))
+        let last = history.top
+        let newMain = last.main.removed(of: uid) ?? Unassigned("A")
+        let newVars = last.vars.map({(k, v) in
+            (k, v.removed(of: uid) ?? Unassigned(k))
+        })
+        
+        history.push(main: newMain, vars: Dictionary(uniqueKeysWithValues: newVars))
         refresh()
     }
     
     
     
     @IBAction func undo(_ sender: Any) {
-        let _ = _history.popLast()
+        history.pop()
         refresh()
     }
     
@@ -73,7 +93,6 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
             }
             
-            print("\(anchorView.frame.origin.x), \(anchorView.frame.origin.y)")
             vc.set(exp: expview.exp)
             vc.promise.then { (r) in
                 switch r {
@@ -114,12 +133,20 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
     }
     func refresh() {
-        let expview = mainExpView.set(exp: exp, del: self)
+        let mainexpview = mainExpView.set(exp: exp, del: self)
+        setHierarchyBG(e: mainexpview, f: 0.9)
         
-        setHierarchyBG(e: expview, f: 0.9)
+        for v in varStack.arrangedSubviews {
+            varStack.willRemoveSubview(v)
+            varStack.removeArrangedSubview(v)
+            v.removeFromSuperview()
+        }
         
-        for v in varStack.arrangedSubviews.compactMap({($0 as? VarView)?.expView}) {
-            setHierarchyBG(e: v, f: 0.9)
+        for (varname, varExp) in history.top.vars {
+            let varview = VarView.loadViewFromNib()
+            let expview = varview.set(name: varname, exp: varExp, del: self)
+            varStack.addArrangedSubview(varview)
+            setHierarchyBG(e: expview, f: 0.9)
         }
         
         do {
@@ -141,7 +168,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         undoButton.layer.shadowOpacity = 0.5
         undoButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         undoButton.layer.shadowRadius = 1
-        push(exp: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
+        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         
     }
@@ -185,13 +212,13 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     @IBAction func addVariableClick(_ sender: Any) {
         let varname = newVarTF.text ?? ""
-        guard !varname.isEmpty else {
-            resetNewVar()
-            return
-        }
-        let varview = VarView.loadViewFromNib()
-        varview.set(name: varname, exp: Unassigned(varname), del: self)
-        varStack.addArrangedSubview(varview)
+        guard !varname.isEmpty else { return }
+        resetNewVar()
+        let last = history.top
+        var newVars = last.vars
+        newVars[varname] = Unassigned(varname)
+        history.push(main: last.main, vars: newVars)
+        refresh()
     }
 }
 
@@ -204,7 +231,8 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: ExpViewableDelegate {
     func changeto(uid:String, to: Exp) {
-        push(exp: exp.changed(from: uid, to: to))
+        let last = history.top
+        history.push(main: last.main.changed(from: uid, to: to), vars: last.vars.mapValues({$0.changed(from: uid, to: to)}))
         refresh()
     }
     func onTap(view: ExpViewable) {

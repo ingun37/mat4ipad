@@ -15,6 +15,7 @@ class VarView: UIView, ExpViewable {
     
     @IBOutlet weak var stack:UIStackView!
     @IBOutlet weak var lbl:UILabel!
+    var name = ""
     var expView:ExpView? = nil
     static func loadViewFromNib() -> VarView {
         let bundle = Bundle(for: self)
@@ -22,6 +23,7 @@ class VarView: UIView, ExpViewable {
         return nib.instantiate(withOwner: nil, options: nil).first as! VarView
     }
     
+    @discardableResult
     func set(name:String, exp:Exp, del:ExpViewableDelegate)-> ExpView {
         lbl.text = name
         let eview = ExpView.loadViewFromNib()
@@ -32,6 +34,7 @@ class VarView: UIView, ExpViewable {
         expView = eview
         stack.addArrangedSubview(eview)
         eview.setExp(exp: exp, del: del)
+        self.name = name
         return eview
     }
     /*
