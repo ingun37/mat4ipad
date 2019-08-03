@@ -242,8 +242,88 @@
                                             <action selector="removeClick:" destination="Zc6-Oj-lwd" eventType="touchUpInside" id="o7I-nM-8en"/>
                                         </connections>
                                     </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ODQ-bu-tK7">
+                                        <rect key="frame" x="0.0" y="46" width="304" height="70"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="YI0-GA-7Vr">
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="38"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ino-0L-gMg">
+                                                        <rect key="frame" x="0.0" y="18.5" width="116.5" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="v2e-0b-PGZ"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Variables" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xF-OJ-50V">
+                                                        <rect key="frame" x="120.5" y="11" width="63" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="ELJ-07-WfT"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGK-YZ-uhb">
+                                                        <rect key="frame" x="187.5" y="18.5" width="116.5" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="w03-FZ-bfy"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="uGK-YZ-uhb" firstAttribute="width" secondItem="ino-0L-gMg" secondAttribute="width" id="PBg-za-Ifa"/>
+                                                </constraints>
+                                            </stackView>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B2P-yG-nei">
+                                                <rect key="frame" x="0.0" y="38" width="304" height="32"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="32" id="hDH-Hh-Gzs"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="IEU-Pl-1IF">
+                                                    <size key="itemSize" width="50" height="50"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="XIS-74-VFG" customClass="VarCell" customModule="mat4ipad" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="-9" width="50" height="50"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="acO-HQ-5WS">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </view>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="acO-HQ-5WS" secondAttribute="trailing" id="7oH-Dn-SdW"/>
+                                                            <constraint firstItem="acO-HQ-5WS" firstAttribute="leading" secondItem="XIS-74-VFG" secondAttribute="leading" id="JNr-rY-Ic4"/>
+                                                            <constraint firstAttribute="bottom" secondItem="acO-HQ-5WS" secondAttribute="bottom" id="VVy-KC-VQm"/>
+                                                            <constraint firstItem="acO-HQ-5WS" firstAttribute="top" secondItem="XIS-74-VFG" secondAttribute="top" id="jlF-mI-hPy"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <outlet property="lbl" destination="acO-HQ-5WS" id="N4y-ty-4UT"/>
+                                                        </connections>
+                                                    </collectionViewCell>
+                                                </cells>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="Zc6-Oj-lwd" id="gaK-K4-qXn"/>
+                                                    <outlet property="delegate" destination="Zc6-Oj-lwd" id="D6g-dx-XqR"/>
+                                                </connections>
+                                            </collectionView>
+                                        </subviews>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="wdn-Nb-0B4">
-                                        <rect key="frame" x="0.0" y="46" width="304" height="28"/>
+                                        <rect key="frame" x="0.0" y="132" width="304" height="28"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="XuA-j7-KRo">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="16"/>
@@ -288,7 +368,7 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Re4-50-JeU">
-                                        <rect key="frame" x="0.0" y="90" width="304" height="276"/>
+                                        <rect key="frame" x="0.0" y="176" width="304" height="190"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-BL-mgL">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
@@ -300,7 +380,7 @@
                                                 </connections>
                                             </textField>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="GH7-bs-MK9">
-                                                <rect key="frame" x="0.0" y="32" width="304" height="244"/>
+                                                <rect key="frame" x="0.0" y="32" width="304" height="158"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="TA1-g6-UH4">
                                                         <rect key="frame" x="0.0" y="0.0" width="148" height="158"/>
@@ -663,6 +743,9 @@
                         <outlet property="fillBtn" destination="CEE-AY-gRx" id="pAQ-IE-BMH"/>
                         <outlet property="numberTextField" destination="GAz-BL-mgL" id="aBA-ue-Rb0"/>
                         <outlet property="tv" destination="AIL-5f-GND" id="pCm-Cw-ezb"/>
+                        <outlet property="varPanel" destination="ODQ-bu-tK7" id="M33-IP-1I3"/>
+                        <outlet property="varcv" destination="B2P-yG-nei" id="C9F-ly-tmi"/>
+                        <outlet property="varcvlayout" destination="IEU-Pl-1IF" id="SY4-xy-nhT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NzG-Wp-eLb" userLabel="First Responder" sceneMemberID="firstResponder"/>

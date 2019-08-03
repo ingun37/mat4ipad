@@ -92,8 +92,8 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             } else if let matcell = expview as? MatrixCell {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
             }
-            
-            vc.set(exp: expview.exp)
+            let aa = Array(history.top.vars.keys)
+            vc.set(exp: expview.exp, varNames: aa)
             vc.promise.then { (r) in
                 switch r {
                     

@@ -28,13 +28,17 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     
     @IBOutlet weak var matrixPanel: UIStackView!
     
-//    var del:ApplyTableDelegate?
+    @IBOutlet weak var varPanel: UIStackView!
+    //    var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
     var exp:Exp?
-    func set(exp:Exp) {
+    var varNames:[String] = []
+    func set(exp:Exp, varNames:[String]) {
         self.exp = exp
+        self.varNames = varNames
     }
+    
     struct Represent {
         let exp:Exp
         let showLatex:String
@@ -72,8 +76,12 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         return options
     }
     
+    @IBOutlet weak var varcvlayout: UICollectionViewFlowLayout!
     override func viewDidLoad() {
         super.viewDidLoad()
+        varPanel.isHidden = varNames.isEmpty
+        varcvlayout.estimatedItemSize = CGSize(width: 20, height: 20)
+        varcvlayout.itemSize = UICollectionViewFlowLayout.automaticSize
         guard let exp = exp else {
             return
         }
@@ -99,6 +107,10 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         fillingValueOb.subscribe(onNext: { [unowned self] (str) in
             self.fillBtn.setTitle("Fill matrix with \(str)", for: .normal)
         }).disposed(by: disposeBag)
+        
+//        Observable.just(["a", "bb", "cccc"]).bind(to: varcv.rx.items(cellIdentifier: "cell", cellType: VarCell.self), curriedArgument: { (row, element, cell) in
+//            cell.lbl.text = element
+//        }).disposed(by: disposeBag)
     }
     @IBAction func fillMatrixClick(_ sender: Any) {
         guard let mat = exp as? Mat else {return}
@@ -118,6 +130,12 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DispatchQueue.main.async {
+            self.varcvlayout.invalidateLayout()
+        }
+    }
     func txt2exp(txt:String)->Exp? {
         if let value = Int(txt) {
             return value.exp
@@ -167,6 +185,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         
         return true
     }
+    @IBOutlet weak var varcv: UICollectionView!
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!
@@ -177,4 +196,20 @@ extension String {
     var isAlphanumeric: Bool {
         return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
     }
+}
+class VarCell:UICollectionViewCell {
+    @IBOutlet weak var lbl:UILabel!
+}
+extension ApplyTableVC:UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return varNames.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        (cell as? VarCell)?.lbl.text = varNames[indexPath.row]
+        print("--_-" + varNames[indexPath.row])
+        return cell
+    }
+    
 }
