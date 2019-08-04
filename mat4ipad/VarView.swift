@@ -7,14 +7,19 @@
 //
 
 import UIKit
-
-class VarView: UIView, ExpViewable {
+import Promises
+protocol VarDelegate {
+    func varNameChanged(from:String, to:String)->Promise<Bool>
+}
+class VarView: UIView, ExpViewable, UITextFieldDelegate {
+    var del:VarDelegate?
     var exp: Exp {
-        return expView?.exp ?? Unassigned(lbl.text ?? "Var")
+        return expView?.exp ?? Unassigned(tf.text ?? "Var")
     }
     
     @IBOutlet weak var stack:UIStackView!
-    @IBOutlet weak var lbl:UILabel!
+    @IBOutlet weak var tf:UITextField!
+    
     var name = ""
     var expView:ExpView? = nil
     static func loadViewFromNib() -> VarView {
@@ -24,8 +29,9 @@ class VarView: UIView, ExpViewable {
     }
     
     @discardableResult
-    func set(name:String, exp:Exp, del:ExpViewableDelegate)-> ExpView {
-        lbl.text = name
+    func set(name:String, exp:Exp, expDel:ExpViewableDelegate, varDel:VarDelegate)-> ExpView {
+        self.del = varDel
+        tf.text = name
         let eview = ExpView.loadViewFromNib()
         if let prev = expView {
             stack.removeArrangedSubview(prev)
@@ -33,9 +39,26 @@ class VarView: UIView, ExpViewable {
         }
         expView = eview
         stack.addArrangedSubview(eview)
-        eview.setExp(exp: exp, del: del)
+        eview.setExp(exp: exp, del: expDel)
         self.name = name
         return eview
+    }
+    @IBAction func editEnd(_ sender: UITextField) {
+        if let to = sender.text {
+            del?.varNameChanged(from:name, to: to).then({[unowned self] (allowed) in
+                if allowed {
+                    self.name = to
+                } else {
+                    sender.text = self.name
+                }
+            })
+        } else {
+            sender.text = name
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     /*
     // Only override draw() if you perform custom drawing.

@@ -99,41 +99,26 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
                                                                 <rect key="frame" x="264" y="0.0" width="128" height="128"/>
                                                                 <subviews>
-                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nhJ-kn-XZu">
-                                                                        <rect key="frame" x="20.5" y="34" width="87" height="60"/>
-                                                                        <subviews>
-                                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="X" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bgh-Ss-2Tx">
-                                                                                <rect key="frame" x="11.5" y="0.0" width="64" height="30"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="width" constant="64" id="qzH-aN-hEX"/>
-                                                                                </constraints>
-                                                                                <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet"/>
-                                                                                <connections>
-                                                                                    <action selector="newVarNameChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="hMQ-7k-kiZ"/>
-                                                                                </connections>
-                                                                            </textField>
-                                                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a">
-                                                                                <rect key="frame" x="0.0" y="30" width="87" height="30"/>
-                                                                                <state key="normal" title="Add Variable">
-                                                                                    <color key="titleColor" red="0.66660184290000002" green="0.66952987929999996" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                                </state>
-                                                                                <state key="disabled">
-                                                                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                                </state>
-                                                                                <connections>
-                                                                                    <action selector="addVariableClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RYt-7p-69h"/>
-                                                                                </connections>
-                                                                            </button>
-                                                                        </subviews>
-                                                                    </stackView>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                                        <state key="normal" title="New Variable">
+                                                                            <color key="titleColor" red="0.66660184290000002" green="0.66952987929999996" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                        </state>
+                                                                        <state key="disabled">
+                                                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="addVariableClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RYt-7p-69h"/>
+                                                                        </connections>
+                                                                    </button>
                                                                 </subviews>
                                                                 <constraints>
-                                                                    <constraint firstItem="nhJ-kn-XZu" firstAttribute="centerY" secondItem="kh4-vC-Uuk" secondAttribute="centerY" id="2QC-T3-8CF"/>
                                                                     <constraint firstAttribute="width" constant="128" id="FP1-3y-1BA"/>
                                                                     <constraint firstAttribute="height" constant="128" id="HzA-3j-jkP"/>
-                                                                    <constraint firstItem="nhJ-kn-XZu" firstAttribute="centerX" secondItem="kh4-vC-Uuk" secondAttribute="centerX" id="Z8o-Jn-O8b"/>
+                                                                    <constraint firstItem="fFX-yB-t6a" firstAttribute="top" secondItem="kh4-vC-Uuk" secondAttribute="top" id="IIt-dR-3F6"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="fFX-yB-t6a" secondAttribute="trailing" id="IWg-zH-yF4"/>
+                                                                    <constraint firstItem="fFX-yB-t6a" firstAttribute="leading" secondItem="kh4-vC-Uuk" secondAttribute="leading" id="PVX-sa-dV7"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="fFX-yB-t6a" secondAttribute="bottom" id="Ykl-eW-lxn"/>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
@@ -199,7 +184,6 @@
                         <outlet property="mainExpView" destination="WlF-gG-ROh" id="YWv-LL-kMF"/>
                         <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
                         <outlet property="newVarBtn" destination="fFX-yB-t6a" id="1O8-GZ-McV"/>
-                        <outlet property="newVarTF" destination="bgh-Ss-2Tx" id="GYn-k0-7Ob"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
                         <outlet property="varStack" destination="1cE-JV-GVH" id="NRB-o0-J0u"/>

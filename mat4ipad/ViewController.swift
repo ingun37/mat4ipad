@@ -10,6 +10,7 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
+import Promises
 struct History {
     struct State {
         let main:Exp
@@ -22,6 +23,9 @@ struct History {
     }
     mutating func push(main:Exp) {
         _history.append(State(main: main.clone(), vars: top.vars))
+    }
+    mutating func push(_ state:State) {
+        _history.append(state)
     }
     var top:State {
         return _history.last ?? State(main: Unassigned("A"), vars: [:])
@@ -107,18 +111,6 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     
     
-    func occupiedLetters(e:Exp)->[String] {
-        let kidsLetters = e.kids.map({self.occupiedLetters(e: $0)}).flatMap({$0})
-        if let e = e as? Unassigned {
-            return [e.letter] + kidsLetters
-        }
-        return kidsLetters
-    }
-    func availableLetters()->Set<String> {
-        return Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).subtracting(occupiedLetters(e: exp))
-    }
-    
-    
     
     @IBOutlet weak var mathStackView:UIStackView!
     @IBOutlet weak var mainExpView:ExpInitView!
@@ -144,7 +136,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         
         for (varname, varExp) in history.top.vars {
             let varview = VarView.loadViewFromNib()
-            let expview = varview.set(name: varname, exp: varExp, del: self)
+            let expview = varview.set(name: varname, exp: varExp, expDel: self, varDel: self)
             varStack.addArrangedSubview(varview)
             setHierarchyBG(e: expview, f: 0.9)
         }
@@ -212,27 +204,12 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     
     
     @IBOutlet weak var newVarBtn: UIButton!
-    @IBOutlet weak var newVarTF: UITextField!
-    func resetNewVar() {
-        newVarTF.text = nil
-        newVarBtn.isEnabled = false
-    }
     
-    @IBAction func newVarNameChanged(_ sender: UITextField) {
-        if sender.text?.first?.isNumber ?? false {
-            let alert = UIAlertController(title: "Invalid Variable Name", message: "Variable name can't start with number", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: false, completion: nil)
-            resetNewVar()
-        } else {
-            newVarBtn.isEnabled = sender.text?.count ?? 0 > 0
-        }
-        
-    }
     @IBAction func addVariableClick(_ sender: Any) {
-        let varname = newVarTF.text ?? ""
-        guard !varname.isEmpty else { return }
-        resetNewVar()
+        var varname = (0...).lazy.map({"V\($0)"}).first(where: {name in
+            !self.history.top.vars.keys.contains(name)
+        })!
+        
         let last = history.top
         var newVars = last.vars
         newVars[varname] = Unassigned(varname)
@@ -260,5 +237,44 @@ extension ViewController: ExpViewableDelegate {
     }
     func onTap(view: ExpViewable) {
         performSegue(withIdentifier: "op", sender: view)
+    }
+}
+
+extension ViewController: VarDelegate {
+    func alert(title:String, del:@escaping ()->Void) {
+        let alert = UIAlertController(title: "Invalid Variable Name", message: title, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in del()}))
+        present(alert, animated: true, completion: nil)
+    }
+    enum InvalidNameReasons:String {
+        case empty = "Name can't be empty."
+        case startsWithNumber = "Name can't start with numbers"
+        case unknown
+    }
+    func isVarNameValid(name:String)->(Bool, InvalidNameReasons) {
+        guard let first = name.first else {
+            return (false, .empty)
+        }
+        guard !first.isNumber else {
+            return (false, .startsWithNumber)
+        }
+        return (true, .unknown)
+    }
+    func varNameChanged(from:String, to: String) -> Promise<Bool> {
+        let (allowed, reason) = isVarNameValid(name: to)
+        if allowed {
+            var last = history.top
+            var lastVars = last.vars
+            lastVars[to] = last.vars[from]
+            lastVars.removeValue(forKey: from)
+            history.push(main: last.main, vars: lastVars)
+            return Promise(true)
+        } else {
+            let pend = Promise<Bool>.pending()
+            alert(title: reason.rawValue) {
+                pend.fulfill(false)
+            }
+            return pend
+        }
     }
 }
