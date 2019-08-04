@@ -222,4 +222,13 @@ extension ApplyTableVC:UICollectionViewDelegate, UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        dismiss(animated: false) { [unowned self] in
+            if let exp = self.exp {
+                self.promise.fulfill(.changed(exp.uid, Unassigned(self.varNames[indexPath.row])))
+            } else {
+                self.promise.fulfill(.nothin)
+            }
+        }
+    }
 }
