@@ -53,7 +53,7 @@ class ExpView: UIView, ExpViewable {
 //    private var dragStartPosition:CGPoint = CGPoint.zero
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.cornerRadius = 8;
+        layer.cornerRadius = 4;
         
         latexWrap.layer.cornerRadius = 4;
         latexWrap.layer.shadowColor = UIColor.black.cgColor
