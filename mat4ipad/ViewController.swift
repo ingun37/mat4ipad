@@ -38,7 +38,6 @@ struct History {
 class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
     
-    @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var preview: LatexView!
     func expandBy(mat: Mat, row: Int, col: Int) {
         let co = mat.cols
@@ -176,10 +175,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        undoButton.layer.shadowColor = UIColor.black.cgColor
-        undoButton.layer.shadowOpacity = 0.5
-        undoButton.layer.shadowOffset = CGSize(width: 1, height: 1)
-        undoButton.layer.shadowRadius = 1
+        
         history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         
@@ -277,5 +273,16 @@ extension ViewController: VarDelegate {
             }
             return pend
         }
+    }
+}
+
+class ShadowButton:UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        layer.cornerRadius = 4
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.shadowRadius = 1
     }
 }

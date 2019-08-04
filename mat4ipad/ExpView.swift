@@ -55,7 +55,7 @@ class ExpView: UIView, ExpViewable {
         super.awakeFromNib()
         layer.cornerRadius = 8;
         
-        latexWrap.layer.cornerRadius = 8;
+        latexWrap.layer.cornerRadius = 4;
         latexWrap.layer.shadowColor = UIColor.black.cgColor
         latexWrap.layer.shadowOpacity = 0.5
         latexWrap.layer.shadowOffset = CGSize(width: 1, height: 1)

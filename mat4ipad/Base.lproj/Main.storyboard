@@ -32,22 +32,18 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
                                                 <rect key="frame" x="8" y="0.0" width="752" height="50"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <state key="normal" title="Undo"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="24"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
                                                         <connections>
                                                             <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tJ7-iD-jcT"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
                                                         <rect key="frame" x="378" y="0.0" width="374" height="50"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Clear"/>
                                                         <connections>
                                                             <action selector="clearClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="huT-Tl-iuE"/>
@@ -90,10 +86,11 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kh4-vC-Uuk">
                                                                 <rect key="frame" x="264" y="0.0" width="128" height="128"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a">
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                                                        <state key="normal" title="New Variable">
-                                                                            <color key="titleColor" red="0.66660184290000002" green="0.66952987929999996" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <state key="normal" title="New Variable +">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
                                                                         <state key="disabled">
                                                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -176,7 +173,6 @@
                         <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
                         <outlet property="newVarBtn" destination="fFX-yB-t6a" id="1O8-GZ-McV"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
-                        <outlet property="undoButton" destination="Fvt-Yj-Zgo" id="zWu-H5-HjP"/>
                         <outlet property="varStack" destination="1cE-JV-GVH" id="NRB-o0-J0u"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" animates="NO" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
