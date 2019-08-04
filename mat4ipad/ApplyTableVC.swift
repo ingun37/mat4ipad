@@ -22,6 +22,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     enum Result {
         case changed(String, Exp)
         case removed(String)
+        case nothin
     }
     let promise = Promise<Result>.pending()
     @IBOutlet weak var fillBtn: UIButton!
@@ -148,18 +149,23 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }
         return nil
     }
-    func applyExpression(txt:String) {
-        guard let exp = exp else {return}
-        guard let newExp = txt2exp(txt: txt) else {return}
-        self.promise.fulfill(.changed(exp.uid, newExp))
+    
+    ///Dismiss and fulfill the user input if possible.
+    func applyNumber() {
+        if let input = numberTextField.text {
+            if let exp = exp {
+                if let newExp = txt2exp(txt: input) {
+                    dismiss(animated: false) { [unowned self] in
+                        self.promise.fulfill(.changed(exp.uid, newExp))
+                    }
+                }
+            }
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        
-        guard let valueTxt = textField.text else {return true}
-        applyExpression(txt: valueTxt)
-        
+        applyNumber()
         return true
     }
     
@@ -180,12 +186,16 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
 
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
-        guard let txt = numberTextField.text else {return true}
-        applyExpression(txt: txt)
-        
+        applyNumber()
         return true
     }
     @IBOutlet weak var varcv: UICollectionView!
+    
+    @IBAction func cancel(_ sender:UIButton) {
+        dismiss(animated: false) {
+            self.promise.fulfill(.nothin)
+        }
+    }
 }
 class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var latex:LatexView!

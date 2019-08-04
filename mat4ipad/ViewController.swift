@@ -100,11 +100,12 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             vc.set(exp: expview.exp, varNames: aa)
             vc.promise.then { (r) in
                 switch r {
-                    
                 case let .changed(uid, to):
                     self.changeto(uid: uid, to: to)
                 case let .removed(uid):
                     self.remove(uid: uid)
+                case .nothin:
+                    break
                 }
             }
         }
