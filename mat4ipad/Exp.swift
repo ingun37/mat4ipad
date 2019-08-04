@@ -33,6 +33,7 @@ protocol Exp{
     ///
     /// Never call eval() in here
     func evalType()-> EvalType
+    var successor:Exp? {get}
 }
 extension Exp {
     func changed(from:String, to:Exp)-> Exp {
@@ -43,7 +44,7 @@ extension Exp {
     }
     func removed(of:String)-> Exp? {
         if uid == of {
-            return nil
+            return successor
         }
         return removeKid(of: of)
     }
@@ -87,6 +88,8 @@ extension evalErr {
 }
 
 struct Add:Exp {
+    var successor: Exp? { return nil }
+    
     func evalType() -> EvalType {
         if kids.allSatisfy({$0.evalType() == .Mat}) {
             return .Mat
@@ -134,6 +137,8 @@ struct Add:Exp {
     }
 }
 struct Mul: Exp {
+    var successor: Exp? { return nil }
+    
     func evalType() -> EvalType {
         // You can't know to what multiplication of matrices will evalutes.
         // Because some multiplication of matrices will evalute numeric value.
@@ -192,6 +197,8 @@ protocol VectorSpace: Exp {
     var isIdentity:Bool {get}
 }
 struct Mat:VectorSpace {
+    var successor: Exp? {return nil}
+    
     func evalType() -> EvalType {
         return .Mat
     }
@@ -350,6 +357,8 @@ extension Array where Element == Exp {
     }
 }
 struct Unassigned:Exp {
+    var successor: Exp? {return nil}
+    
     func evalType() -> EvalType {
         return .Unknown
     }
@@ -383,6 +392,8 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    var successor: Exp? {return nil}
+    
     func evalType() -> EvalType {
         return .Num
     }
@@ -573,6 +584,8 @@ struct NumExp:VectorSpace {
     var kids: [Exp] = []
 }
 struct Power: Exp {
+    var successor: Exp? {return nil}
+    
     func evalType() -> EvalType {
         return base.evalType()
     }
@@ -687,6 +700,8 @@ extension UIColor {
 }
 
 struct RowEchelonForm:Exp {
+    var successor: Exp? {return mat}
+    
     func evalType() -> EvalType {
         return .Mat
     }
@@ -776,6 +791,8 @@ struct RowEchelonForm:Exp {
 }
 
 struct GaussJordanElimination:Exp {
+    var successor: Exp? {return mat}
+    
     func evalType() -> EvalType {
         return .Mat
     }
@@ -832,6 +849,8 @@ struct GaussJordanElimination:Exp {
 }
 
 struct Transpose:Exp {
+    var successor: Exp? {return mat}
+    
     func evalType() -> EvalType {
         return .Mat
     }
@@ -876,6 +895,8 @@ struct Transpose:Exp {
 }
 
 struct Determinant:Exp {
+    var successor: Exp? {return mat}
+    
     func evalType() -> EvalType {
         return .Num
     }
@@ -923,6 +944,8 @@ struct Determinant:Exp {
 }
 
 struct Fraction:Exp {
+    var successor: Exp? {return nil}
+    
     func evalType() -> EvalType {
         return .Num
     }
@@ -971,6 +994,8 @@ struct Fraction:Exp {
 }
 
 struct Inverse:Exp {
+    var successor: Exp? {return mat}
+    
     func evalType() -> EvalType {
         return mat.evalType()
     }
