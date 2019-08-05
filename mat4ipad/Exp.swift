@@ -208,7 +208,7 @@ struct Mat:VectorSpace {
         } else if n.isZero {
             return Mat(r: rows, c: cols, fillWith: NumExp(0))
         } else {
-            return Mat(try rowArr.map({try $0.map({try mul(n, $0)})}))
+            return Mat(try elements.map({try $0.map({try mul(n, $0)})}))
         }
     }
     
@@ -240,13 +240,13 @@ struct Mat:VectorSpace {
     }
     
     func changeKid(from: String, to: Exp) -> Exp {
-        return Mat(rowArr.map({
+        return Mat(elements.map({
             $0.map({$0.changed(from: from, to: to)})
         }))
     }
     
     func clone() -> Exp {
-        return Mat(rowArr.map({
+        return Mat(elements.map({
             $0.map({$0.clone()})
         }))
     }
@@ -281,41 +281,44 @@ struct Mat:VectorSpace {
     }
     
     var uid: String = UUID().uuidString
-    var kids: [Exp] = []
-    func associative() { }
+    
+    
+    let elements:[[Exp]]
+    var kids: [Exp] {
+        return elements.flatMap({$0})
+    }
     
     let rows, cols:Int
     func latex() -> String {
-        let array2d = (0..<rows).map({r in kids[r*cols..<r*cols+cols]})
-        
-        let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
+        let inner = elements.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
         return "\\begin{pmatrix}\n" + inner + "\n\\end{pmatrix}"
     }
     init(r:Int, c:Int, fillWith:NumExp) {
         rows = r
         cols = c
-        kids = Array(repeating: fillWith.clone(), count: rows*cols)
+        elements = (0..<r).map({ _ in
+            (0..<c).map({ _ in
+                fillWith.clone()
+            })
+        })
     }
     init(_ arr2d:[[Exp]]) {
         rows = arr2d.count
         cols = arr2d[0].count
-        kids = arr2d.flatMap({$0})
+        elements = arr2d
     }
     func row(_ i:Int)->[Exp] {
-        return Array(kids[i*cols..<i*cols+cols])
+        return elements[i]
     }
     func col(_ j:Int)->[Exp] {
-        return (0..<rows).map({$0*cols + j}).map({kids[$0]})
+        return elements.map({ $0[j] })
     }
     func rowDropped(first:Int)->Mat {
         let restRows = (first..<rows).map({row($0)})
         return Mat(restRows)
     }
-    var rowArr:[[Exp]] {
-        return (0..<rows).map({self.row($0)})
-    }
     func rowMultiply(by:NumExp, at:Int)throws->Mat {
-        var rs = rowArr
+        var rs = elements
         guard let multipliedRow = try mul(rs[at].asMat, by) as? Mat else {
             throw evalErr.RowEcheloningWrongExp
         }
@@ -323,7 +326,7 @@ struct Mat:VectorSpace {
         return Mat(rs)
     }
     func rowAddToOther(from:Int, to:Int, by:NumExp)throws ->Mat {
-        var rs = rowArr
+        var rs = elements
         guard let multipliedRow = try mul(rs[from].asMat, by) as? Mat else {
             throw evalErr.RowEcheloningWrongExp
         }
@@ -814,7 +817,7 @@ struct RowEchelonForm:Exp {
         guard let echelon2 = try RowEchelonForm(mat: rest).eval() as? Mat else {
             throw evalErr.RowEcheloningWrongExp
         }
-        return Mat([top] + echelon2.rowArr)
+        return Mat([top] + echelon2.elements)
         
     }
     
