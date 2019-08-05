@@ -8,7 +8,7 @@
 
 import Foundation
 
-func if2<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, T) throws ->Exp) throws ->Exp? {
+func if2<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, T) throws ->Exp?) throws ->Exp? {
     if let a = a as? T, let b = b as? T {
         return try c(a, b)
     }
@@ -22,17 +22,23 @@ func if1<T:Exp>(_ a:Exp, _ b:Exp, _ c:(T, Exp) throws ->Exp?) throws ->Exp? {
     }
     return nil
 }
+func if1V(_ a:Exp, _ b:Exp, _ c:(VectorSpace, Exp) throws ->Exp?) throws ->Exp? {
+    if let a = a as? VectorSpace {
+        return try c(a, b)
+    } else if let b = b as? VectorSpace {
+        return try c(b, a)
+    }
+    return nil
+}
+func if2V(_ a:Exp, _ b:Exp, _ c:(VectorSpace, VectorSpace) throws ->Exp?) throws ->Exp? {
+    if let a = a as? VectorSpace, let b = b as? VectorSpace {
+        return try c(a, b)
+    }
+    return nil
+}
 func add(_ a:Exp, _ b:Exp) throws -> Exp {
-    return try if2(a, b, { (a:Mat, b:Mat) -> Exp in
-        guard a.cols == b.cols && a.rows == b.rows else {
-            throw evalErr.matrixSizeNotMatch(a, b)
-        }
-        let new2d = try (0..<a.rows).map({i in
-            try zip(a.row(i), b.row(i)).map({ try add($0, $1) })
-        })
-        return Mat(new2d)
-    }) ?? if2(a, b, { (a:NumExp, b:NumExp) -> Exp in
-        return a+b
+    return try if2V(a, b, { (a, b) -> Exp in
+        return try a.added(b)
     }) ?? if1(a, b, { (a:NumExp, b) -> Exp? in
         return a.isZero ? b : nil
     }) ?? Add([a, b])
@@ -56,15 +62,9 @@ func mul(_ a:Exp, _ b:Exp) throws ->Exp {//never call eval in here
         return Mat(new2d)
     }) ?? if2(a, b, { (a:Unassigned, b:Unassigned) -> Exp in
         return Unassigned("\(a.letter)\(b.letter)")
-    }) ?? if2(a, b, { (a:NumExp, b:NumExp) -> Exp in
-        return a * b
     }) ?? if1(a, b, { (a:NumExp, b) -> Exp? in
-        if a.isIdentity {
-            return b
-        }
-        if let b = b as? Mat {
-            let rows = try (0..<b.rows).map({try b.row($0).map({try mul($0, a)})})
-            return Mat(rows)
+        if let b = b as? VectorSpace {
+            return try b.scalarMultiplied(a)
         }
         return nil
     }) ?? Mul([a, b])

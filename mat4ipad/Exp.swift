@@ -61,6 +61,7 @@ enum evalErr:Error {
     case ZeroRowEchelon
     case InvertingNonSquareMatrix
     case invertingDeterminantZero
+    case NotInSameSpace
 }
 extension evalErr {
     func describeInLatex() -> String {
@@ -83,6 +84,8 @@ extension evalErr {
             return "inverting non square matrix"
         case .invertingDeterminantZero:
             return "inverting a matrix with determinant of zero"
+        case .NotInSameSpace:
+            return "\\text{operands are not in same space}"
         }
     }
 }
@@ -192,11 +195,33 @@ struct Mul: Exp {
     
 }
 protocol VectorSpace: Exp {
-    func identity()-> Self
+    func identity()-> VectorSpace
     var isZero:Bool {get}
     var isIdentity:Bool {get}
+    func scalarMultiplied(_ n:NumExp)throws -> VectorSpace
+    func added(_ e:VectorSpace)throws -> VectorSpace
 }
 struct Mat:VectorSpace {
+    func scalarMultiplied(_ n: NumExp)throws -> VectorSpace {
+        if n.isIdentity {
+            return self
+        } else if n.isZero {
+            return Mat(r: rows, c: cols, fillWith: NumExp(0))
+        } else {
+            return Mat(try rowArr.map({try $0.map({try mul(n, $0)})}))
+        }
+    }
+    
+    func added(_ e: VectorSpace)throws -> VectorSpace {
+        guard let m = e as? Mat, m.cols == cols && m.rows == rows else {
+            throw evalErr.NotInSameSpace
+        }
+        let new2d = try (0..<rows).map({i in
+            try zip(self.row(i), m.row(i)).map({ try add($0, $1) })
+        })
+        return Mat(new2d)
+    }
+    
     var successor: Exp? {return nil}
     
     func evalType() -> EvalType {
@@ -247,7 +272,7 @@ struct Mat:VectorSpace {
         })
         return Mat(arr2d)
     }
-    func identity() -> Mat {
+    func identity() -> VectorSpace {
         return Mat.identityOf(rows, cols)
     }
     
@@ -266,10 +291,10 @@ struct Mat:VectorSpace {
         let inner = array2d.map({ $0.map({"{\($0.latex())}"}).joined(separator: " & ") }).joined(separator: "\\\\\n")
         return "\\begin{pmatrix}\n" + inner + "\n\\end{pmatrix}"
     }
-    init(r:Int, c:Int) {
+    init(r:Int, c:Int, fillWith:NumExp) {
         rows = r
         cols = c
-        kids = Array(repeating: Unassigned("A"), count: rows*cols)
+        kids = Array(repeating: fillWith.clone(), count: rows*cols)
     }
     init(_ arr2d:[[Exp]]) {
         rows = arr2d.count
@@ -392,6 +417,17 @@ struct Unassigned:Exp {
     }
 }
 struct NumExp:VectorSpace {
+    func scalarMultiplied(_ n: NumExp) throws -> VectorSpace {
+        return self * n
+    }
+    
+    func added(_ e: VectorSpace) throws -> VectorSpace {
+        guard let n = e as? NumExp else {
+            throw evalErr.NotInSameSpace
+        }
+        return self + n
+    }
+    
     var successor: Exp? {return nil}
     
     func evalType() -> EvalType {
@@ -559,8 +595,8 @@ struct NumExp:VectorSpace {
             self.init(r)
         }
     }
-    func identity() -> NumExp {
-        return NumExp(1)
+    func identity() -> VectorSpace {
+        return NumExp.identity()
     }
     static func identity() -> NumExp {
         return NumExp(1)
