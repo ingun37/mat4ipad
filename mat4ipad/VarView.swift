@@ -8,6 +8,8 @@
 
 import UIKit
 import Promises
+import AlgebraEvaluator
+
 protocol VarDelegate {
     func varNameChanged(from:String, to:String)->Promise<Bool>
 }

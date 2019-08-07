@@ -11,6 +11,8 @@ import iosMath
 import RxSwift
 import RxCocoa
 import Promises
+import AlgebraEvaluator
+
 struct History {
     struct State {
         let main:Exp

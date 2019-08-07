@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import AlgebraEvaluator
+
 protocol ResizePreviewDelegate {
     func expandBy(mat: Mat, row: Int, col: Int)
 }

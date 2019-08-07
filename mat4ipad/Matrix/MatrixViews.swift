@@ -10,6 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
+import AlgebraEvaluator
 
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     

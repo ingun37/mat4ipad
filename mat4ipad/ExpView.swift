@@ -10,6 +10,7 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
+import AlgebraEvaluator
 
 protocol ExpViewable:UIView {
     var exp:Exp {get}

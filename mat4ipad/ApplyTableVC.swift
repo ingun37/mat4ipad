@@ -10,8 +10,9 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
-import NumberKit
 import Promises
+import AlgebraEvaluator
+import numbers
 
 //
 //protocol ApplyTableDelegate {
@@ -142,7 +143,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return value.exp
         } else if let value = Float(txt) {
             return NumExp(value)
-        } else if let r = Rational<Int>(from: txt){
+        } else if let r = numbers.Rational<Int>(from: txt){
             return NumExp(r)
         } else if txt.isAlphanumeric {
             return Unassigned(txt)
