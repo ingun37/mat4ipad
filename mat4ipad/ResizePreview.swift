@@ -12,7 +12,7 @@ import RxCocoa
 import AlgebraEvaluator
 
 protocol ResizePreviewDelegate {
-    func expandBy(mat: Mat, row: Int, col: Int)
+    func expandBy(matrix: MatrixView, row: Int, col: Int)
 }
 class ResizePreview: UIView {
     var del:ResizePreviewDelegate?
@@ -77,7 +77,7 @@ class ResizePreview: UIView {
             let oldcol = matrixView.mat.cols
             self.previewResizedMatrix(newRow: newRow, newCol: newCol)
             if state == .ended {
-                self.del?.expandBy(mat: matrixView.mat, row: newRow - oldrow, col: newCol - oldcol)
+                self.del?.expandBy(matrix: matrixView, row: newRow - oldrow, col: newCol - oldcol)
             }
             if state == .began {
 //                self.matrixView.layer.borderWidth = 0

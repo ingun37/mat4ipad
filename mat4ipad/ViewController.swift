@@ -20,11 +20,10 @@ struct History {
     }
     private var _history:[State] = []
     mutating func push(main:Exp, vars:[String:Exp]) {
-        _history.append(State(main: main.clone(), vars: vars.mapValues({ $0.clone()
-        })))
+        _history.append(State(main: main, vars: vars))
     }
     mutating func push(main:Exp) {
-        _history.append(State(main: main.clone(), vars: top.vars))
+        _history.append(State(main: main, vars: top.vars))
     }
     mutating func push(_ state:State) {
         _history.append(state)
@@ -39,11 +38,19 @@ struct History {
 }
 class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var anchorView: UIView!
-    
+    func findOwnerOf(matrix:MatrixView)->ExpView? {
+        let views = varStack.arrangedSubviews.compactMap({($0 as? VarView)?.expView}).flatMap({$0.allSubExpViews}) + (mainExpView.contentView?.allSubExpViews ?? [])
+        return views.first(where: { (v) -> Bool in
+            v.matrixView == matrix
+        })
+    }
     @IBOutlet weak var preview: LatexView!
-    func expandBy(mat: Mat, row: Int, col: Int) {
+    func expandBy(matrix: MatrixView, row: Int, col: Int) {
+        guard let view = findOwnerOf(matrix: matrix) else {return}
+        guard let mat = view.exp as? Mat else {return}
+        print("expanding \(view)")
         let co = mat.cols
-        var kids2d = (0..<mat.rows).map({ri in Array(mat.kids[ri*co..<ri*co+co])})
+        var kids2d = mat.elements
         if col < 0 && 0 < co + col {
             kids2d = kids2d.map({row in row.dropLast(-col)})
         } else if 0 < col {
@@ -60,7 +67,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         
         let newMat = Mat(kids2d)
-        changeto(uid: mat.uid, to: newMat)
+        changeto(view: view, to: newMat)
     }
     
     var history = History()
@@ -68,43 +75,41 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     private var exp:Exp {
         return history.top.main
     }
-    func remove(uid: String) {
-        let last = history.top
-        let newMain = last.main.removed(of: uid) ?? Unassigned("A")
-        let newVars = last.vars.map({(k, v) in
-            (k, v.removed(of: uid) ?? Unassigned(k))
+    func remove(view: ExpViewable) {
+        let newMain = mainExpView.contentView?.removed(view: view) ?? Unassigned("A")
+        let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({varview in
+            (varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
         })
         
         history.push(main: newMain, vars: Dictionary(uniqueKeysWithValues: newVars))
         refresh()
     }
     
-    
-    
     @IBAction func undo(_ sender: Any) {
         history.pop()
         refresh()
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "op" {
             guard let vc = segue.destination as? ApplyTableVC else { return }
             guard let expview = sender as? ExpViewable else {return}
 
+            print("ExpView is preparing for segue: \(expview)")
             if let expview = expview as? ExpView {
                 anchorView.frame.origin = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
             } else if let matcell = expview as? MatrixCell {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
             }
             let aa = Array(history.top.vars.keys)
+
             vc.set(exp: expview.exp, varNames: aa)
             vc.promise.then { (r) in
                 switch r {
-                case let .changed(uid, to):
-                    self.changeto(uid: uid, to: to)
-                case let .removed(uid):
-                    self.remove(uid: uid)
+                case let .changed(to):
+                    self.changeto(view: expview, to: to)
+                case .removed:
+                    self.remove(view: expview)
                 case .nothin:
                     break
                 }
@@ -122,7 +127,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
-        e.directSubExpViews.forEach { (v) in
+        e.directSubExpViews.compactMap({$0 as? ExpView}).forEach { (v) in
             self.setHierarchyBG(e: v, f:f - 0.1)
         }
     }
@@ -144,21 +149,33 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         
         let mainExp = mainexpview.exp
-        let finalExp = history.top.vars.reduce(mainExp) { (lastExp, arg1) -> Exp in
-            let (varname, varExp) = arg1
-            let uids = self.findUIDs(from: lastExp, that: { (e) -> Bool in
-                return (e as? Unassigned)?.letter == varname
-            })
-            return uids.reduce(lastExp, { (a, b) -> Exp in
-                a.changed(from: b, to: varExp)
-            })
-        }
         
         do {
-            try preview.set("= {\(finalExp.eval().latex())}")
+            try preview.set("= {\(mainExp.eval().latex())}")
         } catch {
             if let e = error as? evalErr {
-                preview.set("= {\(e.describeInLatex())}")
+                switch e {
+                case .operandIsNotMatrix(_):
+                    preview.set("= \\text{operandIsNotMatrix}")
+                case .matrixSizeNotMatch(_, _):
+                    preview.set("= \\text{matrixSizeNotMatch}")
+                case .multiplyNotSupported(_, _):
+                    preview.set("= \\text{multiplyNotSupported}")
+                case .invalidExponent(_, _):
+                    preview.set("= \\text{invalidExponent}")
+                case .RowEcheloningWrongExp:
+                    preview.set("= \\text{RowEcheloningWrongExp}")
+                case .InvalidMatrixToRowEchelon:
+                    preview.set("= \\text{InvalidMatrixToRowEchelon}")
+                case .ZeroRowEchelon:
+                    preview.set("= \\text{ZeroRowEchelon}")
+                case .InvertingNonSquareMatrix:
+                    preview.set("= \\text{InvertingNonSquareMatrix}")
+                case .invertingDeterminantZero:
+                    preview.set("= \\text{invertingDeterminantZero}")
+                case .NotInSameSpace:
+                    preview.set("= \\text{NotInSameSpace}")
+                }
             } else {
                 preview.set("= \\text{invalid}")
             }
@@ -167,25 +184,15 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         self.view.layoutIfNeeded()
         makeResizers()
     }
-    func findUIDs(from:Exp, that:(Exp)->Bool)->[String] {
-        let fromKids = from.kids.flatMap({findUIDs(from: $0, that: that)})
-        if that(from) {
-            return fromKids + [from.uid]
-        } else {
-            return fromKids
-        }
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
+//        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
-        
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         refresh()
     }
+
     private var matrixResizePreviews:[ResizePreview] = []
     func makeResizers() {
         matrixResizePreviews.forEach { (preview) in
@@ -229,10 +236,18 @@ extension ViewController: UITextFieldDelegate {
 }
 
 extension ViewController: ExpViewableDelegate {
-    func changeto(uid:String, to: Exp) {
-        let last = history.top
-        history.push(main: last.main.changed(from: uid, to: to), vars: last.vars.mapValues({$0.changed(from: uid, to: to)}))
-        refresh()
+    func changeto(view:ExpViewable, to: Exp) {
+        let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({
+            ($0.name, $0.expView!.changed(view: view, to: to))
+        })
+        
+        if let mainExpView = mainExpView.contentView {
+            print("ExpView is changing: \(mainExpView)")
+            let changedMain = mainExpView.changed(view: view, to: to)
+            history.push(main: changedMain, vars:
+                Dictionary(uniqueKeysWithValues: changedVarPairs))
+            refresh()
+        }
     }
     func onTap(view: ExpViewable) {
         performSegue(withIdentifier: "op", sender: view)
@@ -262,7 +277,7 @@ extension ViewController: VarDelegate {
     func varNameChanged(from:String, to: String) -> Promise<Bool> {
         let (allowed, reason) = isVarNameValid(name: to)
         if allowed {
-            var last = history.top
+            let last = history.top
             var lastVars = last.vars
             lastVars[to] = last.vars[from]
             lastVars.removeValue(forKey: from)

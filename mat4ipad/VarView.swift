@@ -13,7 +13,7 @@ import AlgebraEvaluator
 protocol VarDelegate {
     func varNameChanged(from:String, to:String)->Promise<Bool>
 }
-class VarView: UIView, ExpViewable, UITextFieldDelegate {
+class VarView: UIView, UITextFieldDelegate {
     var del:VarDelegate?
     var exp: Exp {
         return expView?.exp ?? Unassigned(tf.text ?? "Var")

@@ -1,8 +1,6 @@
 PODS:
-  - AlgebraEvaluator (0.1.3):
-    - numbers (= 0.1.1)
+  - AlgebraEvaluator (0.2.1)
   - iosMath (0.9.4)
-  - numbers (0.1.1)
   - PromisesObjC (1.2.8)
   - PromisesSwift (1.2.8):
     - PromisesObjC (= 1.2.8)
@@ -19,9 +17,8 @@ PODS:
     - TensorFlowLiteC (= 0.2.0)
 
 DEPENDENCIES:
-  - AlgebraEvaluator (~> 0.1.3)
+  - AlgebraEvaluator (~> 0.2.1)
   - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
-  - numbers
   - PromisesSwift
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
@@ -29,10 +26,8 @@ DEPENDENCIES:
   - TensorFlowLiteSwift
 
 SPEC REPOS:
-  "git@github.com:ingun37/my-spec.git":
-    - AlgebraEvaluator
-    - numbers
   https://github.com/cocoapods/specs.git:
+    - AlgebraEvaluator
     - PromisesObjC
     - PromisesSwift
     - RxCocoa
@@ -53,9 +48,8 @@ CHECKOUT OPTIONS:
     :git: https://github.com/kostub/iosMath
 
 SPEC CHECKSUMS:
-  AlgebraEvaluator: 2cafcc790c4cf943ed146f4976bb4d877a275169
+  AlgebraEvaluator: 49428cc33435dab2e1d433afcfdd8c50df8b1500
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
-  numbers: 7d2efc76e05b9c5242a99ca21512bb7f37334cd7
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PromisesSwift: 37bad6f4daddb02f7c9c531efe91e8b21c13ee2f
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
@@ -65,6 +59,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
   TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
 
-PODFILE CHECKSUM: bc6c36ceb3455defb1af4fbe2c3a6aed7580c337
+PODFILE CHECKSUM: c7f6de602c09635a7aecdd4eb7fd4712636c07b0
 
 COCOAPODS: 1.7.1

@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import Promises
 import AlgebraEvaluator
-import numbers
 
 //
 //protocol ApplyTableDelegate {
@@ -21,8 +20,8 @@ import numbers
 //}
 class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
     enum Result {
-        case changed(String, Exp)
-        case removed(String)
+        case changed(Exp)
+        case removed
         case nothin
     }
     let promise = Promise<Result>.pending()
@@ -34,7 +33,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     //    var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
     @IBOutlet weak var tv: UITableView!
-    var exp:Exp?
+    var exp:Exp!
     var varNames:[String] = []
     func set(exp:Exp, varNames:[String]) {
         self.exp = exp
@@ -55,24 +54,19 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
-        let evalType = exp.evalType()
-        if evalType == .Mat || evalType == .Unknown {
-            options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}"))
-            options.append(Represent(GaussJordanElimination(mat: exp), show: "\\text{Gauss Jordan Elimination}"))
-            options.append(Represent(Transpose(exp)))
-            options.append(Represent(Determinant(exp)))
-            
-        }
         
-        if evalType == .Num || evalType == .Unknown {
-            options.append(Represent(Fraction(numerator: exp, denominator: Unassigned("D"))))
-            options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
-        }
+        options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}"))
+        options.append(Represent(GaussJordanElimination(exp), show: "\\text{Gauss Jordan Elimination}"))
+        options.append(Represent(Transpose(exp)))
+        options.append(Represent(Determinant(exp)))
+    
+        options.append(Represent(Fraction(numerator: exp, denominator: Unassigned("D"))))
+        options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
         
         options.append(Represent(Inverse(exp)))
         options.append(Represent(Mat.identityOf(2, 2)))
-        options.append(Represent(Mul([exp, Unassigned("Z")])))
-        options.append(Represent(Add([exp, Unassigned("Z")])))
+        options.append(Represent(Mul(exp, Unassigned("Z"))))
+        options.append(Represent(Add(exp, Unassigned("Z"))))
         options.append(Represent(Power(exp, Unassigned("n"))))
         
         return options
@@ -84,9 +78,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         varPanel.isHidden = varNames.isEmpty
         varcvlayout.estimatedItemSize = CGSize(width: 20, height: 20)
         varcvlayout.itemSize = UICollectionViewFlowLayout.automaticSize
-        guard let exp = exp else {
-            return
-        }
+        
         let options = optionsFor(exp: exp)
         let oble = Observable.just(options)
         
@@ -96,9 +88,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             cell.lbl.text = "" //unused
         }).disposed(by: disposeBag)
         
-        tv.rx.modelSelected(Represent.self).subscribe(onNext:  { value in
+        tv.rx.modelSelected(Represent.self).subscribe(onNext: { value in
             self.dismiss(animated: false, completion: {
-                self.promise.fulfill(.changed(exp.uid, value.exp))
+                self.promise.fulfill(.changed(value.exp))
             })
         }).disposed(by: disposeBag)
         popoverPresentationController?.delegate = self
@@ -115,20 +107,19 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
 //        }).disposed(by: disposeBag)
     }
     @IBAction func fillMatrixClick(_ sender: Any) {
+        
         guard let mat = exp as? Mat else {return}
         guard let txt = numberTextField.text else {return}
         guard let _ = txt2exp(txt: txt) else {return}
         let exparr = (0..<mat.rows).map({_ in (0..<mat.cols).map({_ in txt2exp(txt: txt)! })})
         dismiss(animated: false) {
-            self.promise.fulfill(.changed(mat.uid, Mat(exparr)))
+            self.promise.fulfill(.changed(Mat(exparr)))
         }
     }
     
     @IBAction func removeClick(_ sender: Any) {
         dismiss(animated: false) {
-            if let uid = self.exp?.uid {
-                self.promise.fulfill(.removed(uid))
-            }
+            self.promise.fulfill(.removed)
         }
     }
 
@@ -143,7 +134,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return value.exp
         } else if let value = Float(txt) {
             return NumExp(value)
-        } else if let r = numbers.Rational<Int>(from: txt){
+        } else if let r = Rational<Int>(from: txt){
             return NumExp(r)
         } else if txt.isAlphanumeric {
             return Unassigned(txt)
@@ -154,11 +145,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     ///Dismiss and fulfill the user input if possible.
     func applyNumber() {
         if let input = numberTextField.text {
-            if let exp = exp {
-                if let newExp = txt2exp(txt: input) {
-                    dismiss(animated: false) { [unowned self] in
-                        self.promise.fulfill(.changed(exp.uid, newExp))
-                    }
+            if let newExp = txt2exp(txt: input) {
+                dismiss(animated: false) { [unowned self] in
+                    self.promise.fulfill(.changed(newExp))
                 }
             }
         }
@@ -225,11 +214,7 @@ extension ApplyTableVC:UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         dismiss(animated: false) { [unowned self] in
-            if let exp = self.exp {
-                self.promise.fulfill(.changed(exp.uid, Unassigned(self.varNames[indexPath.row])))
-            } else {
-                self.promise.fulfill(.nothin)
-            }
+            self.promise.fulfill(.changed(Unassigned(self.varNames[indexPath.row])))
         }
     }
 }

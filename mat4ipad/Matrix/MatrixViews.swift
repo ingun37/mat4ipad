@@ -13,6 +13,8 @@ import SignedNumberRecognizer
 import AlgebraEvaluator
 
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
+    var directSubExpViews: [ExpViewable] { return []}
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,7 +62,7 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
                     let res = recognize(paths: seperate(path: self.drawing))
                     let most = mostLikely(sign: res.0, results: res.1)
                     if let i = Int(most) {
-                        self.del?.changeto(uid: self.exp.uid, to: NumExp(i))
+                        self.del?.changeto(view: self, to: NumExp(i))
                     } else {
                         self.drawing = CGMutablePath()
                         self.setNeedsDisplay()
@@ -133,6 +135,7 @@ class MatrixRow: UIView {
     }
 }
 class MatrixView:UIView {
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
