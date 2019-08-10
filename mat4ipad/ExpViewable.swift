@@ -269,4 +269,42 @@ extension Exp {
     func subExps()->[Exp] {
         return coverAllCases(Add: {[$0.l, $0.r]}, Mul: {[$0.l,$0.r]}, Mat: {$0.elements.flatMap({$0})}, Unassigned: {_ in []}, NumExp: {_ in []}, Power: {[$0.base, $0.exponent]}, RowEchelonForm: {[$0.mat]}, GaussJordanElimination: {[$0.mat]}, Transpose: {[$0.mat]}, Determinant: {[$0.mat]}, Fraction: {[$0.numerator, $0.denominator]}, Inverse: {[$0.mat]}, Rank: {[$0.mat]}, Nullity: {[$0.mat]})
     }
+    func changed(eqTo:Exp, to:Exp)->Exp {
+        if isEq(eqTo) {
+            return to
+        }
+        return coverAllCases(Add: { (e) -> Exp in
+            Add(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
+        }, Mul: { (e) -> Exp in
+            Mul(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
+        }, Mat: { (e) -> Exp in
+            Mat(e.elements.map({
+                $0.map({
+                    $0.changed(eqTo: eqTo, to: to)
+                })
+            }))
+        }, Unassigned: { (e) -> Exp in
+            e
+        }, NumExp: { (e) -> Exp in
+            e
+        }, Power: { (e) -> Exp in
+            Power(e.base.changed(eqTo: eqTo, to: to), e.exponent.changed(eqTo: eqTo, to: to))
+        }, RowEchelonForm: { (e) -> Exp in
+            RowEchelonForm(mat:e.mat.changed(eqTo: eqTo, to: to))
+        }, GaussJordanElimination: { (e) -> Exp in
+            GaussJordanElimination(e.mat.changed(eqTo: eqTo, to:to))
+        }, Transpose: { (e) -> Exp in
+            Transpose(e.mat.changed(eqTo: eqTo, to:to))
+        }, Determinant: { (e) -> Exp in
+            Determinant(e.mat.changed(eqTo: eqTo, to:to))
+        }, Fraction: { (e) -> Exp in
+            Fraction(numerator: e.numerator.changed(eqTo: eqTo, to: to), denominator: e.denominator.changed(eqTo: eqTo, to: to))
+        }, Inverse: { (e) -> Exp in
+            Inverse(e.mat.changed(eqTo: eqTo, to:to))
+        }, Rank: { (e) -> Exp in
+            Rank(e.mat.changed(eqTo: eqTo, to:to))
+        }, Nullity: { (e) -> Exp in
+            Nullity(e.mat.changed(eqTo: eqTo, to:to))
+        })
+    }
 }

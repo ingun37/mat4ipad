@@ -131,6 +131,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             self.setHierarchyBG(e: v, f:f - 0.1)
         }
     }
+    
     func refresh() {
         let mainexpview = mainExpView.set(exp: exp, del: self)
         setHierarchyBG(e: mainexpview, f: 0.9)
@@ -149,9 +150,11 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         
         let mainExp = mainexpview.exp
-        
+        let final = varStack.arrangedSubviews.compactMap({$0 as? VarView}).reduce(mainExp) { (exp, vv) -> Exp in
+            exp.changed(eqTo: Unassigned(vv.name), to: vv.exp)
+        }
         do {
-            try preview.set("= {\(mainExp.eval().latex())}")
+            try preview.set("= {\(final.eval().latex())}")
         } catch {
             if let e = error as? evalErr {
                 switch e {
