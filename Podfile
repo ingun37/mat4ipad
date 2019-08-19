@@ -12,7 +12,7 @@ target 'mat4ipad' do
   pod 'PromisesSwift'
   pod 'TensorFlowLiteSwift'
   pod 'SignedNumberRecognizer'
-  pod 'AlgebraEvaluator', '~> 0.2.1'
+  pod 'AlgebraEvaluator', '~> 0.2.6'
   target 'mat4ipadTests' do
     inherit! :search_paths
     # Pods for testing

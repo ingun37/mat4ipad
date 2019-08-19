@@ -25,66 +25,57 @@ extension ExpViewable {
     func removed(view: ExpViewable) -> Exp? {
         if self == view {
             //Return it's successor if exists.
-            return exp.coverAllCases(Add: { (_) -> Exp? in
-                nil
-            }, Mul: { (_) -> Exp? in
-                nil
-            }, Mat: { (_) -> Exp? in
-                nil
-            }, Unassigned: { (_) -> Exp? in
-                nil
-            }, NumExp: { (_) -> Exp? in
-                nil
-            }, Power: { (_) -> Exp? in
-                nil
-            }, RowEchelonForm: { (e) -> Exp? in
-                return e.mat
-            }, GaussJordanElimination: { (e) -> Exp? in
-                return e.mat
-            }, Transpose: { (e) -> Exp? in
-                return e.mat
-            }, Determinant: { (e) -> Exp? in
-                return e.mat
-            }, Fraction: { (_) -> Exp? in
-                return nil
-            }, Inverse: { (e) -> Exp? in
-                return e.mat
-            }, Rank: { (e) -> Exp? in
-                return e.mat
-            }, Nullity: { (e) -> Exp? in
-                return e.mat
-            })
+            switch exp.reflect() {
+            case .Add(_): return nil
+            case .Mul(_): return nil
+            case .Mat(_): return nil
+            case .Unassigned(_): return nil
+            case .NumExp(_): return nil
+            case .Power(_): return nil
+            case .RowEchelonForm(let e): return e.mat
+            case .GaussJordanElimination(let e): return e.mat
+            case .Transpose(let e): return e.mat
+            case .Determinant(let e): return e.mat
+            case .Fraction(_): return nil
+            case .Inverse(let e): return e.mat
+            case .Rank(let e): return e.mat
+            case .Nullity(let e): return e.mat
+            case .Norm(let e): return e.mat
+            case .Unknown: return nil
+            }
         }
-        return exp.coverAllCases(Add: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view:view)})
-            if removed.count == 0 {
-                return nil
-            } else if removed.count == 1 {
-                return removed[0]
+        let removed = self.directSubExpViews.map({$0.removed(view:view)})
+        switch exp.reflect() {
+        case .Add(_):
+            if let l = removed[0] {
+                if let r = removed[1] {
+                    return Add(l, r)
+                } else {
+                    return l
+                }
             } else {
-                return Add(removed[0], removed[1])
-            }
-        }, Mul: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view:view)})
-            if removed.count == 0 {
                 return nil
-            } else if removed.count == 1 {
-                return removed[0]
-            } else {
-                return Mul(removed[0], removed[1])
             }
-        }, Mat: { (e) -> Exp? in
-            let removed = self.directSubExpViews.map({$0.removed(view:view) ?? NumExp(0)})
+        case .Mul(_):
+            if let l = removed[0] {
+                if let r = removed[1] {
+                    return Mul(l, r)
+                } else {
+                    return l
+                }
+            } else {
+                return nil
+            }
+        case .Mat(let e):
             let arrIn2D = stride(from: 0, to: removed.count, by: e.cols).map({
-                Array(removed[$0..<$0+e.cols])
+                Array(removed[$0..<$0+e.cols].map({$0 ?? NumExp(0)}))
             })
             return Mat(arrIn2D)
-        }, Unassigned: { (e) -> Exp? in
-            return e
-        }, NumExp: { (e) -> Exp? in
-            return e
-        }, Power: { (e) -> Exp? in
-            let removed = self.directSubExpViews.map({$0.removed(view: view)})
+        case .Unassigned(_):
+            return exp
+        case .NumExp(_):
+            return exp
+        case .Power(_):
             if let base = removed[0] {
                 if let exponent = removed[1] {
                     return Power(base, exponent)
@@ -94,36 +85,31 @@ extension ExpViewable {
             } else {
                 return nil
             }
-        }, RowEchelonForm: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .RowEchelonForm(_):
+            if let m = removed[0] {
                 return RowEchelonForm(mat: m)
             } else {
                 return nil
             }
-        }, GaussJordanElimination: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .GaussJordanElimination(_):
+            if let m = removed[0] {
                 return GaussJordanElimination(m)
             } else {
                 return nil
             }
-        }, Transpose: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .Transpose(_):
+            if let m = removed[0] {
                 return Transpose(m)
             } else {
                 return nil
             }
-        }, Determinant: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .Determinant(_):
+            if let m = removed[0] {
                 return Determinant(m)
             } else {
                 return nil
             }
-        }, Fraction: { (e) -> Exp? in
-            let removed = self.directSubExpViews.map({$0.removed(view: view)})
+        case .Fraction(_):
             if let numerator = removed[0] {
                 if let denominator = removed[1] {
                     return Fraction(numerator: numerator, denominator: denominator)
@@ -136,175 +122,220 @@ extension ExpViewable {
             } else {
                 return nil
             }
-        }, Inverse: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .Inverse(_):
+            if let m = removed[0] {
                 return Inverse(m)
             } else {
                 return nil
             }
-        }, Rank: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .Rank(_):
+            if let m = removed[0] {
                 return Rank(m)
             } else {
                 return nil
             }
-        }, Nullity: { (e) -> Exp? in
-            let removed = self.directSubExpViews.compactMap({$0.removed(view: view)})
-            if let m = removed.first {
+        case .Nullity(_):
+            if let m = removed[0] {
                 return Nullity(m)
             } else {
                 return nil
             }
-        })
+        case .Norm(_):
+            if let m = removed[0] {
+                return Norm(m)
+            } else {
+                return nil
+            }
+        case .Unknown:
+            return exp
+        }
     }
     //TODO: Currently it presumes that directSubExpViews() and subExps() are in same order.
     func changed(view: ExpViewable, to: Exp) -> Exp {
         if self == view {
             return to
         }
-        return exp.coverAllCases(Add: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view:view, to: to)})
+        let changed = self.directSubExpViews.map({$0.changed(view:view, to: to)})
+        switch exp.reflect() {
+        case .Add(_):
             return Add(changed[0], changed[1])
-        }, Mul: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view:view, to: to)})
+        case .Mul(_):
             return Mul(changed[0], changed[1])
-        }, Mat: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view:view, to: to)})
+        case .Mat(let e):
             let arrIn2D = stride(from: 0, to: changed.count, by: e.cols).map({
                 Array(changed[$0..<$0+e.cols])
             })
             return Mat(arrIn2D)
-        }, Unassigned: { (e) -> Exp in
-            return e
-        }, NumExp: { (e) -> Exp in
-            return e
-        }, Power: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Unassigned(_):
+            return exp
+        case .NumExp(_):
+            return exp
+        case .Power(_):
             return Power(changed[0], changed[1])
-        }, RowEchelonForm: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .RowEchelonForm(_):
             return RowEchelonForm(mat: changed[0])
-        }, GaussJordanElimination: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .GaussJordanElimination(_):
             return GaussJordanElimination(changed[0])
-        }, Transpose: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Transpose(_):
             return Transpose(changed[0])
-        }, Determinant: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Determinant(_):
             return Determinant(changed[0])
-        }, Fraction: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Fraction(_):
             return Fraction(numerator: changed[0], denominator: changed[1])
-        }, Inverse: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Inverse(_):
             return Inverse(changed[0])
-        }, Rank: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Rank(_):
             return Rank(changed[0])
-        }, Nullity: { (e) -> Exp in
-            let changed = self.directSubExpViews.map({$0.changed(view: view, to: to)})
+        case .Nullity(_):
             return Nullity(changed[0])
-        })
+        case .Norm(_):
+            return Norm(changed[0])
+        case .Unknown:
+            return exp
+        }
     }
     
 }
 
 extension Exp {
-    func coverAllCases<T>(
-        Add:(Add)->T,
-        Mul:(Mul)->T,
-        Mat:(Mat)->T,
-        Unassigned:(Unassigned)->T,
-        NumExp:(NumExp)->T,
-        Power:(Power)->T,
-        RowEchelonForm:(RowEchelonForm)->T,
-        GaussJordanElimination:(GaussJordanElimination)->T,
-        Transpose:(Transpose)->T,
-        Determinant:(Determinant)->T,
-        Fraction:(Fraction)->T,
-        Inverse:(Inverse)->T,
-        Rank:(Rank)->T,
-        Nullity:(Nullity)->T
-        )->T {
-        
-        if let e = self as? Add {
-            return Add(e)
-        } else if let e = self as? Mul {
-            return Mul(e)
-        } else if let e = self as? Mat {
-            return Mat(e)
-        } else if let e = self as? Unassigned {
-            return Unassigned(e)
-        } else if let e = self as? NumExp {
-            return NumExp(e)
-        } else if let e = self as? Power {
-            return Power(e)
-        } else if let e = self as? RowEchelonForm {
-            return RowEchelonForm(e)
-        } else if let e = self as? GaussJordanElimination {
-            return GaussJordanElimination(e)
-        } else if let e = self as? Transpose {
-            return Transpose(e)
-        } else if let e = self as? Determinant {
-            return Determinant(e)
-        } else if let e = self as? Fraction {
-            return Fraction(e)
-        } else if let e = self as? Inverse {
-            return Inverse(e)
-        } else if let e = self as? Rank {
-            return Rank(e)
-        } else if let e = self as? Nullity {
-            return Nullity(e)
-        }
-        //TODO:
-        fatalError()
-    }
-    
+
     /// Return all it's direct sub exps.
     ///
     /// The order of exps in return array is preserved
     func subExps()->[Exp] {
-        return coverAllCases(Add: {[$0.l, $0.r]}, Mul: {[$0.l,$0.r]}, Mat: {$0.elements.flatMap({$0})}, Unassigned: {_ in []}, NumExp: {_ in []}, Power: {[$0.base, $0.exponent]}, RowEchelonForm: {[$0.mat]}, GaussJordanElimination: {[$0.mat]}, Transpose: {[$0.mat]}, Determinant: {[$0.mat]}, Fraction: {[$0.numerator, $0.denominator]}, Inverse: {[$0.mat]}, Rank: {[$0.mat]}, Nullity: {[$0.mat]})
+        switch reflect() {
+        case .Add(let e):
+            return [e.l, e.r]
+        case .Mul(let e):
+            return [e.l,e.r]
+        case .Mat(let e):
+            return e.elements.flatMap({$0})
+        case .Unassigned(_):
+            return []
+        case .NumExp(_):
+            return []
+        case .Power(let e):
+            return [e.base, e.exponent]
+        case .RowEchelonForm(let e):
+            return [e.mat]
+        case .GaussJordanElimination(let e):
+            return [e.mat]
+        case .Transpose(let e):
+            return [e.mat]
+        case .Determinant(let e):
+            return [e.mat]
+        case .Fraction(let e):
+            return [e.numerator, e.denominator]
+        case .Inverse(let e):
+            return [e.mat]
+        case .Rank(let e):
+            return [e.mat]
+        case .Nullity(let e):
+            return [e.mat]
+        case .Norm(let e):
+            return [e.mat]
+        case .Unknown:
+            return []
+        }
     }
     func changed(eqTo:Exp, to:Exp)->Exp {
         if isEq(eqTo) {
             return to
         }
-        return coverAllCases(Add: { (e) -> Exp in
-            Add(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
-        }, Mul: { (e) -> Exp in
-            Mul(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
-        }, Mat: { (e) -> Exp in
-            Mat(e.elements.map({
+        switch reflect() {
+        case .Add(let e):
+            return Add(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
+        case .Mul(let e):
+            return Mul(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
+        case .Mat(let e):
+            return Mat(e.elements.map({
                 $0.map({
                     $0.changed(eqTo: eqTo, to: to)
                 })
             }))
-        }, Unassigned: { (e) -> Exp in
-            e
-        }, NumExp: { (e) -> Exp in
-            e
-        }, Power: { (e) -> Exp in
-            Power(e.base.changed(eqTo: eqTo, to: to), e.exponent.changed(eqTo: eqTo, to: to))
-        }, RowEchelonForm: { (e) -> Exp in
-            RowEchelonForm(mat:e.mat.changed(eqTo: eqTo, to: to))
-        }, GaussJordanElimination: { (e) -> Exp in
-            GaussJordanElimination(e.mat.changed(eqTo: eqTo, to:to))
-        }, Transpose: { (e) -> Exp in
-            Transpose(e.mat.changed(eqTo: eqTo, to:to))
-        }, Determinant: { (e) -> Exp in
-            Determinant(e.mat.changed(eqTo: eqTo, to:to))
-        }, Fraction: { (e) -> Exp in
-            Fraction(numerator: e.numerator.changed(eqTo: eqTo, to: to), denominator: e.denominator.changed(eqTo: eqTo, to: to))
-        }, Inverse: { (e) -> Exp in
-            Inverse(e.mat.changed(eqTo: eqTo, to:to))
-        }, Rank: { (e) -> Exp in
-            Rank(e.mat.changed(eqTo: eqTo, to:to))
-        }, Nullity: { (e) -> Exp in
-            Nullity(e.mat.changed(eqTo: eqTo, to:to))
-        })
+        case .Unassigned(let e):
+            return e
+        case .NumExp(let e):
+            return e
+        case .Power(let e):
+            return Power(e.base.changed(eqTo: eqTo, to: to), e.exponent.changed(eqTo: eqTo, to: to))
+        case .RowEchelonForm(let e):
+            return RowEchelonForm(mat:e.mat.changed(eqTo: eqTo, to: to))
+        case .GaussJordanElimination(let e):
+            return GaussJordanElimination(e.mat.changed(eqTo: eqTo, to:to))
+        case .Transpose(let e):
+            return Transpose(e.mat.changed(eqTo: eqTo, to:to))
+        case .Determinant(let e):
+            return Determinant(e.mat.changed(eqTo: eqTo, to:to))
+        case .Fraction(let e):
+            return Fraction(numerator: e.numerator.changed(eqTo: eqTo, to: to), denominator: e.denominator.changed(eqTo: eqTo, to: to))
+        case .Inverse(let e):
+            return Inverse(e.mat.changed(eqTo: eqTo, to:to))
+        case .Rank(let e):
+            return Rank(e.mat.changed(eqTo: eqTo, to:to))
+        case .Nullity(let e):
+            return Nullity(e.mat.changed(eqTo: eqTo, to:to))
+        case .Norm(let e):
+            return Norm(e.mat.changed(eqTo: eqTo, to: to))
+        case .Unknown:
+            return self
+        }
+    }
+}
+
+enum ExpReflection {
+    case Add(Add)
+    case Mul(Mul)
+    case Mat(Mat)
+    case Unassigned(Unassigned)
+    case NumExp(NumExp)
+    case Power(Power)
+    case RowEchelonForm(RowEchelonForm)
+    case GaussJordanElimination(GaussJordanElimination)
+    case Transpose(Transpose)
+    case Determinant(Determinant)
+    case Fraction(Fraction)
+    case Inverse(Inverse)
+    case Rank(Rank)
+    case Nullity(Nullity)
+    case Norm(Norm)
+    case Unknown
+}
+
+extension Exp {
+    func reflect()->ExpReflection {
+        if let e = self as? Add {
+            return .Add(e)
+        } else if let e = self as? Mul {
+            return .Mul(e)
+        } else if let e = self as? Mat {
+            return .Mat(e)
+        } else if let e = self as? Unassigned {
+            return .Unassigned(e)
+        } else if let e = self as? NumExp {
+            return .NumExp(e)
+        } else if let e = self as? Power {
+            return .Power(e)
+        } else if let e = self as? RowEchelonForm {
+            return .RowEchelonForm(e)
+        } else if let e = self as? GaussJordanElimination {
+            return .GaussJordanElimination(e)
+        } else if let e = self as? Transpose {
+            return .Transpose(e)
+        } else if let e = self as? Determinant {
+            return .Determinant(e)
+        } else if let e = self as? Fraction {
+            return .Fraction(e)
+        } else if let e = self as? Inverse {
+            return .Inverse(e)
+        } else if let e = self as? Rank {
+            return .Rank(e)
+        } else if let e = self as? Nullity {
+            return .Nullity(e)
+        } else if let e = self as? Norm {
+            return .Norm(e)
+        } else {
+            return .Unknown
+        }
     }
 }

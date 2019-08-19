@@ -47,11 +47,11 @@ class VarView: UIView, UITextFieldDelegate {
     }
     @IBAction func editEnd(_ sender: UITextField) {
         if let to = sender.text {
-            del?.varNameChanged(from:name, to: to).then({[unowned self] (allowed) in
+            del?.varNameChanged(from:name, to: to).then({[weak self] (allowed) in
                 if allowed {
-                    self.name = to
+                    self?.name = to
                 } else {
-                    sender.text = self.name
+                    sender.text = self?.name
                 }
             })
         } else {
