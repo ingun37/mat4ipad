@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '12.4'
+platform :ios, '13.1'
 
 target 'mat4ipad' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks

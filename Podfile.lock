@@ -26,7 +26,7 @@ DEPENDENCIES:
   - TensorFlowLiteSwift
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AlgebraEvaluator
     - PromisesObjC
     - PromisesSwift
@@ -59,6 +59,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
   TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
 
-PODFILE CHECKSUM: 0d2b6ad4a05f2c0305712dd1c0541e4965e8d4b7
+PODFILE CHECKSUM: 450d69031d9d12f8df949ce7a429cd09cd511373
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.8.4
