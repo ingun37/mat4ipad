@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import AlgebraEvaluator
+import ExpressiveAlgebra
 
 protocol ResizePreviewDelegate {
     func expandBy(matrix: MatrixView, row: Int, col: Int)

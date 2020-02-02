@@ -1,24 +1,23 @@
 PODS:
-  - AlgebraEvaluator (0.2.6)
   - iosMath (0.9.4)
   - PromisesObjC (1.2.8)
   - PromisesSwift (1.2.8):
     - PromisesObjC (= 1.2.8)
-  - RxCocoa (5.0.0):
+  - RxCocoa (5.0.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
-  - RxRelay (5.0.0):
+  - RxRelay (5.0.1):
     - RxSwift (~> 5)
-  - RxSwift (5.0.0)
-  - SignedNumberRecognizer (0.1.0):
+  - RxSwift (5.0.1)
+  - SignedNumberRecognizer (0.1.1):
+    - PromisesSwift
     - TensorFlowLiteSwift
-  - TensorFlowLiteC (0.2.0)
-  - TensorFlowLiteSwift (0.2.0):
-    - TensorFlowLiteC (= 0.2.0)
+  - TensorFlowLiteC (2.1.0)
+  - TensorFlowLiteSwift (2.1.0):
+    - TensorFlowLiteC (= 2.1.0)
 
 DEPENDENCIES:
-  - AlgebraEvaluator (~> 0.2.6)
-  - iosMath (from `https://github.com/kostub/iosMath`, commit `e9b6ec66911089ca0673dd0034715652e71420c9`)
+  - iosMath
   - PromisesSwift
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
@@ -27,7 +26,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - AlgebraEvaluator
+    - iosMath
     - PromisesObjC
     - PromisesSwift
     - RxCocoa
@@ -37,28 +36,17 @@ SPEC REPOS:
     - TensorFlowLiteC
     - TensorFlowLiteSwift
 
-EXTERNAL SOURCES:
-  iosMath:
-    :commit: e9b6ec66911089ca0673dd0034715652e71420c9
-    :git: https://github.com/kostub/iosMath
-
-CHECKOUT OPTIONS:
-  iosMath:
-    :commit: e9b6ec66911089ca0673dd0034715652e71420c9
-    :git: https://github.com/kostub/iosMath
-
 SPEC CHECKSUMS:
-  AlgebraEvaluator: cf2e7d1f8fcb47ab08b90bb2f1ca0c8c6a0009f2
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PromisesSwift: 37bad6f4daddb02f7c9c531efe91e8b21c13ee2f
-  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
-  RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
-  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
-  SignedNumberRecognizer: 66d876fa234b5cc2dc8e29a0fce03e393da471a2
-  TensorFlowLiteC: c90ae90f5d8194e3c66518e576f53cf4c1e7f42b
-  TensorFlowLiteSwift: 2499b9629744d0962de7340b53746d1f46f59096
+  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
+  RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  SignedNumberRecognizer: e0932e033172ee98eb7947d922577ca0c44e017a
+  TensorFlowLiteC: 215603d4426d93810eace5947e317389554a4b66
+  TensorFlowLiteSwift: 9d8137f18d5ac30ca89bba4fbe118e0949ac5743
 
-PODFILE CHECKSUM: 450d69031d9d12f8df949ce7a429cd09cd511373
+PODFILE CHECKSUM: 50ef23bed51221ad98f1781052d53cae00669ec9
 
 COCOAPODS: 1.8.4

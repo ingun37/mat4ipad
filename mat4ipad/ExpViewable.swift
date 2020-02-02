@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import AlgebraEvaluator
+import ExpressiveAlgebra
 
 protocol ExpViewable: UIView {
     var exp:Exp {get}

@@ -8,7 +8,7 @@
 
 import UIKit
 import Promises
-import AlgebraEvaluator
+import ExpressiveAlgebra
 
 protocol VarDelegate {
     func varNameChanged(from:String, to:String)->Promise<Bool>

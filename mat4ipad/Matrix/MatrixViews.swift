@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
-import AlgebraEvaluator
+import ExpressiveAlgebra
 
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     var directSubExpViews: [ExpViewable] { return []}

@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		467A0A7FDE46E36247439742 /* Pods_mat4ipadUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95799D30292970263F20A7CA /* Pods_mat4ipadUITests.framework */; };
-		634E1F238BA32D76347A4ACA /* Pods_mat4ipadTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BDD30F8584A45D9A093FB7E /* Pods_mat4ipadTests.framework */; };
 		6B2F5C27229E64DC00A634B3 /* ExpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F5C26229E64DC00A634B3 /* ExpView.swift */; };
 		6B2F5C2D229E6E5000A634B3 /* ExpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B2F5C2C229E6E5000A634B3 /* ExpView.xib */; };
 		6B2F5C2F229E939500A634B3 /* ApplyTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F5C2E229E939500A634B3 /* ApplyTableVC.swift */; };
@@ -32,7 +30,10 @@
 		6BDC97C222F34D59009BD451 /* VarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDC97C122F34D59009BD451 /* VarView.swift */; };
 		6BEC780822FE86F3007AE58B /* ExpViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BEC780722FE86F3007AE58B /* ExpViewable.swift */; };
 		6BFE54CB22F4A0E800476825 /* MathScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE54CA22F4A0E800476825 /* MathScrollView.swift */; };
-		F14B9F209542616905EC0C20 /* Pods_mat4ipad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCDAA1D25335F34931D38BA /* Pods_mat4ipad.framework */; };
+		92D37B3923E6777500393C50 /* ExpressiveAlgebra in Frameworks */ = {isa = PBXBuildFile; productRef = 92D37B3823E6777500393C50 /* ExpressiveAlgebra */; };
+		938EB633D6E260C6692C6AAB /* libPods-mat4ipadTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDCE23A62859008EA8258E6 /* libPods-mat4ipadTests.a */; };
+		BDE01773B50BD0A4832320A6 /* libPods-mat4ipadUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B72D52F9A364EC58398667 /* libPods-mat4ipadUITests.a */; };
+		C4CCF3B9DAF574FB1025A0DE /* libPods-mat4ipad.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C91D4B5C0327D1BEF208BA57 /* libPods-mat4ipad.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +55,6 @@
 
 /* Begin PBXFileReference section */
 		088EE4861E82F28AFFFFA4C6 /* Pods-mat4ipadTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadTests/Pods-mat4ipadTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3BDD30F8584A45D9A093FB7E /* Pods_mat4ipadTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mat4ipadTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA47F067355FCA462DE0329 /* Pods-mat4ipadTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadTests/Pods-mat4ipadTests.release.xcconfig"; sourceTree = "<group>"; };
 		6B2F5C26229E64DC00A634B3 /* ExpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpView.swift; sourceTree = "<group>"; };
 		6B2F5C2C229E6E5000A634B3 /* ExpView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpView.xib; sourceTree = "<group>"; };
@@ -92,11 +92,12 @@
 		6BEC780722FE86F3007AE58B /* ExpViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpViewable.swift; sourceTree = "<group>"; };
 		6BFE54CA22F4A0E800476825 /* MathScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathScrollView.swift; sourceTree = "<group>"; };
 		6F24F6C796DEEA6B97B096B5 /* Pods-mat4ipadUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadUITests/Pods-mat4ipadUITests.release.xcconfig"; sourceTree = "<group>"; };
-		95799D30292970263F20A7CA /* Pods_mat4ipadUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mat4ipadUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92B72D52F9A364EC58398667 /* libPods-mat4ipadUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mat4ipadUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41F4B3CD988DD2058B939AA /* Pods-mat4ipad.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipad.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipad/Pods-mat4ipad.release.xcconfig"; sourceTree = "<group>"; };
+		C91D4B5C0327D1BEF208BA57 /* libPods-mat4ipad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mat4ipad.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC2D3D3B3EBA5A0D265670A4 /* Pods-mat4ipadUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadUITests/Pods-mat4ipadUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FBB48FC5F417416D6BF0F102 /* Pods-mat4ipad.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipad.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipad/Pods-mat4ipad.debug.xcconfig"; sourceTree = "<group>"; };
-		FBCDAA1D25335F34931D38BA /* Pods_mat4ipad.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mat4ipad.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCDCE23A62859008EA8258E6 /* libPods-mat4ipadTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mat4ipadTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F14B9F209542616905EC0C20 /* Pods_mat4ipad.framework in Frameworks */,
+				C4CCF3B9DAF574FB1025A0DE /* libPods-mat4ipad.a in Frameworks */,
+				92D37B3923E6777500393C50 /* ExpressiveAlgebra in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				634E1F238BA32D76347A4ACA /* Pods_mat4ipadTests.framework in Frameworks */,
+				938EB633D6E260C6692C6AAB /* libPods-mat4ipadTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				467A0A7FDE46E36247439742 /* Pods_mat4ipadUITests.framework in Frameworks */,
+				BDE01773B50BD0A4832320A6 /* libPods-mat4ipadUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,9 +228,9 @@
 				6B49899322A528FC00F47A5E /* NumberKit.framework */,
 				6B49899722A52BBB00F47A5E /* NumberKit.framework */,
 				6B49899122A5282C00F47A5E /* NumberKit.framework */,
-				FBCDAA1D25335F34931D38BA /* Pods_mat4ipad.framework */,
-				3BDD30F8584A45D9A093FB7E /* Pods_mat4ipadTests.framework */,
-				95799D30292970263F20A7CA /* Pods_mat4ipadUITests.framework */,
+				C91D4B5C0327D1BEF208BA57 /* libPods-mat4ipad.a */,
+				FCDCE23A62859008EA8258E6 /* libPods-mat4ipadTests.a */,
+				92B72D52F9A364EC58398667 /* libPods-mat4ipadUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -244,7 +246,6 @@
 				6BBE5B99229D9A77006A56D8 /* Sources */,
 				6BBE5B9A229D9A77006A56D8 /* Frameworks */,
 				6BBE5B9B229D9A77006A56D8 /* Resources */,
-				3FB74C3448C13DF983083D27 /* [CP] Embed Pods Frameworks */,
 				7728C4C322ED918FA9480F82 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -252,6 +253,9 @@
 			dependencies = (
 			);
 			name = mat4ipad;
+			packageProductDependencies = (
+				92D37B3823E6777500393C50 /* ExpressiveAlgebra */,
+			);
 			productName = mat4ipad;
 			productReference = 6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */;
 			productType = "com.apple.product-type.application";
@@ -326,6 +330,9 @@
 				Base,
 			);
 			mainGroup = 6BBE5B94229D9A77006A56D8;
+			packageReferences = (
+				92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */,
+			);
 			productRefGroup = 6BBE5B9E229D9A77006A56D8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -388,23 +395,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3FB74C3448C13DF983083D27 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mat4ipad/Pods-mat4ipad-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7728C4C322ED918FA9480F82 /* [CP] Copy Pods Resources */ = {
@@ -810,6 +800,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ingun37/ExpressiveAlgebra.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		92D37B3823E6777500393C50 /* ExpressiveAlgebra */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */;
+			productName = ExpressiveAlgebra;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6BBE5B95229D9A77006A56D8 /* Project object */;
 }

@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ExpressiveAlgebra",
+        "repositoryURL": "https://github.com/ingun37/ExpressiveAlgebra.git",
+        "state": {
+          "branch": null,
+          "revision": "21b9c56acd5ad51190f6990057191e7e55b9823d",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
+          "version": "7.3.4"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "f2b5a06440ea87eba1a167cab37bf6496646c52e",
+          "version": "1.3.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

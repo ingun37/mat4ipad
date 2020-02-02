@@ -10,7 +10,7 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
-import AlgebraEvaluator
+import ExpressiveAlgebra
 
 class ExpView: UIView, ExpViewable {
     var del:ExpViewableDelegate?
