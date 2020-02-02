@@ -26,11 +26,11 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GmD-Cc-c21">
                                         <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
-                                                <rect key="frame" x="8" y="0.0" width="752" height="50"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
+                                                <rect key="frame" x="8" y="0.0" width="77" height="50"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="50"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <state key="normal" title="Undo"/>
@@ -39,7 +39,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="378" y="0.0" width="374" height="50"/>
+                                                        <rect key="frame" x="41" y="0.0" width="36" height="50"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Clear"/>
                                                         <connections>
@@ -53,7 +53,6 @@
                                         <constraints>
                                             <constraint firstItem="gw5-0j-tOY" firstAttribute="leading" secondItem="GmD-Cc-c21" secondAttribute="leading" constant="8" id="15E-Ru-tjv"/>
                                             <constraint firstItem="gw5-0j-tOY" firstAttribute="top" secondItem="GmD-Cc-c21" secondAttribute="top" id="7Mp-lg-eLC"/>
-                                            <constraint firstAttribute="trailing" secondItem="gw5-0j-tOY" secondAttribute="trailing" constant="8" id="BSN-NJ-Igc"/>
                                             <constraint firstAttribute="bottom" secondItem="gw5-0j-tOY" secondAttribute="bottom" id="b65-RA-TZc"/>
                                         </constraints>
                                     </view>
