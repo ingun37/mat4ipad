@@ -91,7 +91,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             let tap = UITapGestureRecognizer()
             latexv.addGestureRecognizer(tap)
             tap.rx.event.bind { (rec) in
-                print("touch")
+                self.dismiss(animated: false, completion: {
+                    self.promise.fulfill(.changed(rep.exp))
+                })
             }.disposed(by: disposeBag)
             return latexv
         }
@@ -168,6 +170,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 dismiss(animated: false) { [unowned self] in
                     self.promise.fulfill(.changed(newExp))
                 }
+            } else if input.isEmpty {
+                
             } else {
                 let alert = UIAlertController(title: "Invalid expression", message: """
 Following formats are accepted
