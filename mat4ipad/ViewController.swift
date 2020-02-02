@@ -258,6 +258,20 @@ extension ViewController: ExpViewableDelegate {
 }
 
 extension ViewController: VarDelegate {
+    func changeVarName(original: String) -> Promise<String> {
+        let pro = Promise<String>.pending()
+        let alert = UIAlertController(title: "Enter name", message: title, preferredStyle: .alert)
+        alert.addTextField { (tfield) in }
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+            pro.fulfill(alert.textFields?.first?.text ?? "")
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+            pro.reject(Err.nameIsNull)
+        }))
+        present(alert, animated: true, completion: nil)
+        return pro
+    }
+    
     func alert(title:String, del:@escaping ()->Void) {
         let alert = UIAlertController(title: "Invalid Variable Name", message: title, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in del()}))

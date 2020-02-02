@@ -12,16 +12,34 @@ import ExpressiveAlgebra
 
 protocol VarDelegate {
     func varNameChanged(from:String, to:String)->Promise<Bool>
+    func changeVarName(original:String)->Promise<String>
+}
+enum Err:Error {
+    case nameIsNull
 }
 class VarView: UIView, UITextFieldDelegate {
+    @IBOutlet weak var namelbl: UILabel!
     var del:VarDelegate?
     var exp: Exp {
-        return expView?.exp ?? Unassigned(tf.text ?? "Var")
+        return expView?.exp ?? Unassigned(namelbl.text ?? "Var")
     }
     
     @IBOutlet weak var stack:UIStackView!
-    @IBOutlet weak var tf:UITextField!
     
+    @IBAction func nameTap(_ sender: Any) {
+        let original = namelbl.text ?? ""
+        del?.changeVarName(original: original).then({ (to)-> Promise<Bool> in
+            guard !to.isEmpty else {throw Err.nameIsNull}
+            guard let del = self.del else {throw Err.nameIsNull}
+            return del.varNameChanged(from: original, to: to).then { (allowed) in
+                guard allowed else {throw Err.nameIsNull}
+                self.namelbl.text = to
+                self.name = to
+            }
+        }).catch({ (err) in
+            
+        })
+    }
     var name = ""
     var expView:ExpView? = nil
     static func loadViewFromNib() -> VarView {
@@ -33,7 +51,7 @@ class VarView: UIView, UITextFieldDelegate {
     @discardableResult
     func set(name:String, exp:Exp, expDel:ExpViewableDelegate, varDel:VarDelegate)-> ExpView {
         self.del = varDel
-        tf.text = name
+        namelbl.text = name
         let eview = ExpView.loadViewFromNib()
         if let prev = expView {
             stack.removeArrangedSubview(prev)
@@ -45,31 +63,6 @@ class VarView: UIView, UITextFieldDelegate {
         self.name = name
         return eview
     }
-    @IBAction func editEnd(_ sender: UITextField) {
-        if let to = sender.text {
-            del?.varNameChanged(from:name, to: to).then({[weak self] (allowed) in
-                if allowed {
-                    self?.name = to
-                } else {
-                    sender.text = self?.name
-                }
-            })
-        } else {
-            sender.text = name
-        }
-    }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }
 
 class VarInitView:UIView {

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,31 +13,19 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="EVc-Vd-ZnN">
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="EVc-Vd-ZnN">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" verticalCompressionResistancePriority="754" text="assigned name: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rM1-gd-NUD">
-                            <rect key="frame" x="145" y="0.0" width="124.5" height="20.5"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="124.5" id="FH1-LN-2ha"/>
-                            </constraints>
+                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" verticalCompressionResistancePriority="754" text="assigned name: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rM1-gd-NUD">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
+                            <gestureRecognizers/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <nil key="highlightedColor"/>
-                        </label>
-                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="247" horizontalCompressionResistancePriority="747" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xLU-f0-gdG">
-                            <rect key="frame" x="175" y="647" width="64" height="30"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="64" id="rzz-ui-fLG"/>
-                            </constraints>
-                            <nil key="textColor"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <action selector="editEnd:" destination="iN0-l3-epB" eventType="editingDidEnd" id="VDd-Rf-Xyh"/>
-                                <outlet property="delegate" destination="iN0-l3-epB" id="PgV-2A-dFB"/>
+                                <outletCollection property="gestureRecognizers" destination="0kA-Ob-EtA" appends="YES" id="AXz-Cp-K4f"/>
                             </connections>
-                        </textField>
+                        </label>
                     </subviews>
                 </stackView>
             </subviews>
@@ -55,10 +40,15 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="namelbl" destination="rM1-gd-NUD" id="6Nf-AE-cbz"/>
                 <outlet property="stack" destination="EVc-Vd-ZnN" id="YJi-ZG-53A"/>
-                <outlet property="tf" destination="xLU-f0-gdG" id="1mo-ha-rCN"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="217.96875"/>
         </view>
+        <tapGestureRecognizer id="0kA-Ob-EtA">
+            <connections>
+                <action selector="nameTap:" destination="iN0-l3-epB" id="rnj-Nt-EKs"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>
