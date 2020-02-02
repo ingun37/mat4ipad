@@ -55,10 +55,10 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
         
-        options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}"))
-        options.append(Represent(GaussJordanElimination(exp), show: "\\text{Gauss Jordan Elimination}"))
+        options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}(\(exp.latex()))"))
+        options.append(Represent(GaussJordanElimination(exp), show: "\\text{Gauss Jordan Elimination}(\(exp.latex()))"))
         options.append(Represent(Transpose(exp)))
-        options.append(Represent(Determinant(exp)))
+        options.append(Represent(Determinant(exp), show: "\\text{Determinant}(\(exp.latex()))"))
     
         options.append(Represent(Fraction(numerator: exp, denominator: Unassigned("D"))))
         options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
