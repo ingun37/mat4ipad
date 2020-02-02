@@ -51,11 +51,8 @@ class ExpView: UIView, ExpViewable {
         super.awakeFromNib()
         layer.cornerRadius = 4;
         
-        latexWrap.layer.cornerRadius = 4;
-        latexWrap.layer.shadowColor = UIColor.black.cgColor
-        latexWrap.layer.shadowOpacity = 0.5
-        latexWrap.layer.shadowOffset = CGSize(width: 1, height: 1)
-        latexWrap.layer.shadowRadius = 1
+        latexWrap.uniformLatexLayout()
+        
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -134,3 +131,12 @@ class ExpInitView:UIView {
     
 }
 
+public extension UIView {
+    func uniformLatexLayout() {
+        layer.cornerRadius = 4;
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.shadowRadius = 1
+    }
+}

@@ -32,7 +32,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     @IBOutlet weak var varPanel: UIStackView!
     //    var del:ApplyTableDelegate?
     let disposeBag = DisposeBag()
-    @IBOutlet weak var tv: UITableView!
+    
     var exp:Exp!
     var varNames:[String] = []
     func set(exp:Exp, varNames:[String]) {
@@ -40,6 +40,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         self.varNames = varNames
     }
     
+    @IBOutlet weak var stackView: UIStackView!
     struct Represent {
         let exp:Exp
         let showLatex:String
@@ -80,19 +81,37 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         varcvlayout.itemSize = UICollectionViewFlowLayout.automaticSize
         
         let options = optionsFor(exp: exp)
-        let oble = Observable.just(options)
+        let expViews = options.map { (rep) -> UIView in
+            let latexv = PaddedLatexView.loadViewFromNib()
+            if rep.showLatex.isEmpty {
+                latexv.mathv?.latex = rep.exp.latex()
+            } else {
+                latexv.mathv?.latex = rep.showLatex
+            }
+            let tap = UITapGestureRecognizer()
+            latexv.addGestureRecognizer(tap)
+            tap.rx.event.bind { (rec) in
+                print("touch")
+            }.disposed(by: disposeBag)
+            return latexv
+        }
+        expViews.forEach { (v) in
+            v.uniformLatexLayout()
+            stackView.addArrangedSubview(v)
+        }
+//        let oble = Observable.just(options)
         
         
-        oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ApplyTableCell.self), curriedArgument: { (row, element, cell) in
-            cell.latex.set(element.showLatex)
-            cell.lbl.text = "" //unused
-        }).disposed(by: disposeBag)
-        
-        tv.rx.modelSelected(Represent.self).subscribe(onNext: { value in
-            self.dismiss(animated: false, completion: {
-                self.promise.fulfill(.changed(value.exp))
-            })
-        }).disposed(by: disposeBag)
+//        oble.bind(to: tv.rx.items(cellIdentifier: "cell", cellType: ApplyTableCell.self), curriedArgument: { (row, element, cell) in
+//            cell.latex.set(element.showLatex)
+//            cell.lbl.text = "" //unused
+//        }).disposed(by: disposeBag)
+//
+//        tv.rx.modelSelected(Represent.self).subscribe(onNext: { value in
+//            self.dismiss(animated: false, completion: {
+//                self.promise.fulfill(.changed(value.exp))
+//            })
+//        }).disposed(by: disposeBag)
         popoverPresentationController?.delegate = self
 //        matrixPanel.isHidden = !(exp is Mat)
         
