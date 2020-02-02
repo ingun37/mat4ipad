@@ -149,6 +149,14 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 dismiss(animated: false) { [unowned self] in
                     self.promise.fulfill(.changed(newExp))
                 }
+            } else {
+                let alert = UIAlertController(title: "Invalid expression", message: """
+Following formats are accepted
+123, -123, 1/2, 3.14 ...
+x, xy, A ...
+""", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(alert, animated: true)
             }
         }
     }
