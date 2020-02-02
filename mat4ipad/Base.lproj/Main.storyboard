@@ -231,14 +231,14 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="305" height="16"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ino-0L-gMg">
-                                                                <rect key="frame" x="0.0" y="7.5" width="117" height="1"/>
+                                                                <rect key="frame" x="0.0" y="7.5" width="96" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="v2e-0b-PGZ"/>
                                                                 </constraints>
                                                             </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Variables" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xF-OJ-50V">
-                                                                <rect key="frame" x="121" y="0.0" width="63" height="16"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign Variable" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xF-OJ-50V">
+                                                                <rect key="frame" x="100" y="0.0" width="105" height="16"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="16" id="ELJ-07-WfT"/>
                                                                 </constraints>
@@ -247,7 +247,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGK-YZ-uhb">
-                                                                <rect key="frame" x="188" y="7.5" width="117" height="1"/>
+                                                                <rect key="frame" x="209" y="7.5" width="96" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="w03-FZ-bfy"/>
@@ -311,14 +311,14 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="305" height="16"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kzp-vx-DTa">
-                                                                <rect key="frame" x="0.0" y="7.5" width="126" height="1"/>
+                                                                <rect key="frame" x="0.0" y="7.5" width="65" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="2dI-9c-lw6"/>
                                                                 </constraints>
                                                             </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emo-LL-p7r">
-                                                                <rect key="frame" x="130" y="0.0" width="45.5" height="16"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign Number or Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emo-LL-p7r">
+                                                                <rect key="frame" x="69" y="0.0" width="167" height="16"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="16" id="qEf-V8-hXA"/>
                                                                 </constraints>
@@ -327,7 +327,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fSV-SI-8rR">
-                                                                <rect key="frame" x="179.5" y="7.5" width="125.5" height="1"/>
+                                                                <rect key="frame" x="240" y="7.5" width="65" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="YFZ-2h-1ha"/>
