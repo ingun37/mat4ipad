@@ -98,7 +98,6 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return latexv
         }
         expViews.forEach { (v) in
-            v.uniformLatexLayout()
             stackView.addArrangedSubview(v)
         }
 //        let oble = Observable.just(options)

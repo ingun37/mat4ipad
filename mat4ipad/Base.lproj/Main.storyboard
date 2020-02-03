@@ -21,57 +21,34 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="EY8-Vo-fDE">
-                                <rect key="frame" x="0.0" y="8" width="768" height="320"/>
+                                <rect key="frame" x="0.0" y="8" width="768" height="338"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GmD-Cc-c21" userLabel="buttonsView">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="32"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
-                                                <rect key="frame" x="8" y="0.0" width="185" height="32"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="32"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                        <state key="normal" title="Undo"/>
+                                    <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xdI-s2-QbL">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                        <items>
+                                            <navigationItem title="Title" id="cWV-ys-NJk">
+                                                <leftBarButtonItems>
+                                                    <barButtonItem title="Undo" id="uhP-gT-cfP">
                                                         <connections>
-                                                            <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tJ7-iD-jcT"/>
+                                                            <action selector="undo:" destination="BYZ-38-t0r" id="3rg-1X-UJX"/>
                                                         </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="41" y="0.0" width="36" height="32"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <state key="normal" title="Clear"/>
+                                                    </barButtonItem>
+                                                    <barButtonItem title="Clear" id="dam-Yi-MTo">
                                                         <connections>
-                                                            <action selector="clearClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="huT-Tl-iuE"/>
+                                                            <action selector="clearClick:" destination="BYZ-38-t0r" id="orh-x9-xsv"/>
                                                         </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="81" y="0.0" width="104" height="32"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <state key="normal" title="New Variable +">
-                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </state>
-                                                        <state key="disabled">
-                                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </state>
+                                                    </barButtonItem>
+                                                    <barButtonItem title="Add Variable" id="CRU-cs-vgK">
                                                         <connections>
-                                                            <action selector="addVariableClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RYt-7p-69h"/>
+                                                            <action selector="addVariableClick:" destination="BYZ-38-t0r" id="VV7-jV-Il0"/>
                                                         </connections>
-                                                    </button>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstItem="gw5-0j-tOY" firstAttribute="leading" secondItem="GmD-Cc-c21" secondAttribute="leading" constant="8" id="15E-Ru-tjv"/>
-                                            <constraint firstItem="gw5-0j-tOY" firstAttribute="top" secondItem="GmD-Cc-c21" secondAttribute="top" id="7Mp-lg-eLC"/>
-                                            <constraint firstAttribute="bottom" secondItem="gw5-0j-tOY" secondAttribute="bottom" id="b65-RA-TZc"/>
-                                            <constraint firstAttribute="height" constant="32" id="u3M-CF-mpv"/>
-                                        </constraints>
-                                    </view>
+                                                    </barButtonItem>
+                                                </leftBarButtonItems>
+                                            </navigationItem>
+                                        </items>
+                                    </navigationBar>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6f1-8r-UCe" customClass="MathScrollView" customModule="mat4ipad" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="40" width="768" height="144"/>
+                                        <rect key="frame" x="0.0" y="58" width="768" height="144"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
                                                 <rect key="frame" x="8" y="8" width="260" height="128"/>
@@ -93,7 +70,7 @@
                                                 </subviews>
                                             </stackView>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="kpS-te-l7F" secondAttribute="top" priority="999" constant="8" id="4a5-EW-fk8"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="bottom" secondItem="kpS-te-l7F" secondAttribute="bottom" priority="999" constant="-8" id="6CG-8g-UZr"/>
@@ -107,7 +84,7 @@
                                         <viewLayoutGuide key="frameLayoutGuide" id="kpS-te-l7F"/>
                                     </scrollView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hnc-2R-FxG">
-                                        <rect key="frame" x="0.0" y="192" width="768" height="128"/>
+                                        <rect key="frame" x="0.0" y="210" width="768" height="128"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7YB-oO-viv" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="0.0" width="752" height="128"/>
@@ -146,7 +123,6 @@
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
                         <outlet property="mainExpView" destination="WlF-gG-ROh" id="YWv-LL-kMF"/>
                         <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
-                        <outlet property="newVarBtn" destination="fFX-yB-t6a" id="1O8-GZ-McV"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="varStack" destination="1cE-JV-GVH" id="NRB-o0-J0u"/>
                         <segue destination="Zc6-Oj-lwd" kind="popoverPresentation" identifier="op" animates="NO" popoverAnchorView="JqQ-Js-lNh" id="wcU-Ns-MxU">

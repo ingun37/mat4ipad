@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,34 +16,15 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
                     <rect key="frame" x="8" y="8" width="557" height="1220"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJF-Qu-Dom">
-                            <rect key="frame" x="0.0" y="0.0" width="557" height="76"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sa2-S3-OQh" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
-                                    <rect key="frame" x="8" y="8" width="541" height="60"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="5cr-3V-cPY"/>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1" id="gab-VJ-upq"/>
-                                    </constraints>
-                                    <connections>
-                                        <outlet property="initialHeightCon" destination="5cr-3V-cPY" id="mov-O6-bAF"/>
-                                        <outlet property="widthGreater" destination="gab-VJ-upq" id="EJi-C2-Txg"/>
-                                    </connections>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="trailing" secondItem="sa2-S3-OQh" secondAttribute="trailing" constant="8" id="5N2-FN-soT"/>
-                                <constraint firstAttribute="bottom" secondItem="sa2-S3-OQh" secondAttribute="bottom" constant="8" id="Pij-Lc-mYc"/>
-                                <constraint firstItem="sa2-S3-OQh" firstAttribute="top" secondItem="cJF-Qu-Dom" secondAttribute="top" constant="8" id="d8k-ui-ptT"/>
-                                <constraint firstItem="sa2-S3-OQh" firstAttribute="leading" secondItem="cJF-Qu-Dom" secondAttribute="leading" constant="8" id="jD0-HQ-uMF"/>
-                            </constraints>
+                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bkR-D4-fOd" customClass="PaddedLatexViewStory" customModule="mat4ipad" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="557" height="128"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <connections>
-                                <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="etj-In-jbc"/>
+                                <outletCollection property="gestureRecognizers" destination="I2V-gd-Upp" appends="YES" id="86y-G7-xvv"/>
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" ambiguous="YES" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="84" width="557" height="727"/>
+                            <rect key="frame" x="0.0" y="136" width="557" height="675"/>
                         </stackView>
                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="819" width="557" height="401"/>
@@ -89,11 +67,10 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="latexView" destination="sa2-S3-OQh" id="0ou-j7-F7x"/>
-                <outlet property="latexWrap" destination="cJF-Qu-Dom" id="Q2R-bZ-76Z"/>
                 <outlet property="matrixHeight" destination="1jS-oO-f1b" id="dzh-Se-Ur4"/>
                 <outlet property="matrixView" destination="KrO-lo-Eyg" id="Dou-3d-UnW"/>
                 <outlet property="matrixWidth" destination="6lZ-Ny-GkX" id="tdp-W7-hJV"/>
+                <outlet property="padLatexView" destination="bkR-D4-fOd" id="fvz-QE-R4I"/>
                 <outlet property="stack" destination="bvF-bR-XdC" id="UcY-hp-41J"/>
             </connections>
             <point key="canvasLocation" x="252.89855072463769" y="235.04464285714283"/>

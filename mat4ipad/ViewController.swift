@@ -98,7 +98,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
 
             print("ExpView is preparing for segue: \(expview)")
             if let expview = expview as? ExpView {
-                anchorView.frame.origin = expview.latexWrap.convert(CGPoint(x: expview.latexWrap.frame.size.width/2, y: expview.latexWrap.frame.size.height), to: anchorView.superview)
+                anchorView.frame.origin = expview.padLatexView.convert(CGPoint(x: expview.padLatexView.frame.size.width/2, y: expview.padLatexView.frame.size.height), to: anchorView.superview)
             } else if let matcell = expview as? MatrixCell {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
             }
@@ -212,9 +212,6 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         matrixResizePreviews.forEach({self.view.addSubview($0)})
     }
     
-    
-    @IBOutlet weak var newVarBtn: UIButton!
-    
     @IBAction func addVariableClick(_ sender: Any) {
         
         var varname = lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).first(where: {name in
@@ -315,10 +312,6 @@ extension ViewController: VarDelegate {
 class ShadowButton:UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.cornerRadius = 4
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 1, height: 1)
-        layer.shadowRadius = 1
+        
     }
 }

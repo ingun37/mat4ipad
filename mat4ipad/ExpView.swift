@@ -26,8 +26,7 @@ class ExpView: UIView, ExpViewable {
     var allSubExpViews:[ExpView] {
         return [self] + directSubExpViews.compactMap({($0 as? ExpView)?.allSubExpViews}).flatMap({$0})
     }
-    @IBOutlet weak var latexWrap: UIView!
-    @IBOutlet weak var latexView: LatexView!
+    @IBOutlet weak var padLatexView: PaddedLatexViewStory!
     
     @IBOutlet weak var matrixView: MatrixView!
     
@@ -49,10 +48,11 @@ class ExpView: UIView, ExpViewable {
 //    private var dragStartPosition:CGPoint = CGPoint.zero
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.cornerRadius = 4;
         
-        latexWrap.uniformLatexLayout()
-        
+        padLatexView.layer.shadowColor = UIColor.black.cgColor
+        padLatexView.layer.shadowOpacity = 0.5
+        padLatexView.layer.shadowOffset = CGSize(width: 1, height: 1)
+        padLatexView.layer.shadowRadius = 1
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -68,7 +68,7 @@ class ExpView: UIView, ExpViewable {
     func setExp(exp:Exp, del:ExpViewableDelegate) {
         self.exp = exp
         self.del = del
-        latexView.set(exp.latex())
+        padLatexView.contentView.mathv?.latex = exp.latex()
         if let exp = exp as? Mat {
             matrixView.isHidden = false
             stack.isHidden = true
@@ -123,20 +123,9 @@ class ExpInitView:UIView {
         eview.layoutMarginsGuide.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
         
         contentView = eview
-        print("Created ExpView:\(eview), \(contentView)")
         
         eview.setExp(exp: exp, del: del)
         return eview
     }
     
-}
-
-public extension UIView {
-    func uniformLatexLayout() {
-        layer.cornerRadius = 4;
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 1, height: 1)
-        layer.shadowRadius = 1
-    }
 }

@@ -8,7 +8,21 @@
 
 import UIKit
 import iosMath
+class PaddedLatexViewStory: UIView {
+    var contentView:PaddedLatexView
+    required init?(coder: NSCoder) {
+        contentView = PaddedLatexView.loadViewFromNib()
+        super.init(coder: coder)
+        contentView.frame = bounds
+        addSubview(contentView)
+        translatesAutoresizingMaskIntoConstraints = false
 
+        contentView.layoutMarginsGuide.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor).isActive = true
+        contentView.layoutMarginsGuide.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor).isActive = true
+        contentView.layoutMarginsGuide.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor).isActive = true
+        contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
+    }
+}
 class PaddedLatexView: UIView {
     
     @IBOutlet weak var container: UIView!
