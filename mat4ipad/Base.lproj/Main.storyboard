@@ -21,16 +21,16 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="EY8-Vo-fDE">
-                                <rect key="frame" x="0.0" y="8" width="768" height="338"/>
+                                <rect key="frame" x="0.0" y="8" width="768" height="320"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GmD-Cc-c21">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GmD-Cc-c21" userLabel="buttonsView">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="32"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gw5-0j-tOY">
-                                                <rect key="frame" x="8" y="0.0" width="185" height="50"/>
+                                                <rect key="frame" x="8" y="0.0" width="185" height="32"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvt-Yj-Zgo" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="32"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <state key="normal" title="Undo"/>
@@ -39,7 +39,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-pb-IRZ" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="41" y="0.0" width="36" height="50"/>
+                                                        <rect key="frame" x="41" y="0.0" width="36" height="32"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Clear"/>
                                                         <connections>
@@ -47,7 +47,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fFX-yB-t6a" customClass="ShadowButton" customModule="mat4ipad" customModuleProvider="target">
-                                                        <rect key="frame" x="81" y="0.0" width="104" height="50"/>
+                                                        <rect key="frame" x="81" y="0.0" width="104" height="32"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="New Variable +">
                                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -67,55 +67,47 @@
                                             <constraint firstItem="gw5-0j-tOY" firstAttribute="leading" secondItem="GmD-Cc-c21" secondAttribute="leading" constant="8" id="15E-Ru-tjv"/>
                                             <constraint firstItem="gw5-0j-tOY" firstAttribute="top" secondItem="GmD-Cc-c21" secondAttribute="top" id="7Mp-lg-eLC"/>
                                             <constraint firstAttribute="bottom" secondItem="gw5-0j-tOY" secondAttribute="bottom" id="b65-RA-TZc"/>
+                                            <constraint firstAttribute="height" constant="32" id="u3M-CF-mpv"/>
                                         </constraints>
                                     </view>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lqz-ed-0xq" customClass="MathScrollView" customModule="mat4ipad" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="58" width="768" height="144"/>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6f1-8r-UCe" customClass="MathScrollView" customModule="mat4ipad" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="40" width="768" height="144"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rMw-In-n6T">
-                                                <rect key="frame" x="4" y="4" width="260" height="128"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
+                                                <rect key="frame" x="8" y="8" width="260" height="128"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-ib-mfE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="260" height="128"/>
-                                                        <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="ExpInitView" customModule="mat4ipad" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="128" placeholder="YES" id="d9t-Aw-hbA"/>
-                                                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="gSZ-Zf-tQz"/>
-                                                                </constraints>
-                                                            </view>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="1cE-JV-GVH">
-                                                                <rect key="frame" x="132" y="0.0" width="128" height="128"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="128" placeholder="YES" id="14w-JG-4qR"/>
-                                                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="dDA-bP-Xro"/>
-                                                                </constraints>
-                                                            </stackView>
-                                                        </subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WlF-gG-ROh" customClass="ExpInitView" customModule="mat4ipad" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="128" placeholder="YES" id="d9t-Aw-hbA"/>
+                                                            <constraint firstAttribute="height" constant="128" placeholder="YES" id="gSZ-Zf-tQz"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="1cE-JV-GVH">
+                                                        <rect key="frame" x="132" y="0.0" width="128" height="128"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="128" placeholder="YES" id="14w-JG-4qR"/>
+                                                            <constraint firstAttribute="height" constant="128" placeholder="YES" id="dDA-bP-Xro"/>
+                                                        </constraints>
                                                     </stackView>
                                                 </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="rMw-In-n6T" secondAttribute="top" id="18S-v8-iF2"/>
-                                                    <constraint firstAttribute="bottom" secondItem="5MG-ib-mfE" secondAttribute="bottom" id="22a-Yk-voP"/>
-                                                    <constraint firstAttribute="width" priority="800" constant="240" id="9KC-bg-Dus"/>
-                                                    <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="rMw-In-n6T" secondAttribute="leading" id="fbX-az-7N0"/>
-                                                    <constraint firstAttribute="height" priority="800" constant="128" id="lF4-By-zKw"/>
-                                                    <constraint firstAttribute="trailing" secondItem="5MG-ib-mfE" secondAttribute="trailing" id="ypm-h1-z8h"/>
-                                                </constraints>
-                                            </view>
+                                            </stackView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.074108736283811108" green="0.104977376103964" blue="0.1527998096446701" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="rMw-In-n6T" firstAttribute="height" secondItem="Lqz-ed-0xq" secondAttribute="height" priority="700" constant="-16" id="81k-pJ-72l"/>
-                                            <constraint firstItem="rMw-In-n6T" firstAttribute="leading" secondItem="Lqz-ed-0xq" secondAttribute="leading" constant="4" id="9vA-MF-XeC"/>
-                                            <constraint firstAttribute="trailing" secondItem="rMw-In-n6T" secondAttribute="trailing" id="C7b-ST-2Ns"/>
-                                            <constraint firstAttribute="bottom" secondItem="rMw-In-n6T" secondAttribute="bottom" id="U4j-0Z-8O2"/>
-                                            <constraint firstItem="rMw-In-n6T" firstAttribute="top" secondItem="Lqz-ed-0xq" secondAttribute="top" constant="4" id="Yi6-Xa-Gzs"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="kpS-te-l7F" secondAttribute="top" priority="999" constant="8" id="4a5-EW-fk8"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="bottom" secondItem="kpS-te-l7F" secondAttribute="bottom" priority="999" constant="-8" id="6CG-8g-UZr"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="kpS-te-l7F" secondAttribute="leading" priority="999" constant="8" id="7VD-fg-c8K"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="bU2-a5-QUo" secondAttribute="top" constant="8" id="Gog-ys-upe"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="bU2-a5-QUo" secondAttribute="leading" constant="8" id="OBY-an-X3M"/>
+                                            <constraint firstItem="bU2-a5-QUo" firstAttribute="bottom" secondItem="5MG-ib-mfE" secondAttribute="bottom" constant="-8" id="j1w-Xs-Pu4"/>
+                                            <constraint firstItem="bU2-a5-QUo" firstAttribute="trailing" secondItem="5MG-ib-mfE" secondAttribute="trailing" constant="8" id="lSV-cf-rtc"/>
                                         </constraints>
+                                        <viewLayoutGuide key="contentLayoutGuide" id="bU2-a5-QUo"/>
+                                        <viewLayoutGuide key="frameLayoutGuide" id="kpS-te-l7F"/>
                                     </scrollView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hnc-2R-FxG">
-                                        <rect key="frame" x="0.0" y="210" width="768" height="128"/>
+                                        <rect key="frame" x="0.0" y="192" width="768" height="128"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7YB-oO-viv" customClass="LatexView" customModule="mat4ipad" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="0.0" width="752" height="128"/>
