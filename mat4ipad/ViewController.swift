@@ -13,6 +13,7 @@ import RxCocoa
 import Promises
 import ExpressiveAlgebra
 import lexiFreeMonoid
+import SwiftUI
 
 struct History {
     struct State {
@@ -38,6 +39,10 @@ struct History {
     }
 }
 class ViewController: UIViewController, ResizePreviewDelegate {
+    
+    @IBSegueAction func addAboutSwiftUIView(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: About())
+    }
     @IBOutlet weak var anchorView: UIView!
     func findOwnerOf(matrix:MatrixView)->ExpView? {
         let views = varStack.arrangedSubviews.compactMap({($0 as? VarView)?.expView}).flatMap({$0.allSubExpViews}) + (mainExpView.contentView?.allSubExpViews ?? [])
