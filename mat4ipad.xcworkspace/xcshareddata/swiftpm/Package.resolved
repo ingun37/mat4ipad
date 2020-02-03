@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "lexiFreeMonoid",
+        "repositoryURL": "https://github.com/ingun37/lexiFreeMonoid.git",
+        "state": {
+          "branch": null,
+          "revision": "b9798e783ba4fff6e6560bcf01b4c3e48c804385",
+          "version": "1.1.0"
+        }
+      },
+      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {

@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import Promises
 import ExpressiveAlgebra
+import lexiFreeMonoid
 
 struct History {
     struct State {
@@ -215,7 +216,8 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var newVarBtn: UIButton!
     
     @IBAction func addVariableClick(_ sender: Any) {
-        var varname = (0...).lazy.map({"V\($0)"}).first(where: {name in
+        
+        var varname = lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).first(where: {name in
             !self.history.top.vars.keys.contains(name)
         })!
         
