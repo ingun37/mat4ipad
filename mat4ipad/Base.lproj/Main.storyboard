@@ -263,17 +263,17 @@
                                                 <rect key="frame" x="0.0" y="110" width="305" height="28"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="XuA-j7-KRo">
-                                                        <rect key="frame" x="0.0" y="0.0" width="305" height="16"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="305" height="28"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kzp-vx-DTa">
-                                                                <rect key="frame" x="0.0" y="7.5" width="65" height="1"/>
+                                                                <rect key="frame" x="0.0" y="13.5" width="65" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="2dI-9c-lw6"/>
                                                                 </constraints>
                                                             </view>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign Number or Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emo-LL-p7r">
-                                                                <rect key="frame" x="69" y="0.0" width="167" height="16"/>
+                                                                <rect key="frame" x="69" y="6" width="167" height="16"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="16" id="qEf-V8-hXA"/>
                                                                 </constraints>
@@ -282,7 +282,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fSV-SI-8rR">
-                                                                <rect key="frame" x="240" y="7.5" width="65" height="1"/>
+                                                                <rect key="frame" x="240" y="13.5" width="65" height="1"/>
                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="YFZ-2h-1ha"/>
@@ -293,12 +293,6 @@
                                                             <constraint firstItem="fSV-SI-8rR" firstAttribute="width" secondItem="kzp-vx-DTa" secondAttribute="width" id="MT1-Tz-t9a"/>
                                                         </constraints>
                                                     </stackView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign a number or a letter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gd5-ns-qju">
-                                                        <rect key="frame" x="0.0" y="16" width="305" height="12"/>
-                                                        <fontDescription key="fontDescription" type="italicSystem" pointSize="10"/>
-                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="28" id="oaa-rp-SH6"/>
@@ -636,9 +630,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="1n8-0E-nZ8" firstAttribute="leading" secondItem="kJV-eA-Aj8" secondAttribute="leading" constant="7" id="IiV-1a-dyX"/>
-                            <constraint firstItem="kJV-eA-Aj8" firstAttribute="bottom" secondItem="1n8-0E-nZ8" secondAttribute="bottom" constant="20" symbolic="YES" id="Naq-WO-Zpw"/>
+                            <constraint firstItem="kJV-eA-Aj8" firstAttribute="bottom" secondItem="1n8-0E-nZ8" secondAttribute="bottom" symbolic="YES" id="Naq-WO-Zpw"/>
                             <constraint firstItem="kJV-eA-Aj8" firstAttribute="trailing" secondItem="1n8-0E-nZ8" secondAttribute="trailing" id="QZj-0L-7Ri"/>
-                            <constraint firstItem="1n8-0E-nZ8" firstAttribute="top" secondItem="kJV-eA-Aj8" secondAttribute="top" constant="20" symbolic="YES" id="kje-5z-us5"/>
+                            <constraint firstItem="1n8-0E-nZ8" firstAttribute="top" secondItem="kJV-eA-Aj8" secondAttribute="top" symbolic="YES" id="kje-5z-us5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kJV-eA-Aj8"/>
                     </view>
