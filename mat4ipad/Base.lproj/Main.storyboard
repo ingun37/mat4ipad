@@ -26,7 +26,7 @@
                                     <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xdI-s2-QbL">
                                         <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
                                         <items>
-                                            <navigationItem title="Title" id="cWV-ys-NJk">
+                                            <navigationItem id="cWV-ys-NJk">
                                                 <leftBarButtonItems>
                                                     <barButtonItem title="Undo" id="uhP-gT-cfP">
                                                         <connections>
@@ -44,6 +44,7 @@
                                                         </connections>
                                                     </barButtonItem>
                                                 </leftBarButtonItems>
+                                                <barButtonItem key="rightBarButtonItem" title="Help" id="4dQ-n1-NSj"/>
                                             </navigationItem>
                                         </items>
                                     </navigationBar>

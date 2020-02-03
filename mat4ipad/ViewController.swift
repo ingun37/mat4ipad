@@ -124,7 +124,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     @IBOutlet weak var mainExpView:ExpInitView!
     
     @IBOutlet weak var varStack: UIStackView!
-    
+    var varViews: [VarView] {
+        return varStack.arrangedSubviews.compactMap({$0 as? VarView})
+    }
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.backgroundColor = color
@@ -205,8 +207,14 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         matrixResizePreviews.removeAll()
         guard let mathView = mainExpView.contentView else {return}
+        
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
-        matrixResizePreviews = mats.map({
+        let mats2 = varViews.flatMap { (varv) in
+            varv.expView?.allSubExpViews.compactMap({$0.matrixView}) ?? []
+        }.filter { (expv) -> Bool in
+            !expv.isHidden
+        }
+        matrixResizePreviews = (mats + mats2).map({
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
@@ -306,12 +314,5 @@ extension ViewController: VarDelegate {
             }
             return pend
         }
-    }
-}
-
-class ShadowButton:UIButton {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
     }
 }
