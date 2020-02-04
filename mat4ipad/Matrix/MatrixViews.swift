@@ -105,9 +105,9 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     
     var exp:Exp = Unassigned("z")
     var del:ExpViewableDelegate?
-    var parentMatrix:Exp = Mat.identityOf(2, 2)
-    var parentExp: Exp? {return parentMatrix}
-    func set(_ exp:Exp, del:ExpViewableDelegate?, parentMatrix:Exp) {
+    var parentMatrix:ParentInfo!
+    var parentExp: ParentInfo? {return parentMatrix}
+    func set(_ exp:Exp, del:ExpViewableDelegate?, parentMatrix:ParentInfo) {
         self.parentMatrix = parentMatrix
         self.exp = exp
         self.del = del
@@ -145,13 +145,13 @@ class MatrixView:UIView {
     }
     var mat:Mat!
     @IBOutlet weak var stack: UIStackView!
-    func set(_ m:Mat, del:ExpViewableDelegate?) {
+    func set(_ m:Mat, parentViewable:ExpViewable, del:ExpViewableDelegate?) {
         self.mat = m
         for ri in (0..<m.rows) {
             let rowView = MatrixRow.loadViewFromNib()
             for ci in (0..<m.cols) {
                 let cell = MatrixCell.loadViewFromNib()
-                cell.set(m.row(ri)[ci], del:del, parentMatrix: self.mat)
+                cell.set(m.row(ri)[ci], del:del, parentMatrix: ParentInfo(expViewable: parentViewable, kidNumber: ri*m.cols + ci))
                 rowView.stack.addArrangedSubview(cell)
             }
             stack.addArrangedSubview(rowView)

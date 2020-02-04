@@ -10,10 +10,13 @@ import Foundation
 import UIKit
 import ExpressiveAlgebra
 
+struct ParentInfo {
+    let expViewable:ExpViewable
+    let kidNumber:Int
+}
 protocol ExpViewable: UIView {
-    var parentExp:Exp? {get}
+    var parentExp:ParentInfo? {get}
     var exp:Exp {get}
-    func changed(view:ExpViewable, to:Exp)->Exp
     func removed(view: ExpViewable) -> Exp?
     var directSubExpViews:[ExpViewable] {get}
 }
@@ -151,50 +154,7 @@ extension ExpViewable {
             return exp
         }
     }
-    //TODO: Currently it presumes that directSubExpViews() and subExps() are in same order.
-    func changed(view: ExpViewable, to: Exp) -> Exp {
-        if self == view {
-            return to
-        }
-        let changed = self.directSubExpViews.map({$0.changed(view:view, to: to)})
-        switch exp.reflect() {
-        case .Add(_):
-            return Add(changed[0], changed[1])
-        case .Mul(_):
-            return Mul(changed[0], changed[1])
-        case .Mat(let e):
-            let arrIn2D = stride(from: 0, to: changed.count, by: e.cols).map({
-                Array(changed[$0..<$0+e.cols])
-            })
-            return Mat(arrIn2D)
-        case .Unassigned(_):
-            return exp
-        case .NumExp(_):
-            return exp
-        case .Power(_):
-            return Power(changed[0], changed[1])
-        case .RowEchelonForm(_):
-            return RowEchelonForm(mat: changed[0])
-        case .GaussJordanElimination(_):
-            return GaussJordanElimination(changed[0])
-        case .Transpose(_):
-            return Transpose(changed[0])
-        case .Determinant(_):
-            return Determinant(changed[0])
-        case .Fraction(_):
-            return Fraction(numerator: changed[0], denominator: changed[1])
-        case .Inverse(_):
-            return Inverse(changed[0])
-        case .Rank(_):
-            return Rank(changed[0])
-        case .Nullity(_):
-            return Nullity(changed[0])
-        case .Norm(_):
-            return Norm(changed[0])
-        case .Unknown:
-            return exp
-        }
-    }
+
     
 }
 
@@ -211,6 +171,19 @@ extension Exp {
             return to
         }
         return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
+    }
+    func refChanged(lineage:[ParentInfo], to:Exp)-> Exp {
+        guard let head = lineage.first else { return to }
+        if isEq(head.expViewable.exp) {
+            return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
+                if idx == head.kidNumber {
+                    return kids()[idx].refChanged(lineage: []+lineage.dropFirst(), to: to)
+                } else {
+                    return kids()[idx]
+                }
+            }))
+        }
+        return self
     }
 }
 

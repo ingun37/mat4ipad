@@ -257,16 +257,28 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
 }
-
+extension ExpViewable {
+    func lineage()->[ParentInfo] {
+        if let parentInfo = parentExp {
+            return parentInfo.expViewable.lineage() + [parentInfo]
+        } else {
+            return []
+        }
+    }
+}
 extension ViewController: ExpViewableDelegate {
     func changeto(view:ExpViewable, to: Exp) {
-        let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({
-            ($0.name, $0.expView!.changed(view: view, to: to))
+        
+        //($0.name, $0.expView!.changed(view: view, to: to))
+        let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
+            let nm = varv.name
+            let newExp = varv.exp.refChanged(lineage: view.lineage(), to: to)
+            return (nm, newExp)
         })
         
         if let mainExpView = mainExpView.contentView {
             print("ExpView is changing: \(mainExpView)")
-            let changedMain = mainExpView.changed(view: view, to: to)
+            let changedMain = mainExpView.exp.refChanged(lineage: view.lineage(), to: to)
             history.push(main: changedMain, vars:
                 Dictionary(uniqueKeysWithValues: changedVarPairs))
             refresh()
