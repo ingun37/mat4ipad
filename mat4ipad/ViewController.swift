@@ -112,7 +112,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
             let aa = Array(history.top.vars.keys)
 
-            vc.set(exp: expview.exp, varNames: aa, availableVarName: availableVarName())
+            vc.set(exp: expview.exp, parentExp: expview.parentExp, varNames: aa, availableVarName: availableVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):

@@ -65,7 +65,9 @@ class ExpView: UIView, ExpViewable {
     }
     
     var exp:Exp = Unassigned("z")
-    func setExp(exp:Exp, del:ExpViewableDelegate) {
+    var parentExp:Exp? = nil
+    func setExp(exp:Exp, del:ExpViewableDelegate, parentExp:Exp?) {
+        self.parentExp = parentExp
         self.exp = exp
         self.del = del
         padLatexView.contentView.mathv?.latex = exp.latex()
@@ -82,7 +84,7 @@ class ExpView: UIView, ExpViewable {
             
             exp.subExps().forEach({e in
                 let v = ExpView.loadViewFromNib()
-                v.setExp(exp: e, del:del)
+                v.setExp(exp: e, del:del, parentExp: exp)
                 stack.addArrangedSubview(v)
             })
         }
@@ -124,7 +126,7 @@ class ExpInitView:UIView {
         
         contentView = eview
         
-        eview.setExp(exp: exp, del: del)
+        eview.setExp(exp: exp, del: del, parentExp: nil)
         return eview
     }
     

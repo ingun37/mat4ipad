@@ -59,7 +59,7 @@ class VarView: UIView, UITextFieldDelegate {
         }
         expView = eview
         stack.addArrangedSubview(eview)
-        eview.setExp(exp: exp, del: expDel)
+        eview.setExp(exp: exp, del: expDel, parentExp: nil)
         self.name = name
         return eview
     }

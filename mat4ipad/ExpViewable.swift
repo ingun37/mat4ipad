@@ -11,6 +11,7 @@ import UIKit
 import ExpressiveAlgebra
 
 protocol ExpViewable: UIView {
+    var parentExp:Exp? {get}
     var exp:Exp {get}
     func changed(view:ExpViewable, to:Exp)->Exp
     func removed(view: ExpViewable) -> Exp?
