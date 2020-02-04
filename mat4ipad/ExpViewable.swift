@@ -204,83 +204,13 @@ extension Exp {
     ///
     /// The order of exps in return array is preserved
     func subExps()->[Exp] {
-        switch reflect() {
-        case .Add(let e):
-            return [e.l, e.r]
-        case .Mul(let e):
-            return [e.l,e.r]
-        case .Mat(let e):
-            return e.elements.flatMap({$0})
-        case .Unassigned(_):
-            return []
-        case .NumExp(_):
-            return []
-        case .Power(let e):
-            return [e.base, e.exponent]
-        case .RowEchelonForm(let e):
-            return [e.mat]
-        case .GaussJordanElimination(let e):
-            return [e.mat]
-        case .Transpose(let e):
-            return [e.mat]
-        case .Determinant(let e):
-            return [e.mat]
-        case .Fraction(let e):
-            return [e.numerator, e.denominator]
-        case .Inverse(let e):
-            return [e.mat]
-        case .Rank(let e):
-            return [e.mat]
-        case .Nullity(let e):
-            return [e.mat]
-        case .Norm(let e):
-            return [e.mat]
-        case .Unknown:
-            return []
-        }
+        return kids()
     }
     func changed(eqTo:Exp, to:Exp)->Exp {
         if isEq(eqTo) {
             return to
         }
-        switch reflect() {
-        case .Add(let e):
-            return Add(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
-        case .Mul(let e):
-            return Mul(e.l.changed(eqTo:eqTo, to:to), e.r.changed(eqTo:eqTo, to:to))
-        case .Mat(let e):
-            return Mat(e.elements.map({
-                $0.map({
-                    $0.changed(eqTo: eqTo, to: to)
-                })
-            }))
-        case .Unassigned(let e):
-            return e
-        case .NumExp(let e):
-            return e
-        case .Power(let e):
-            return Power(e.base.changed(eqTo: eqTo, to: to), e.exponent.changed(eqTo: eqTo, to: to))
-        case .RowEchelonForm(let e):
-            return RowEchelonForm(mat:e.mat.changed(eqTo: eqTo, to: to))
-        case .GaussJordanElimination(let e):
-            return GaussJordanElimination(e.mat.changed(eqTo: eqTo, to:to))
-        case .Transpose(let e):
-            return Transpose(e.mat.changed(eqTo: eqTo, to:to))
-        case .Determinant(let e):
-            return Determinant(e.mat.changed(eqTo: eqTo, to:to))
-        case .Fraction(let e):
-            return Fraction(numerator: e.numerator.changed(eqTo: eqTo, to: to), denominator: e.denominator.changed(eqTo: eqTo, to: to))
-        case .Inverse(let e):
-            return Inverse(e.mat.changed(eqTo: eqTo, to:to))
-        case .Rank(let e):
-            return Rank(e.mat.changed(eqTo: eqTo, to:to))
-        case .Nullity(let e):
-            return Nullity(e.mat.changed(eqTo: eqTo, to:to))
-        case .Norm(let e):
-            return Norm(e.mat.changed(eqTo: eqTo, to: to))
-        case .Unknown:
-            return self
-        }
+        return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
     }
 }
 
@@ -337,6 +267,54 @@ extension Exp {
             return .Norm(e)
         } else {
             return .Unknown
+        }
+    }
+}
+
+extension Exp {
+    func kids()->[Exp] {
+        switch reflect() {
+        case .Add(let e): return [e.l, e.r]
+        case .Mul(let e): return [e.l, e.r]
+        case .Mat(let e): return e.elements.flatMap { $0 }
+        case .Unassigned(let e): return []
+        case .NumExp(let e): return []
+        case .Power(let e): return [e.base, e.exponent]
+        case .RowEchelonForm(let e): return [e.mat]
+        case .GaussJordanElimination(let e): return [e.mat]
+        case .Transpose(let e): return [e.mat]
+        case .Determinant(let e):  return [e.mat]
+        case .Fraction(let e): return [e.numerator, e.denominator]
+        case .Inverse(let e): return [e.mat]
+        case .Rank(let e): return [e.mat]
+        case .Nullity(let e): return [e.mat]
+        case .Norm(let e): return [e.mat]
+        case .Unknown: return []
+        }
+    }
+    func cloneWith(kids:[Exp])->Exp {
+        let changed = kids
+        switch reflect() {
+        case .Add(_): return Add(changed[0], changed[1])
+        case .Mul(_): return Mul(changed[0], changed[1])
+        case .Mat(let e):
+            let arrIn2D = stride(from: 0, to: changed.count, by: e.cols).map({
+                Array(changed[$0..<$0+e.cols])
+            })
+            return Mat(arrIn2D)
+        case .Unassigned(_): return self
+        case .NumExp(_): return self
+        case .Power(_): return Power(changed[0], changed[1])
+        case .RowEchelonForm(_): return RowEchelonForm(mat: changed[0])
+        case .GaussJordanElimination(_): return GaussJordanElimination(changed[0])
+        case .Transpose(_): return Transpose(changed[0])
+        case .Determinant(_): return Determinant(changed[0])
+        case .Fraction(_): return Fraction(numerator: changed[0], denominator: changed[1])
+        case .Inverse(_): return Inverse(changed[0])
+        case .Rank(_): return Rank(changed[0])
+        case .Nullity(_): return Nullity(changed[0])
+        case .Norm(_): return Norm(changed[0])
+        case .Unknown: return self
         }
     }
 }
