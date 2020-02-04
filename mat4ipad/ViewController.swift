@@ -85,9 +85,12 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         return history.top.main
     }
     func remove(view: ExpViewable) {
-        let newMain = mainExpView.contentView?.removed(view: view) ?? Unassigned("A")
-        let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({varview in
-            (varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
+        //(varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
+        let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage(), from: view.exp) ?? Unassigned("A")
+        let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
+            let nm = varview.name
+            let newExp = varview.exp.refRemove(lineage: view.lineage(), from: view.exp) ?? Unassigned(nm)
+            return (nm, newExp)
         })
         
         history.push(main: newMain, vars: Dictionary(uniqueKeysWithValues: newVars))
@@ -272,13 +275,13 @@ extension ViewController: ExpViewableDelegate {
         //($0.name, $0.expView!.changed(view: view, to: to))
         let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
             let nm = varv.name
-            let newExp = varv.exp.refChanged(lineage: view.lineage(), to: to)
+            let newExp = varv.exp.refChanged(lineage: view.lineage(), from: view.exp, to: to)
             return (nm, newExp)
         })
         
         if let mainExpView = mainExpView.contentView {
             print("ExpView is changing: \(mainExpView)")
-            let changedMain = mainExpView.exp.refChanged(lineage: view.lineage(), to: to)
+            let changedMain = mainExpView.exp.refChanged(lineage: view.lineage(), from: view.exp, to: to)
             history.push(main: changedMain, vars:
                 Dictionary(uniqueKeysWithValues: changedVarPairs))
             refresh()

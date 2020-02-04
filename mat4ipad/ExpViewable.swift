@@ -17,7 +17,6 @@ struct ParentInfo {
 protocol ExpViewable: UIView {
     var parentExp:ParentInfo? {get}
     var exp:Exp {get}
-    func removed(view: ExpViewable) -> Exp?
     var directSubExpViews:[ExpViewable] {get}
 }
 protocol ExpViewableDelegate {
@@ -25,141 +24,73 @@ protocol ExpViewableDelegate {
     func changeto(view:ExpViewable, to: Exp)
 }
 
-extension ExpViewable {
-    func removed(view: ExpViewable) -> Exp? {
-        if self == view {
-            //Return it's successor if exists.
-            switch exp.reflect() {
-            case .Add(_): return nil
-            case .Mul(_): return nil
-            case .Mat(_): return nil
-            case .Unassigned(_): return nil
-            case .NumExp(_): return nil
-            case .Power(_): return nil
-            case .RowEchelonForm(let e): return e.mat
-            case .GaussJordanElimination(let e): return e.mat
-            case .Transpose(let e): return e.mat
-            case .Determinant(let e): return e.mat
-            case .Fraction(_): return nil
-            case .Inverse(let e): return e.mat
-            case .Rank(let e): return e.mat
-            case .Nullity(let e): return e.mat
-            case .Norm(let e): return e.mat
-            case .Unknown: return nil
-            }
-        }
-        let removed = self.directSubExpViews.map({$0.removed(view:view)})
-        switch exp.reflect() {
-        case .Add(_):
-            if let l = removed[0] {
-                if let r = removed[1] {
-                    return Add(l, r)
-                } else {
-                    return l
-                }
-            } else {
-                return nil
-            }
-        case .Mul(_):
-            if let l = removed[0] {
-                if let r = removed[1] {
-                    return Mul(l, r)
-                } else {
-                    return l
-                }
-            } else {
-                return nil
-            }
-        case .Mat(let e):
-            let arrIn2D = stride(from: 0, to: removed.count, by: e.cols).map({
-                Array(removed[$0..<$0+e.cols].map({$0 ?? NumExp(0)}))
-            })
-            return Mat(arrIn2D)
-        case .Unassigned(_):
-            return exp
-        case .NumExp(_):
-            return exp
-        case .Power(_):
-            if let base = removed[0] {
-                if let exponent = removed[1] {
-                    return Power(base, exponent)
-                } else {
-                    return base
-                }
-            } else {
-                return nil
-            }
-        case .RowEchelonForm(_):
-            if let m = removed[0] {
-                return RowEchelonForm(mat: m)
-            } else {
-                return nil
-            }
-        case .GaussJordanElimination(_):
-            if let m = removed[0] {
-                return GaussJordanElimination(m)
-            } else {
-                return nil
-            }
-        case .Transpose(_):
-            if let m = removed[0] {
-                return Transpose(m)
-            } else {
-                return nil
-            }
-        case .Determinant(_):
-            if let m = removed[0] {
-                return Determinant(m)
-            } else {
-                return nil
-            }
-        case .Fraction(_):
-            if let numerator = removed[0] {
-                if let denominator = removed[1] {
-                    return Fraction(numerator: numerator, denominator: denominator)
-                }
-                else {
-                    return numerator
-                }
-            } else if let denominator = removed[1] {
-                return Fraction(numerator: NumExp(1), denominator: denominator)
-            } else {
-                return nil
-            }
-        case .Inverse(_):
-            if let m = removed[0] {
-                return Inverse(m)
-            } else {
-                return nil
-            }
-        case .Rank(_):
-            if let m = removed[0] {
-                return Rank(m)
-            } else {
-                return nil
-            }
-        case .Nullity(_):
-            if let m = removed[0] {
-                return Nullity(m)
-            } else {
-                return nil
-            }
-        case .Norm(_):
-            if let m = removed[0] {
-                return Norm(m)
-            } else {
-                return nil
-            }
-        case .Unknown:
-            return exp
-        }
-    }
-
-    
-}
-
 extension Exp {
-
+    func refRemove(lineage:[ParentInfo], from:Exp)-> Exp? {
+        guard let head = lineage.first else {
+            if isEq(from) {
+                return nil
+            } else {
+                return self
+            }
+        }
+        if isEq(head.expViewable.exp) {
+            let newKids = (0..<kids().count).map({ (idx) -> Exp? in
+                if idx == head.kidNumber {
+                    return kids()[idx].refRemove(lineage: []+lineage.dropFirst(), from: from)
+                } else {
+                    return kids()[idx]
+                }
+            })
+            
+            switch reflect() {
+            case .Add(_), .Mul(_):
+                let remainingKids = newKids.compactMap({$0})
+                if remainingKids.isEmpty {
+                    return nil
+                } else if remainingKids.count == 1 {
+                    return remainingKids[0]
+                } else {
+                    return cloneWith(kids: remainingKids)
+                }
+            case .Mat(_):
+                return cloneWith(kids: newKids.map({$0 ?? NumExp(0)}))
+            case .Unassigned(_), .NumExp(_):
+                return self
+            case .Power(_):
+                if let base = newKids[0] {
+                    if let exponent = newKids[1] {
+                        return Power(base, exponent)
+                    } else {
+                        return base
+                    }
+                } else {
+                    return nil
+                }
+            case .RowEchelonForm(_), .GaussJordanElimination(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_):
+                if let m = newKids[0] {
+                    return cloneWith(kids: [m])
+                } else {
+                    return nil
+                }
+            case .Fraction(_):
+                if let numerator = newKids[0] {
+                    if let denominator = newKids[1] {
+                        return Fraction(numerator: numerator, denominator: denominator)
+                    }
+                    else {
+                        return numerator
+                    }
+                } else if let denominator = newKids[1] {
+                    return Fraction(numerator: NumExp(1), denominator: denominator)
+                } else {
+                    return nil
+                }
+            case .Unknown:
+                return self
+            }
+        }
+        return self
+    }
     /// Return all it's direct sub exps.
     ///
     /// The order of exps in return array is preserved
@@ -172,12 +103,18 @@ extension Exp {
         }
         return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
     }
-    func refChanged(lineage:[ParentInfo], to:Exp)-> Exp {
-        guard let head = lineage.first else { return to }
+    func refChanged(lineage:[ParentInfo], from: Exp, to:Exp)-> Exp {
+        guard let head = lineage.first else {
+            if isEq(from) {
+                return to
+            } else {
+                return self
+            }
+        }
         if isEq(head.expViewable.exp) {
             return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
                 if idx == head.kidNumber {
-                    return kids()[idx].refChanged(lineage: []+lineage.dropFirst(), to: to)
+                    return kids()[idx].refChanged(lineage: []+lineage.dropFirst(), from: from, to: to)
                 } else {
                     return kids()[idx]
                 }
