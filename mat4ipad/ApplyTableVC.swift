@@ -71,7 +71,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         options.append(Represent(Inverse(exp)))
         if !(parentExp is Mat) {
             options.append(Represent(Mul(exp, Unassigned(availableVarName))))
+            options.append(Represent(Mul(Unassigned(availableVarName), exp)))
             options.append(Represent(Add(exp, Unassigned(availableVarName))))
+            options.append(Represent(Add(Unassigned(availableVarName), exp)))
             options.append(Represent(Power(exp, Unassigned(availableVarName))))
         }
         if exp is Mat || (!(exp is Mat) && exp is Unassigned) {
