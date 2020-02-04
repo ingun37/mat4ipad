@@ -172,26 +172,25 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         } catch {
             if let e = error as? evalErr {
                 switch e {
-                case .operandIsNotMatrix(_):
-                    preview.set("= \\text{operandIsNotMatrix}")
-                case .matrixSizeNotMatch(_, _):
-                    preview.set("= \\text{matrixSizeNotMatch}")
-                case .multiplyNotSupported(_, _):
-                    preview.set("= \\text{multiplyNotSupported}")
-                case .invalidExponent(_, _):
-                    preview.set("= \\text{invalidExponent}")
-                case .RowEcheloningWrongExp:
-                    preview.set("= \\text{RowEcheloningWrongExp}")
-                case .InvalidMatrixToRowEchelon:
-                    preview.set("= \\text{InvalidMatrixToRowEchelon}")
-                case .ZeroRowEchelon:
-                    preview.set("= \\text{ZeroRowEchelon}")
-                case .InvertingNonSquareMatrix:
-                    preview.set("= \\text{InvertingNonSquareMatrix}")
-                case .invertingDeterminantZero:
-                    preview.set("= \\text{invertingDeterminantZero}")
-                case .NotInSameSpace:
-                    preview.set("= \\text{NotInSameSpace}")
+                case .MatrixSizeNotMatchForMultiplication(let a, let b):
+                    preview.set("\\text{Matrix size does not match for multiplication}" + a.latex() + " " + b.latex())
+                case .InvertingNonSquareMatrix(let m):
+                    preview.set("\\text{Can't invert a non-square matrix}"+m.latex())
+                case .MatrixNotCompleteForRowEchelonForm(_):
+                    preview.set("\\text{Can't invert a non-square matrix}")
+                case .NotAMatrixForRowEchelonForm(let e):
+                    preview.set("\\text{Can't turn not a matrix expression into row echelon form.}" + e.latex())
+                case .NotAMatrixForGaussJordanElimination(let e):
+                    preview.set("\\text{Can't Gauss-Jordan-Eliminate not a matrix expression.}" + e.latex())
+                case .InvertingSingularMatrix(let m):
+                    preview.set("\\text{Can't invert a singular matrix." + m.latex())
+                case .NotAMatrixForDeterminant(let e):
+                    preview.set("\\text{Can't get a determinant of not a matrix.}" + e.latex())
+                case .NotAMatrixForTranspose(let e):
+                    preview.set("\\text{Can't transpose a not a matrix.}" + e.latex())
+
+                @unknown default:
+                    preview.set("\\text{UnknownError}")
                 }
             } else {
                 preview.set("= \\text{invalid}")
