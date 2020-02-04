@@ -39,6 +39,9 @@ struct History {
     }
 }
 class ViewController: UIViewController, ResizePreviewDelegate {
+    @IBSegueAction func addHelpSwiftUIView(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: HelpView())
+    }
     
     @IBSegueAction func addAboutSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: About())

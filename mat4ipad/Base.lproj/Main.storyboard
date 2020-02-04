@@ -54,11 +54,18 @@
                                                         </connections>
                                                     </barButtonItem>
                                                 </leftBarButtonItems>
-                                                <barButtonItem key="rightBarButtonItem" title="About" id="4dQ-n1-NSj">
-                                                    <connections>
-                                                        <segue destination="fEK-00-5yh" kind="show" destinationCreationSelector="addAboutSwiftUIView:" id="fEe-AY-26S"/>
-                                                    </connections>
-                                                </barButtonItem>
+                                                <rightBarButtonItems>
+                                                    <barButtonItem title="About" id="4dQ-n1-NSj">
+                                                        <connections>
+                                                            <segue destination="fEK-00-5yh" kind="show" destinationCreationSelector="addAboutSwiftUIView:" id="fEe-AY-26S"/>
+                                                        </connections>
+                                                    </barButtonItem>
+                                                    <barButtonItem title="Help" id="V6h-hK-olH">
+                                                        <connections>
+                                                            <segue destination="QNt-ax-Kux" kind="show" destinationCreationSelector="addHelpSwiftUIView:" id="cMB-TB-oJi"/>
+                                                        </connections>
+                                                    </barButtonItem>
+                                                </rightBarButtonItems>
                                             </navigationItem>
                                         </items>
                                     </navigationBar>
@@ -664,6 +671,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NzG-Wp-eLb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="919.53125" y="121.87499999999999"/>
+        </scene>
+        <!--Hosting Controller-->
+        <scene sceneID="7T1-GW-xIb">
+            <objects>
+                <hostingController id="QNt-ax-Kux" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="kf8-gm-3lE"/>
+                </hostingController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lMt-II-2DD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="715" y="881"/>
         </scene>
     </scenes>
 </document>
