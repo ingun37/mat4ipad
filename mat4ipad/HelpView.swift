@@ -9,9 +9,19 @@
 import SwiftUI
 
 struct HelpView: View {
-    
+    @State var currentPage = 0
     var body: some View {
-        return HelpPageVC()
+        VStack {
+            HelpPageVC(currentPage: $currentPage)
+            HStack {
+                Button(action: {
+                    print("Left")
+                }, label: { Text("Left")})
+                Button(action: {
+                    print("Right")
+                }, label: { Text("Right")})
+            }
+        }
     }
 }
 

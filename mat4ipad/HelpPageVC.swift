@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct HelpPageVC: UIViewControllerRepresentable {
+    @Binding var currentPage: Int
     func makeCoordinator() -> HelpPageVC.Coordinator {
         return Coordinator()
     }
@@ -16,12 +17,12 @@ struct HelpPageVC: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIPageViewController {
         let vc = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
         vc.dataSource = context.coordinator
+        
         return vc
     }
     
     func updateUIViewController(_ vc: UIPageViewController, context: Context) {
-        
-        vc.setViewControllers([context.coordinator.vcs[0]], direction: .forward, animated: true)
+        vc.setViewControllers([context.coordinator.vcs[currentPage]], direction: .forward, animated: true)
     }
     
     class Coordinator: NSObject, UIPageViewControllerDataSource {
