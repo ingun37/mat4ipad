@@ -112,7 +112,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
             let aa = Array(history.top.vars.keys)
 
-            vc.set(exp: expview.exp, varNames: aa)
+            vc.set(exp: expview.exp, varNames: aa, availableVarName: availableVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
@@ -227,12 +227,17 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
     }
-    
+    func availableVarName()->String {
+        let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
+            allSubVarNames(of: v)
+        })
+        return lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).first(where: {name in
+            !self.history.top.vars.keys.contains(name) && !allSubVars.contains(name)
+        })!
+    }
     @IBAction func addVariableClick(_ sender: Any) {
         
-        var varname = lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).first(where: {name in
-            !self.history.top.vars.keys.contains(name)
-        })!
+        let varname = availableVarName()
         
         let last = history.top
         var newVars = last.vars
@@ -323,4 +328,11 @@ extension ViewController: VarDelegate {
             return pend
         }
     }
+}
+
+func allSubExps(of:Exp)->[Exp] {
+    return [of] + of.subExps().flatMap({allSubExps(of:$0)})
+}
+func allSubVarNames(of:Exp)->[String] {
+    return allSubExps(of: of).compactMap({($0 as? Unassigned)?.letter})
 }

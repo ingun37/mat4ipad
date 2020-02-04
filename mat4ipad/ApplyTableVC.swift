@@ -35,9 +35,11 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     
     var exp:Exp!
     var varNames:[String] = []
-    func set(exp:Exp, varNames:[String]) {
+    var availableVarName = "Z"
+    func set(exp:Exp, varNames:[String], availableVarName:String) {
         self.exp = exp
         self.varNames = varNames
+        self.availableVarName = availableVarName
     }
     
     @IBOutlet weak var stackView: UIStackView!
@@ -57,12 +59,12 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         var options:[Represent] = []
         
         options.append(Represent(Mat.identityOf(2, 2)))
-        options.append(Represent(Fraction(numerator: exp, denominator: Unassigned("D"))))
+        options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
         options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
         options.append(Represent(Inverse(exp)))
-        options.append(Represent(Mul(exp, Unassigned("Z"))))
-        options.append(Represent(Add(exp, Unassigned("Z"))))
-        options.append(Represent(Power(exp, Unassigned("n"))))
+        options.append(Represent(Mul(exp, Unassigned(availableVarName))))
+        options.append(Represent(Add(exp, Unassigned(availableVarName))))
+        options.append(Represent(Power(exp, Unassigned(availableVarName))))
         options.append(Represent(Transpose(exp)))
         options.append(Represent(Determinant(exp), show: "\\text{Determinant}(\(exp.latex()))"))
         options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}(\(exp.latex()))"))
