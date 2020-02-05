@@ -20,7 +20,14 @@ struct History {
         let main:Exp
         let vars:[String:Exp]
     }
-    private var _history:[State] = []
+    private var _history:[State] = [
+        State(main: Add(
+                        Power(Mat([[NumExp(1), Unassigned("x")],
+                                   [NumExp(0), NumExp(1)]]), NumExp(2)),
+                    Mul(Mat([[NumExp(1), NumExp(0)],[Unassigned("z"), NumExp(1)]]), Unassigned("A"))),
+              vars: ["A" : Mat([[NumExp(1), NumExp(2)],[NumExp(3), NumExp(1)]]),
+                     "z" : NumExp(-1)])
+    ]
     mutating func push(main:Exp, vars:[String:Exp]) {
         _history.append(State(main: main, vars: vars))
     }
