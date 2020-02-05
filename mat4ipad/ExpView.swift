@@ -82,21 +82,34 @@ class ExpView: UIView, ExpViewable {
             matrixView.isHidden = true
             stack.isHidden = false
             
-            let kids = exp.kids()
-            for idx in 0..<kids.count {
+            directCommutativeKids(exp: exp).forEach { (kidExp, relLineage) in
                 let v = ExpView.loadViewFromNib()
-                v.setExp(exp: kids[idx], del:del, lineage: lineage+[ParentInfo(exp: exp, kidNumber: idx)])
+                v.setExp(exp: kidExp, del:del, lineage: lineage+relLineage)
                 stack.addArrangedSubview(v)
             }
         }
     }
-    
 
     @IBOutlet weak var matrixHeight: NSLayoutConstraint!
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
+}
+
+func directCommutativeKids(exp:Exp)-> [(Exp, [ParentInfo])] {
+    let kids = exp.kids()
     
-    
-    
+    let commutativeKids = (0..<kids.count).flatMap { (idx) -> [(Exp, [ParentInfo])] in
+        let kid = kids[idx]
+        let baseLineage = [ParentInfo(exp: exp, kidNumber: idx)]
+        if exp is Add && kid is Add || exp is Mul && kid is Mul {
+            let granCommuteKids = directCommutativeKids(exp: kid)
+            return granCommuteKids.map { (grankidExp, relLineage) -> (Exp, [ParentInfo]) in
+                return (grankidExp, baseLineage + relLineage)
+            }
+        } else {
+            return [(kid, baseLineage)]
+        }
+    }
+    return commutativeKids
 }
 
 class ExpInitView:UIView {
