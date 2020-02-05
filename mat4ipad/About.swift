@@ -9,8 +9,28 @@
 import SwiftUI
 
 struct About: View {
+    var version: String {
+      Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+    }
+    var githubUrl: String {
+        "https://github.com/ingun37/mat4ipad"
+    }
     var body: some View {
-        Text("Thanks for using Expressive Calculator!")
+        VStack {
+            Text("Thanks for using Expressive Calculator!")
+                .font(.title)
+            Text("This application is open souce. You can checkout full source code here")
+            Text(self.githubUrl).foregroundColor(Color.blue)
+                .textContentType(.URL).onTapGesture {
+                    guard let url = URL(string: self.githubUrl) else { return }
+                    UIApplication.shared.open(url)
+            }
+            Text("v" + version)
+                .font(.footnote)
+                .foregroundColor(Color.gray)
+            
+        }
+        
     }
 }
 
