@@ -28,7 +28,12 @@ extension Exp {
     func refRemove(lineage:[ParentInfo], from:Exp)-> Exp? {
         guard let head = lineage.first else {
             if isEq(from) {
-                return nil
+                switch reflect() {
+                case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown:
+                    return nil
+                case .RowEchelonForm(_), .GaussJordanElimination(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_):
+                    return kids().first
+                }
             } else {
                 return self
             }
