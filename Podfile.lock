@@ -1,4 +1,5 @@
 PODS:
+  - EasyTipView (2.0.4)
   - iosMath (0.9.4)
   - PromisesObjC (1.2.8)
   - PromisesSwift (1.2.8):
@@ -17,6 +18,7 @@ PODS:
     - TensorFlowLiteC (= 2.1.0)
 
 DEPENDENCIES:
+  - EasyTipView (~> 2.0.4)
   - iosMath
   - PromisesSwift
   - RxCocoa (~> 5)
@@ -26,6 +28,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - EasyTipView
     - iosMath
     - PromisesObjC
     - PromisesSwift
@@ -37,6 +40,7 @@ SPEC REPOS:
     - TensorFlowLiteSwift
 
 SPEC CHECKSUMS:
+  EasyTipView: 4f8beae0a82db2ca4a9b5fd658785fc5f61d296b
   iosMath: f7a6cbadf9d836d2149c2a84c435b1effc244cba
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   PromisesSwift: 37bad6f4daddb02f7c9c531efe91e8b21c13ee2f
@@ -47,6 +51,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: 215603d4426d93810eace5947e317389554a4b66
   TensorFlowLiteSwift: 9d8137f18d5ac30ca89bba4fbe118e0949ac5743
 
-PODFILE CHECKSUM: 50ef23bed51221ad98f1781052d53cae00669ec9
+PODFILE CHECKSUM: 3a89b33d8fead1126bf207ce5c97532dff8f5f6e
 
 COCOAPODS: 1.8.4

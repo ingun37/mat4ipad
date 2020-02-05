@@ -6,6 +6,7 @@ target 'mat4ipad' do
   use_modular_headers!
 
   # Pods for mat4ipad
+  pod 'EasyTipView', '~> 2.0.4'
   pod 'iosMath'
   pod 'RxSwift', '~> 5'
   pod 'RxCocoa', '~> 5'

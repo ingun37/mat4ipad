@@ -14,6 +14,7 @@ import Promises
 import ExpressiveAlgebra
 import lexiFreeMonoid
 import SwiftUI
+import EasyTipView
 
 struct History {
     struct State {
@@ -205,12 +206,15 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         
         self.view.layoutIfNeeded()
-        makeResizers()
+        matrixResizerTimer.onNext(0)
     }
     
+    let matrixResizerTimer = PublishSubject<Int>()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        matrixResizerTimer.delay(0.2, scheduler: MainScheduler.instance).throttle(0.2, scheduler: MainScheduler.instance).subscribe { (_) in
+            self.makeResizers()
+        }
 //        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         refresh()
@@ -226,6 +230,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         guard let mathView = mainExpView.contentView else {return}
         
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
+        
         let mats2 = varViews.flatMap { (varv) in
             varv.expView?.allSubExpViews.compactMap({$0.matrixView}) ?? []
         }.filter { (expv) -> Bool in
@@ -235,7 +240,29 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
+        
+        if !tipShown {
+            if let prev = singleTipView {
+                prev.dismiss()
+            }
+            var preferences = EasyTipView.Preferences()
+            preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
+            preferences.drawing.foregroundColor = .white
+            preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
+            preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
+            
+            if let cell = (mats.last?.stack.arrangedSubviews.last as? MatrixRow)?.stack.arrangedSubviews.last as? MatrixCell {
+                
+                let tipview = EasyTipView(text: "Try handwriting with Apple Pencil within a cell!", preferences: preferences, delegate: self)
+                
+                tipview.show(forView: cell)
+                self.singleTipView = tipview
+            }
+            
+        }
     }
+    var singleTipView:EasyTipView? = nil
+    var tipShown = false
     func availableVarName()->String {
         let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
             allSubVarNames(of: v)
@@ -348,4 +375,10 @@ func allSubExps(of:Exp)->[Exp] {
 }
 func allSubVarNames(of:Exp)->[String] {
     return allSubExps(of: of).compactMap({($0 as? Unassigned)?.letter})
+}
+
+extension ViewController: EasyTipViewDelegate {
+    func easyTipViewDidDismiss(_ tipView: EasyTipView) {
+        self.tipShown = true
+    }
 }
