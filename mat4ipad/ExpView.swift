@@ -65,16 +65,16 @@ class ExpView: UIView, ExpViewable {
     }
     
     var exp:Exp = Unassigned("z")
-    var parentExp:ParentInfo? = nil
-    func setExp(exp:Exp, del:ExpViewableDelegate, parentExp:ParentInfo?) {
-        self.parentExp = parentExp
+    var lineage:[ParentInfo] = []
+    func setExp(exp:Exp, del:ExpViewableDelegate, lineage:[ParentInfo]) {
+        self.lineage = lineage
         self.exp = exp
         self.del = del
         padLatexView.contentView.mathv?.latex = exp.latex()
         if let exp = exp as? Mat {
             matrixView.isHidden = false
             stack.isHidden = true
-            matrixView.set(exp, parentViewable: self, del:del)
+            matrixView.set(exp, lineage: lineage, del:del)
         } else if exp.subExps().isEmpty {
             matrixView.isHidden = true
             stack.isHidden = false
@@ -85,7 +85,7 @@ class ExpView: UIView, ExpViewable {
             let kids = exp.kids()
             for idx in 0..<kids.count {
                 let v = ExpView.loadViewFromNib()
-                v.setExp(exp: kids[idx], del:del, parentExp: ParentInfo(expViewable: self, kidNumber: idx))
+                v.setExp(exp: kids[idx], del:del, lineage: lineage+[ParentInfo(exp: exp, kidNumber: idx)])
                 stack.addArrangedSubview(v)
             }
         }
@@ -127,7 +127,7 @@ class ExpInitView:UIView {
         
         contentView = eview
         
-        eview.setExp(exp: exp, del: del, parentExp: nil)
+        eview.setExp(exp: exp, del: del, lineage: [])
         return eview
     }
     

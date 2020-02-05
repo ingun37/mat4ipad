@@ -34,10 +34,10 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     let disposeBag = DisposeBag()
     
     var exp:Exp!
-    var parentExp:ParentInfo?
+    var parentExp:Exp?
     var varNames:[String] = []
     var availableVarName = "Z"
-    func set(exp:Exp, parentExp:ParentInfo?, varNames:[String], availableVarName:String) {
+    func set(exp:Exp, parentExp:Exp?, varNames:[String], availableVarName:String) {
         self.exp = exp
         self.varNames = varNames
         self.availableVarName = availableVarName

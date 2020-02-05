@@ -86,10 +86,10 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     func remove(view: ExpViewable) {
         //(varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
-        let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage(), from: view.exp) ?? Unassigned("A")
+        let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned("A")
         let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
             let nm = varview.name
-            let newExp = varview.exp.refRemove(lineage: view.lineage(), from: view.exp) ?? Unassigned(nm)
+            let newExp = varview.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned(nm)
             return (nm, newExp)
         })
         
@@ -115,7 +115,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
             let aa = Array(history.top.vars.keys)
 
-            vc.set(exp: expview.exp, parentExp: expview.parentExp, varNames: aa, availableVarName: availableVarName())
+            vc.set(exp: expview.exp, parentExp: expview.lineage.last?.exp, varNames: aa, availableVarName: availableVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
@@ -259,28 +259,20 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
 }
-extension ExpViewable {
-    func lineage()->[ParentInfo] {
-        if let parentInfo = parentExp {
-            return parentInfo.expViewable.lineage() + [parentInfo]
-        } else {
-            return []
-        }
-    }
-}
+
 extension ViewController: ExpViewableDelegate {
     func changeto(view:ExpViewable, to: Exp) {
         
         //($0.name, $0.expView!.changed(view: view, to: to))
         let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
             let nm = varv.name
-            let newExp = varv.exp.refChanged(lineage: view.lineage(), from: view.exp, to: to)
+            let newExp = varv.exp.refChanged(lineage: view.lineage, from: view.exp, to: to)
             return (nm, newExp)
         })
         
         if let mainExpView = mainExpView.contentView {
             print("ExpView is changing: \(mainExpView)")
-            let changedMain = mainExpView.exp.refChanged(lineage: view.lineage(), from: view.exp, to: to)
+            let changedMain = mainExpView.exp.refChanged(lineage: view.lineage, from: view.exp, to: to)
             history.push(main: changedMain, vars:
                 Dictionary(uniqueKeysWithValues: changedVarPairs))
             refresh()

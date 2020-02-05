@@ -11,11 +11,11 @@ import UIKit
 import ExpressiveAlgebra
 
 struct ParentInfo {
-    let expViewable:ExpViewable
+    let exp:Exp
     let kidNumber:Int
 }
 protocol ExpViewable: UIView {
-    var parentExp:ParentInfo? {get}
+    var lineage:[ParentInfo] {get}
     var exp:Exp {get}
     var directSubExpViews:[ExpViewable] {get}
 }
@@ -33,7 +33,7 @@ extension Exp {
                 return self
             }
         }
-        if isEq(head.expViewable.exp) {
+        if isEq(head.exp) {
             let newKids = (0..<kids().count).map({ (idx) -> Exp? in
                 if idx == head.kidNumber {
                     return kids()[idx].refRemove(lineage: []+lineage.dropFirst(), from: from)
@@ -111,7 +111,7 @@ extension Exp {
                 return self
             }
         }
-        if isEq(head.expViewable.exp) {
+        if isEq(head.exp) {
             return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
                 if idx == head.kidNumber {
                     return kids()[idx].refChanged(lineage: []+lineage.dropFirst(), from: from, to: to)
