@@ -27,13 +27,13 @@ class VarView: UIView, UITextFieldDelegate {
     @IBOutlet weak var stack:UIStackView!
     
     @IBAction func nameTap(_ sender: Any) {
-        let original = namelbl.text ?? ""
+        let original = name
         del?.changeVarName(original: original).then({ (to)-> Promise<Bool> in
             guard !to.isEmpty else {throw Err.nameIsNull}
             guard let del = self.del else {throw Err.nameIsNull}
             return del.varNameChanged(from: original, to: to).then { (allowed) in
                 guard allowed else {throw Err.nameIsNull}
-                self.namelbl.text = to
+                self.namelbl.text = to +  " ="
                 self.name = to
             }
         }).catch({ (err) in
@@ -51,7 +51,7 @@ class VarView: UIView, UITextFieldDelegate {
     @discardableResult
     func set(name:String, exp:Exp, expDel:ExpViewableDelegate, varDel:VarDelegate)-> ExpView {
         self.del = varDel
-        namelbl.text = name
+        namelbl.text = name + " ="
         let eview = ExpView.loadViewFromNib()
         if let prev = expView {
             stack.removeArrangedSubview(prev)
