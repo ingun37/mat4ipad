@@ -383,6 +383,7 @@ extension ViewController: VarDelegate {
             lastVars[to] = last.vars[from]
             lastVars.removeValue(forKey: from)
             history.push(main: last.main, vars: lastVars)
+            refresh()
             return Promise(true)
         } else {
             let pend = Promise<Bool>.pending()
