@@ -256,7 +256,10 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             
             if let cell = (mats.last?.stack.arrangedSubviews.last as? MatrixRow)?.stack.arrangedSubviews.last as? MatrixCell {
                 
-                let tipview = EasyTipView(text: "Try handwriting with Apple Pencil within a cell!", preferences: preferences, delegate: self)
+                let tipview = EasyTipView(text: """
+Try handwriting an integer with Apple Pencil within a cell!
+e.g 37, -16
+""", preferences: preferences, delegate: self)
                 
                 tipview.show(forView: cell)
                 self.singleTipView = tipview
