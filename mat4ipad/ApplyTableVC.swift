@@ -76,7 +76,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(Represent(Add(Unassigned(availableVarName), exp)))
             options.append(Represent(Power(exp, Unassigned(availableVarName))))
         }
-        if exp is Mat || (!(exp is Mat) && exp is Unassigned) {
+        if !(exp is NumExp) && !(exp is Fraction) && !(exp is Power) {
             options.append(Represent(Transpose(exp)))
             options.append(Represent(Determinant(exp), show: "\\text{Determinant}(\(exp.latex()))"))
             options.append(Represent(RowEchelonForm(mat: exp), show: "\\text{Row Echelon Form}(\(exp.latex()))"))
