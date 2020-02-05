@@ -87,9 +87,9 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="kpS-te-l7F" secondAttribute="top" priority="999" constant="8" id="4a5-EW-fk8"/>
-                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="bottom" secondItem="kpS-te-l7F" secondAttribute="bottom" priority="999" constant="-8" id="6CG-8g-UZr"/>
-                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="kpS-te-l7F" secondAttribute="leading" priority="999" constant="8" id="7VD-fg-c8K"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="kpS-te-l7F" secondAttribute="top" priority="1" constant="8" id="4a5-EW-fk8"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="bottom" secondItem="kpS-te-l7F" secondAttribute="bottom" priority="1" constant="-8" id="6CG-8g-UZr"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="kpS-te-l7F" secondAttribute="leading" priority="800" constant="8" id="7VD-fg-c8K"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="bU2-a5-QUo" secondAttribute="top" constant="8" id="Gog-ys-upe"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="bU2-a5-QUo" secondAttribute="leading" constant="8" id="OBY-an-X3M"/>
                                             <constraint firstItem="bU2-a5-QUo" firstAttribute="bottom" secondItem="5MG-ib-mfE" secondAttribute="bottom" constant="-8" id="j1w-Xs-Pu4"/>

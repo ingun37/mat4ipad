@@ -42,10 +42,18 @@ class PaddedLatexView: UIView {
             container.translatesAutoresizingMaskIntoConstraints = false
             mathv.translatesAutoresizingMaskIntoConstraints = false
 //
-            mathv.layoutMarginsGuide.leadingAnchor.constraint(equalTo: container.layoutMarginsGuide.leadingAnchor).isActive = true
-            mathv.layoutMarginsGuide.topAnchor.constraint(equalTo: container.layoutMarginsGuide.topAnchor).isActive = true
-            mathv.layoutMarginsGuide.trailingAnchor.constraint(equalTo: container.layoutMarginsGuide.trailingAnchor).isActive = true
-            mathv.layoutMarginsGuide.bottomAnchor.constraint(equalTo: container.layoutMarginsGuide.bottomAnchor).isActive = true
+            let leading = mathv.layoutMarginsGuide.leadingAnchor.constraint(equalTo: container.layoutMarginsGuide.leadingAnchor)
+            leading.isActive = true
+            leading.priority = .required
+            let top = mathv.layoutMarginsGuide.topAnchor.constraint(equalTo: container.layoutMarginsGuide.topAnchor)
+            top.isActive = true
+            top.priority = .required
+            let trailing = mathv.layoutMarginsGuide.trailingAnchor.constraint(equalTo: container.layoutMarginsGuide.trailingAnchor)
+            trailing.isActive = true
+            trailing.priority = .required
+            let bottom = mathv.layoutMarginsGuide.bottomAnchor.constraint(equalTo: container.layoutMarginsGuide.bottomAnchor)
+            bottom.isActive = true
+            bottom.priority = .required
 
         }
     }

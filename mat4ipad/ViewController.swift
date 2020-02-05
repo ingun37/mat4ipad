@@ -225,7 +225,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     let matrixResizerTimer = PublishSubject<Int>()
     override func viewDidLoad() {
         super.viewDidLoad()
-        matrixResizerTimer.delay(0.2, scheduler: MainScheduler.instance).throttle(0.2, scheduler: MainScheduler.instance).subscribe { (_) in
+        matrixResizerTimer.delay(0.1, scheduler: MainScheduler.instance).throttle(0.2, scheduler: MainScheduler.instance).subscribe { (_) in
             self.makeResizers()
         }
 //        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
