@@ -35,10 +35,6 @@ struct About: View {
                     Toggle("", isOn: $userDefaultsManager.showTooltip).labelsHidden()
                 }
                 HStack {
-                    Text("Use Handwriting")
-                    Toggle("", isOn: $userDefaultsManager.useHandwriting).labelsHidden()
-                }
-                HStack {
                     Text("This application is open souce. Checkout in")
                     Text("Github").foregroundColor(Color.blue)
                         .textContentType(.URL).onTapGesture {
@@ -69,9 +65,5 @@ public let useHandwritingKey = "useHandwriting"
 public class UserDefaultsManager: ObservableObject {
     @Published public var showTooltip: Bool = UserDefaults.standard.object(forKey: showTooltipKey) as? Bool ?? true {
         didSet { UserDefaults.standard.set(self.showTooltip, forKey: showTooltipKey) }
-    }
-
-    @Published public var useHandwriting: Bool = UserDefaults.standard.object(forKey: useHandwritingKey) as? Bool ?? true {
-        didSet { UserDefaults.standard.set(self.useHandwriting, forKey: useHandwritingKey) }
     }
 }
