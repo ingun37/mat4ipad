@@ -52,7 +52,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     
     @IBSegueAction func addAboutSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: About())
+        let about = About()
+        let controller = UIHostingController(coder: coder, rootView: about)
+        return controller
     }
     @IBOutlet weak var anchorView: UIView!
     func findOwnerOf(matrix:MatrixView)->ExpView? {
@@ -240,8 +242,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
+        let a = UserDefaultsManager()
         
-        if !tipShown {
+        if !tipShown && a.showTooltip {
             if let prev = singleTipView {
                 prev.dismiss()
             }

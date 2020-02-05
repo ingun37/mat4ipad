@@ -54,7 +54,7 @@
                                                         </connections>
                                                     </barButtonItem>
                                                 </leftBarButtonItems>
-                                                <barButtonItem key="rightBarButtonItem" title="About" id="4dQ-n1-NSj">
+                                                <barButtonItem key="rightBarButtonItem" title="Settings" id="4dQ-n1-NSj">
                                                     <connections>
                                                         <segue destination="fEK-00-5yh" kind="show" destinationCreationSelector="addAboutSwiftUIView:" id="fEe-AY-26S"/>
                                                     </connections>
