@@ -211,6 +211,17 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         matrixResizerTimer.onNext(0)
     }
     
+    var wentBack = false
+    public func wentBackground() {
+        removeMatrixResizers()
+        wentBack = true
+    }
+    public func cameForeground() {
+        if wentBack {
+            refresh()
+            wentBack = false
+        }
+    }
     let matrixResizerTimer = PublishSubject<Int>()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -223,12 +234,15 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
 
     private var matrixResizePreviews:[ResizePreview] = []
-    func makeResizers() {
+    func removeMatrixResizers() {
         matrixResizePreviews.forEach { (preview) in
             self.view.willRemoveSubview(preview)
             preview.removeFromSuperview()
         }
         matrixResizePreviews.removeAll()
+    }
+    func makeResizers() {
+        removeMatrixResizers()
         guard let mathView = mainExpView.contentView else {return}
         
         let mats = mathView.allSubExpViews.compactMap({$0.matrixView}).filter({!$0.isHidden})
