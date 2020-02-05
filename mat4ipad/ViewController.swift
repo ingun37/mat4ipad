@@ -402,3 +402,17 @@ extension ViewController: EasyTipViewDelegate {
         self.tipShown = true
     }
 }
+
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            self.makeResizers()
+        }
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.makeResizers()
+    }
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.removeMatrixResizers()
+    }
+}

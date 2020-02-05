@@ -97,6 +97,9 @@
                                         </constraints>
                                         <viewLayoutGuide key="contentLayoutGuide" id="bU2-a5-QUo"/>
                                         <viewLayoutGuide key="frameLayoutGuide" id="kpS-te-l7F"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="QhD-E8-EhZ"/>
+                                        </connections>
                                     </scrollView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hnc-2R-FxG">
                                         <rect key="frame" x="0.0" y="210" width="768" height="128"/>
