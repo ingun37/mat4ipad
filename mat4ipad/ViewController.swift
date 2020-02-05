@@ -47,6 +47,7 @@ struct History {
     }
 }
 class ViewController: UIViewController, ResizePreviewDelegate {
+    @IBOutlet weak var mathRollv: MathScrollView!
     @IBSegueAction func addHelpSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: HelpView())
     }
@@ -252,7 +253,10 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }.filter { (expv) -> Bool in
             !expv.isHidden
         }
-        matrixResizePreviews = (mats + mats2).map({
+        let allMatViews = mats + mats2
+        matrixResizePreviews = allMatViews.filter({ (mv:MatrixView) -> Bool in
+            mathRollv.bounds.contains(mv.convert(CGPoint(x: mv.bounds.size.width, y: mv.bounds.size.height), to: mathRollv))
+        }).map({
             ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})

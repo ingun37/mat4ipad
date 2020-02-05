@@ -89,7 +89,7 @@
                                         <constraints>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="kpS-te-l7F" secondAttribute="top" priority="1" constant="8" id="4a5-EW-fk8"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="bottom" secondItem="kpS-te-l7F" secondAttribute="bottom" priority="1" constant="-8" id="6CG-8g-UZr"/>
-                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="kpS-te-l7F" secondAttribute="leading" priority="800" constant="8" id="7VD-fg-c8K"/>
+                                            <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="kpS-te-l7F" secondAttribute="leading" priority="1" constant="8" id="7VD-fg-c8K"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="top" secondItem="bU2-a5-QUo" secondAttribute="top" constant="8" id="Gog-ys-upe"/>
                                             <constraint firstItem="5MG-ib-mfE" firstAttribute="leading" secondItem="bU2-a5-QUo" secondAttribute="leading" constant="8" id="OBY-an-X3M"/>
                                             <constraint firstItem="bU2-a5-QUo" firstAttribute="bottom" secondItem="5MG-ib-mfE" secondAttribute="bottom" constant="-8" id="j1w-Xs-Pu4"/>
@@ -140,6 +140,7 @@
                     <connections>
                         <outlet property="anchorView" destination="JqQ-Js-lNh" id="l2r-zm-Ang"/>
                         <outlet property="mainExpView" destination="WlF-gG-ROh" id="YWv-LL-kMF"/>
+                        <outlet property="mathRollv" destination="6f1-8r-UCe" id="PBT-y2-0pD"/>
                         <outlet property="mathStackView" destination="5MG-ib-mfE" id="l6t-kn-UaL"/>
                         <outlet property="preview" destination="7YB-oO-viv" id="J0Z-BP-Qrf"/>
                         <outlet property="varStack" destination="1cE-JV-GVH" id="NRB-o0-J0u"/>
