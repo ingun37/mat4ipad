@@ -15,19 +15,34 @@ struct About: View {
     var githubUrl: String {
         "https://github.com/ingun37/mat4ipad"
     }
+    var devEmail: String {
+        "ingun37@gmail.com"
+    }
     var body: some View {
         VStack {
-            Text("Thanks for using Expressive Calculator!")
-                .font(.title)
-            Text("This application is open souce. You can checkout full source code here")
-            Text(self.githubUrl).foregroundColor(Color.blue)
-                .textContentType(.URL).onTapGesture {
-                    guard let url = URL(string: self.githubUrl) else { return }
-                    UIApplication.shared.open(url)
+            VStack {
+                Text("Thanks for using Expressive Algebra Calculator!")
+                    .font(.title)
+                Text("v" + version)
+                    .font(.footnote)
+                    .foregroundColor(Color.gray)
+            }.padding()
+            HStack {
+                Text("This application is open souce. Checkout in")
+                Text("Github").foregroundColor(Color.blue)
+                    .textContentType(.URL).onTapGesture {
+                        guard let url = URL(string: self.githubUrl) else { return }
+                        UIApplication.shared.open(url)
+                }
             }
-            Text("v" + version)
-                .font(.footnote)
-                .foregroundColor(Color.gray)
+            
+            HStack {
+                Text("Developer email")
+                Text(self.devEmail).onTapGesture {
+                    guard let url = URL(string: "mailto:" + self.devEmail) else { return }
+                    UIApplication.shared.open(url)
+                }.foregroundColor(.blue)
+            }
             
         }
         
