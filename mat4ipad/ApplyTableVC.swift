@@ -75,6 +75,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(Represent(Mul(Unassigned(availableVarName), exp)))
             options.append(Represent(Add(exp, Unassigned(availableVarName))))
             options.append(Represent(Add(Unassigned(availableVarName), exp)))
+            options.append(Represent(Subtract(exp, Unassigned(availableVarName))))
+            options.append(Represent(Subtract(Unassigned(availableVarName), exp)))
             options.append(Represent(Power(exp, Unassigned(availableVarName))))
         }
         if !(exp is NumExp) && !(exp is Fraction) && !(exp is Power) {

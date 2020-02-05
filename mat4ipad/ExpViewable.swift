@@ -29,7 +29,7 @@ extension Exp {
         guard let head = lineage.first else {
             if isEq(from) {
                 switch reflect() {
-                case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown:
+                case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown, .Subtract(_):
                     return nil
                 case .RowEchelonForm(_), .GaussJordanElimination(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_):
                     return kids().first
@@ -48,7 +48,7 @@ extension Exp {
             })
             
             switch reflect() {
-            case .Add(_), .Mul(_):
+            case .Add(_), .Mul(_), .Subtract(_):
                 let remainingKids = newKids.compactMap({$0})
                 if remainingKids.isEmpty {
                     return nil
@@ -145,6 +145,7 @@ enum ExpReflection {
     case Rank(Rank)
     case Nullity(Nullity)
     case Norm(Norm)
+    case Subtract(Subtract)
     case Unknown
 }
 
@@ -180,6 +181,8 @@ extension Exp {
             return .Nullity(e)
         } else if let e = self as? Norm {
             return .Norm(e)
+        } else if let e = self as? Subtract {
+            return .Subtract(e)
         } else {
             return .Unknown
         }
@@ -205,6 +208,7 @@ extension Exp {
         case .Nullity(let e): return [e.mat]
         case .Norm(let e): return [e.mat]
         case .Unknown: return []
+        case .Subtract(let e): return [e.l, e.r]
         }
     }
     func cloneWith(kids:[Exp])->Exp {
@@ -230,6 +234,7 @@ extension Exp {
         case .Nullity(_): return Nullity(changed[0])
         case .Norm(_): return Norm(changed[0])
         case .Unknown: return self
+        case .Subtract(_): return Subtract(changed[0], changed[1])
         }
     }
 }
