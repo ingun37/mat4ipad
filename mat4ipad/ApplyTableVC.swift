@@ -62,7 +62,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         if !(parentExp is Mat) {
             options.append(Represent(Mat.identityOf(2, 2)))
         }
-        if !(parentExp is Mat) {
+        if !(parentExp is Mat) && !(exp is Mat) {
             options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
         }
         if !(exp is Mat) {
