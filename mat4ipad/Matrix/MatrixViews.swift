@@ -159,6 +159,8 @@ class MatrixView:UIView {
                 if changedMat.isEq(self.mat) {
                     
                 } else {
+                    UserDefaultsManager().showTooltip = false
+                    (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.singleTipView?.dismiss()
                     self.del?.changeto(exp: self.mat, lineage: self.lineage, to: changedMat)
                 }
             }
