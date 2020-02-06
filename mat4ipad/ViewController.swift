@@ -167,7 +167,15 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             v.removeFromSuperview()
         }
         
-        for (varname, varExp) in history.top.vars {
+        for (varname, varExp) in history.top.vars.sorted(by: { (l, r) -> Bool in
+            let lt = self.variableAddTimes[l.key] ?? Date(timeIntervalSince1970: 0)
+            let rt = self.variableAddTimes[r.key] ?? Date(timeIntervalSince1970: 0)
+            if lt == rt {
+                return l.key < r.key
+            } else {
+                return lt < rt
+            }
+        }) {
             let varview = VarView.loadViewFromNib()
             let expview = varview.set(name: varname, exp: varExp, expDel: self, varDel: self)
             varStack.addArrangedSubview(varview)
@@ -293,6 +301,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             !self.history.top.vars.keys.contains(name) && !allSubVars.contains(name)
         })!
     }
+    var variableAddTimes:[String: Date] = [:]
     @IBAction func addVariableClick(_ sender: Any) {
         
         let varname = availableVarName()
@@ -300,6 +309,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         let last = history.top
         var newVars = last.vars
         newVars[varname] = Unassigned(varname)
+        variableAddTimes[varname] = Date()
         history.push(main: last.main, vars: newVars)
         refresh()
     }
