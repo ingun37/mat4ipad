@@ -14,7 +14,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="iCE-KS-6QP">
-                    <rect key="frame" x="8" y="8" width="557" height="1220"/>
+                    <rect key="frame" x="8" y="8" width="557" height="1254"/>
                     <subviews>
                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bkR-D4-fOd" customClass="PaddedLatexViewStory" customModule="mat4ipad" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="557" height="128"/>
@@ -24,10 +24,10 @@
                             </connections>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="248" verticalCompressionResistancePriority="748" ambiguous="YES" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bvF-bR-XdC">
-                            <rect key="frame" x="0.0" y="136" width="557" height="675"/>
+                            <rect key="frame" x="0.0" y="136" width="557" height="709"/>
                         </stackView>
                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrO-lo-Eyg" customClass="MatrixView" customModule="mat4ipad" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="819" width="557" height="401"/>
+                            <rect key="frame" x="0.0" y="853" width="557" height="401"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="dfD-Y6-fbF">
                                     <rect key="frame" x="2" y="2" width="553" height="397"/>
@@ -59,7 +59,7 @@
             <constraints>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="4DU-3H-ZtF"/>
                 <constraint firstAttribute="trailing" secondItem="iCE-KS-6QP" secondAttribute="trailing" constant="8" id="Ph6-2I-93t"/>
-                <constraint firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" constant="42" id="fhV-34-oCh"/>
+                <constraint firstAttribute="bottom" secondItem="iCE-KS-6QP" secondAttribute="bottom" constant="8" id="fhV-34-oCh"/>
                 <constraint firstItem="iCE-KS-6QP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="hZx-aT-LuT"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
