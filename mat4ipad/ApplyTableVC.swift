@@ -253,8 +253,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             } else {
                 let alert = UIAlertController(title: "Invalid expression", message: """
 Following formats are accepted
-123, -123, 1/2, 3.14 ...
-x, A, 6y ...
+1, 3.14, 1/2, -x, x^3, 4/x ...
 """, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true)

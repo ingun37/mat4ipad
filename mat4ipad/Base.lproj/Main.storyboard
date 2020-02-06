@@ -322,7 +322,7 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yJ6-rd-DYs">
                                                         <rect key="frame" x="0.0" y="0.0" width="305" height="34"/>
                                                         <subviews>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="e.g 1,  1/2,  3.14,  -x,  5x,  1/x ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-BL-mgL">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="e.g 1,  1/2,  3.14,  -2x,  1/x, x^y ..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-BL-mgL">
                                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="34"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>
@@ -338,14 +338,27 @@
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="TA1-g6-UH4">
                                                                 <rect key="frame" x="0.0" y="0.0" width="148.5" height="158"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3W-lK-ZAT">
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="bmP-pB-br6">
                                                                         <rect key="frame" x="0.0" y="0.0" width="148.5" height="30"/>
-                                                                        <color key="backgroundColor" white="0.94596354169999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <state key="normal" title="-"/>
-                                                                        <connections>
-                                                                            <action selector="numberClick:" destination="Zc6-Oj-lwd" eventType="touchUpInside" id="Y6f-Z2-pvQ"/>
-                                                                        </connections>
-                                                                    </button>
+                                                                        <subviews>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3W-lK-ZAT">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="73.5" height="30"/>
+                                                                                <color key="backgroundColor" white="0.94596354169999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <state key="normal" title="-"/>
+                                                                                <connections>
+                                                                                    <action selector="numberClick:" destination="Zc6-Oj-lwd" eventType="touchUpInside" id="Y6f-Z2-pvQ"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4HZ-as-Ji3">
+                                                                                <rect key="frame" x="75.5" y="0.0" width="73" height="30"/>
+                                                                                <color key="backgroundColor" white="0.94596354169999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <state key="normal" title="^"/>
+                                                                                <connections>
+                                                                                    <action selector="numberClick:" destination="Zc6-Oj-lwd" eventType="touchUpInside" id="6m6-ju-aka"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="cdY-k5-HvC">
                                                                         <rect key="frame" x="0.0" y="32" width="148.5" height="30"/>
                                                                         <subviews>
