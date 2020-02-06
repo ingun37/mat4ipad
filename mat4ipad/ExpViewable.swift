@@ -22,6 +22,7 @@ protocol ExpViewable: UIView {
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
     func changeto(view:ExpViewable, to: Exp)
+    func changeto(exp:Exp, lineage:[ParentInfo], to: Exp)
 }
 
 extension Exp {

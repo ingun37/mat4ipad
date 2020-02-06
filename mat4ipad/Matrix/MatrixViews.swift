@@ -11,10 +11,12 @@ import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
 import ExpressiveAlgebra
-
+enum DrawErr:Error {
+    case canceled
+}
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     var directSubExpViews: [ExpViewable] { return []}
-    
+    let rxDrawing = PublishSubject<Int>()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -52,27 +54,21 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
             timer?.invalidate()
         case .moved:
             drawing.addLine(to: loc)
+            rxDrawing.onNext(0)
         case .ended:
             if lastPhase == .began {
                 drawing = CGMutablePath()
                 del?.onTap(view: self)
             } else {
-                timer?.invalidate()
-                timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {[unowned self] (tmr) in
-                    let res = recognize(paths: seperate(path: self.drawing))
-                    let most = mostLikely(sign: res.0, results: res.1)
-                    if let i = Int(most) {
-                        self.del?.changeto(view: self, to: NumExp(i))
-                    } else {
-                        self.drawing = CGMutablePath()
-                        self.setNeedsDisplay()
-                        self.latex.isHidden = true
-                    }
-                })
+                
+                    
+                
             }
         case .cancelled:
+            rxDrawing.onError(DrawErr.canceled)
             drawing = CGMutablePath()
         default:
+            rxDrawing.onError(DrawErr.canceled)
             drawing = CGMutablePath()
         }
         lastPhase = touch.phase
@@ -142,17 +138,52 @@ class MatrixView:UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         translatesAutoresizingMaskIntoConstraints = false
+        cellsDrawingSignal.debounce(.milliseconds(500), scheduler: MainScheduler.instance).subscribe(onNext: {[weak self] (n) in
+            print("drawn")
+            if let self = self {
+                let changedMat = self.cellViews.filter { (cellv) -> Bool in
+                    !cellv.drawing.isEmpty
+                }.reduce(self.mat as Exp, { (mat, cellv) -> Exp in
+                    let res = recognize(paths: seperate(path: cellv.drawing))
+                    let most = mostLikely(sign: res.0, results: res.1)
+                    cellv.drawing = CGMutablePath()
+                    if let i = Int(most) {
+                        let kididx = cellv.lineage.last!.kidNumber
+                        var elements = mat.kids()
+                        elements[kididx] = NumExp(i)
+                        return mat.cloneWith(kids: elements)
+                    } else {
+                        return mat
+                    }
+                })
+                if changedMat.isEq(self.mat) {
+                    
+                } else {
+                    self.del?.changeto(exp: self.mat, lineage: self.lineage, to: changedMat)
+                }
+            }
+        }).disposed(by: dBag)
     }
+    let cellsDrawingSignal = PublishSubject<Int>()
+    let dBag = DisposeBag()
     var mat:Mat!
+    var cellViews:[MatrixCell] = []
+    var del:ExpViewableDelegate? = nil
     @IBOutlet weak var stack: UIStackView!
+    var lineage:[ParentInfo] = []
     func set(_ m:Mat, lineage:[ParentInfo], del:ExpViewableDelegate?) {
+        self.del = del
         self.mat = m
+        self.lineage = lineage
         for ri in (0..<m.rows) {
             let rowView = MatrixRow.loadViewFromNib()
             for ci in (0..<m.cols) {
                 let cell = MatrixCell.loadViewFromNib()
-                cell.set(m.row(ri)[ci], del:del, lineage: lineage + [ParentInfo(exp: m, kidNumber: ri*m.cols + ci)])
+                let kididx = ri*m.cols + ci
+                cell.set(m.row(ri)[ci], del:del, lineage: lineage + [ParentInfo(exp: m, kidNumber: kididx)])
                 rowView.stack.addArrangedSubview(cell)
+                cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)
+                cellViews.append(cell)
             }
             stack.addArrangedSubview(rowView)
         }
