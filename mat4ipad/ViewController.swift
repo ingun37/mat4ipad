@@ -214,7 +214,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
         }
         
-        self.view.layoutIfNeeded()
+//        self.view.layoutIfNeeded()
         matrixResizerTimer.onNext(0)
     }
     
@@ -282,7 +282,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                     
                     let tipview = EasyTipView(text: """
             Try handwriting an integer with Apple Pencil within a cell!
-            e.g 37, -16
+            e.g 3, -10
             """, preferences: preferences, delegate: self)
                     
                     tipview.show(forView: cell)
@@ -292,7 +292,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
     }
     var singleTipView:EasyTipView? = nil
-    var tipShown = false
+    var varTipView:EasyTipView? = nil
+    public var tipShown = false
+    public var varTipShown = false
     func availableVarName()->String {
         let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
             allSubVarNames(of: v)

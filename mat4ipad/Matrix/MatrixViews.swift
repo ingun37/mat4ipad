@@ -164,8 +164,9 @@ class MatrixView:UIView {
                         cellv.setNeedsDisplay()
                     }
                 } else {
-                    UserDefaultsManager().showTooltip = false
+                    
                     (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.singleTipView?.dismiss()
+                    (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.tipShown = true
                     self.del?.changeto(exp: self.mat, lineage: self.lineage, to: changedMat)
                 }
             }
