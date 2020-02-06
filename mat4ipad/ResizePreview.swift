@@ -15,6 +15,7 @@ protocol ResizePreviewDelegate {
     func expandBy(matrix: MatrixView, row: Int, col: Int)
 }
 class ResizePreview: UIView {
+    @IBOutlet weak var handle: UIView!
     var del:ResizePreviewDelegate?
     @IBOutlet weak var dragPan: UIPanGestureRecognizer!
     @IBOutlet weak var blue: UIView!

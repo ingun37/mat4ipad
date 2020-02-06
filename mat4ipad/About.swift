@@ -31,7 +31,7 @@ struct About: View {
             }.padding()
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Show Tooltip")
+                    Text("Show tooltip when start up")
                     Toggle("", isOn: $userDefaultsManager.showTooltip).labelsHidden()
                 }
                 HStack {

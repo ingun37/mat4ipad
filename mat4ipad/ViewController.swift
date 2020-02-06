@@ -183,9 +183,13 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
         
         let mainExp = mainexpview.exp
-        let final = varStack.arrangedSubviews.compactMap({$0 as? VarView}).reduce(mainExp) { (exp, vv) -> Exp in
+        let varviews = varStack.arrangedSubviews.compactMap({$0 as? VarView})
+        let final = varviews.reduce(mainExp) { (exp, vv) -> Exp in
             exp.changed(eqTo: Unassigned(vv.name), to: vv.exp)
         }
+        
+        
+        
         do {
             try preview.set("= {\(final.eval().latex())}")
         } catch {
@@ -213,6 +217,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                 preview.set("= \\text{invalid}")
             }
         }
+        
+        singleTipView?.dismiss()
+        varTipView?.dismiss()
         
 //        self.view.layoutIfNeeded()
         matrixResizerTimer.onNext(0)
@@ -271,6 +278,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         
         if !tipShown && a.showTooltip {
             if let cell = (mats.last?.stack.arrangedSubviews.last as? MatrixRow)?.stack.arrangedSubviews.last as? MatrixCell {
+                tipShown = true
                 if let prev = singleTipView {
                     prev.show(forView: cell)
                 } else {
@@ -290,11 +298,58 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                 }
             }
         }
+        
+        if !varTipShown && UserDefaultsManager().showTooltip {
+            if let lastvarview = varStack.arrangedSubviews.compactMap({$0 as? VarView}).last {
+                varTipShown = true
+                if let prev = varTipView {
+                    prev.show(forView: lastvarview.namelbl)
+                } else {
+                    var preferences = EasyTipView.Preferences()
+                    preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
+                    preferences.drawing.foregroundColor = .white
+                    preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
+                    preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
+                    
+                    let tipview = EasyTipView(text: """
+                Tap variable label to change name or remove!
+                """, preferences: preferences, delegate: self)
+                        
+                    tipview.show(forView: lastvarview.namelbl)
+                    self.varTipView = tipview
+                }
+            }
+        }
+        if !handleTipShown && UserDefaultsManager().showTooltip {
+            let handles = matrixResizePreviews.compactMap({$0.handle})
+            if let lasthandle = handles.last {
+                handleTipShown = true
+                
+                if let prev = handleTipView {
+                    prev.show(forView: lasthandle)
+                } else {
+                    var preferences = EasyTipView.Preferences()
+                    preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
+                    preferences.drawing.foregroundColor = .white
+                    preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
+                    preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
+                    
+                    let tipview = EasyTipView(text: """
+                Drag blue handle to change matrix's size!
+                """, preferences: preferences, delegate: self)
+                        
+                    tipview.show(forView: lasthandle)
+                    self.handleTipView = tipview
+                }
+            }
+        }
     }
+    var handleTipView:EasyTipView? = nil
     var singleTipView:EasyTipView? = nil
     var varTipView:EasyTipView? = nil
     public var tipShown = false
     public var varTipShown = false
+    public var handleTipShown = false
     func availableVarName()->String {
         let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
             allSubVarNames(of: v)
@@ -424,7 +479,7 @@ func allSubVarNames(of:Exp)->[String] {
 
 extension ViewController: EasyTipViewDelegate {
     func easyTipViewDidDismiss(_ tipView: EasyTipView) {
-        self.tipShown = true
+        
     }
 }
 
