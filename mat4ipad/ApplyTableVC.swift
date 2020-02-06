@@ -170,11 +170,28 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     func txt2exp(txt:String)->Exp? {
         if let value = Int(txt) {
             return value.exp
-        } else if let value = Float(txt) {
+        }
+        if let value = Float(txt) {
             return NumExp(value)
-        } else if let r = Rational<Int>(from: txt){
+        }
+        if let r = Rational<Int>(from: txt){
             return NumExp(r)
-        } else if let match = #"^(-?)([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
+        }
+        if let match = #"^([a-zA-Z0-9]+)\+([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
+            if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
+                if let partr = match.group(at: 2), let expr = txt2exp(txt: partr) {
+                    return Add(expl, expr)
+                }
+            }
+        }
+        if let match = #"^([a-zA-Z0-9]+)-([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
+            if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
+                if let partr = match.group(at: 2), let expr = txt2exp(txt: partr) {
+                    return Subtract(expl, expr)
+                }
+            }
+        }
+        if let match = #"^(-?)([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
             if let varpart = match.group(at: 2) {
                 if match.group(at: 1) == "-" {
                     return Negate(Unassigned(varpart))

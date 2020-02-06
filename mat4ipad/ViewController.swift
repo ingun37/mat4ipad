@@ -346,11 +346,19 @@ extension ViewController: VarDelegate {
         let pro = Promise<String>.pending()
         let alert = UIAlertController(title: "Enter name", message: title, preferredStyle: .alert)
         alert.addTextField { (tfield) in }
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in
+        alert.addAction(UIAlertAction(title: "Change", style: .default, handler: {_ in
             pro.fulfill(alert.textFields?.first?.text ?? "")
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
             pro.reject(Err.nameIsNull)
+        }))
+        alert.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: {[weak self] (_) in
+            if let self = self {
+                self.history.push(main: self.history.top.main, vars: self.history.top.vars.filter({ (key, val) -> Bool in
+                    return key != original
+                }))
+                self.refresh()
+            }
         }))
         present(alert, animated: true, completion: nil)
         return pro
