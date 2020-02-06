@@ -177,10 +177,11 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         } else if txt.isAlphabets {
             return Unassigned(txt)
         } else {
-            if let match = "^(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
-                if let numpart = match.group(at: 1) {
-                    if let varpart = match.group(at: 2) {
-                        if let num = Int(numpart) {
+            if let match = "^(-?)(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
+                if let numpart = match.group(at: 2) {
+                    if let varpart = match.group(at: 3) {
+                        let sign = match.group(at: 1) ?? ""
+                        if let num = Int(sign + numpart) {
                             return Mul(NumExp(num), Unassigned(varpart))
                         }
                     }
