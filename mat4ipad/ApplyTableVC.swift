@@ -191,12 +191,49 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                     }
                 }
             }
-        } else if let match = #"^(-?)(\d+)\/([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
-            if let numpart = match.group(at: 2) {
-                if let varpart = match.group(at: 3) {
-                    let sign = match.group(at: 1) ?? ""
-                    if let num = Int(sign + numpart) {
-                        return Fraction(numerator: NumExp(num), denominator: Unassigned(varpart))
+        } else if let match = #"^(-?)(\d+|[a-zA-Z]+)\/(\d+|[a-zA-Z]+)$"#.r?.findFirst(in: txt) {
+            if let part1 = match.group(at: 2) {
+                if let part2 = match.group(at: 3) {
+                    let exp1:Exp
+                    if let num1 = Int(part1) {
+                        exp1 = NumExp(num1)
+                    } else {
+                        exp1 = Unassigned(part1)
+                    }
+                    let exp2:Exp
+                    if let num2 = Int(part2) {
+                        exp2 = NumExp(num2)
+                    } else {
+                        exp2 = Unassigned(part2)
+                    }
+                    let result = Fraction(numerator: exp1, denominator: exp2)
+                    if match.group(at: 1) == "-" {
+                        return Negate(result)
+                    } else {
+                        return result
+                    }
+                }
+            }
+        } else if let match = #"^(-?)(\d+|[a-zA-Z]+)\^(\d+|[a-zA-Z]+)$"#.r?.findFirst(in: txt) {
+            if let part1 = match.group(at: 2) {
+                if let part2 = match.group(at: 3) {
+                    let exp1:Exp
+                    if let num1 = Int(part1) {
+                        exp1 = NumExp(num1)
+                    } else {
+                        exp1 = Unassigned(part1)
+                    }
+                    let exp2:Exp
+                    if let num2 = Int(part2) {
+                        exp2 = NumExp(num2)
+                    } else {
+                        exp2 = Unassigned(part2)
+                    }
+                    let result = Power(exp1, exp2)
+                    if match.group(at: 1) == "-" {
+                        return Negate(result)
+                    } else {
+                        return result
                     }
                 }
             }
