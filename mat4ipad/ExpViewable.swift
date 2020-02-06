@@ -32,7 +32,7 @@ extension Exp {
                 switch reflect() {
                 case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown, .Subtract(_):
                     return nil
-                case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_):
+                case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_), .Negate(_):
                     return kids().first
                 }
             } else {
@@ -72,7 +72,7 @@ extension Exp {
                 } else {
                     return nil
                 }
-            case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_):
+            case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_), .Negate(_):
                 if let m = newKids[0] {
                     return cloneWith(kids: [m])
                 } else {
@@ -147,6 +147,7 @@ enum ExpReflection {
     case Nullity(Nullity)
     case Norm(Norm)
     case Subtract(Subtract)
+    case Negate(Negate)
     case Unknown
 }
 
@@ -184,6 +185,8 @@ extension Exp {
             return .Norm(e)
         } else if let e = self as? Subtract {
             return .Subtract(e)
+        } else if let e = self as? Negate {
+            return .Negate(e)
         } else {
             return .Unknown
         }
@@ -210,6 +213,7 @@ extension Exp {
         case .Norm(let e): return [e.mat]
         case .Unknown: return []
         case .Subtract(let e): return [e.l, e.r]
+        case .Negate(let e): return [e.e]
         }
     }
     func cloneWith(kids:[Exp])->Exp {
@@ -236,6 +240,7 @@ extension Exp {
         case .Norm(_): return Norm(changed[0])
         case .Unknown: return self
         case .Subtract(_): return Subtract(changed[0], changed[1])
+        case .Negate(_): return Negate(changed[0])
         }
     }
 }

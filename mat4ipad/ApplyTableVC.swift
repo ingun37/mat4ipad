@@ -174,22 +174,34 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return NumExp(value)
         } else if let r = Rational<Int>(from: txt){
             return NumExp(r)
-        } else if txt.isAlphabets {
-            return Unassigned(txt)
-        } else {
-            if let match = "^(-?)(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
-                if let numpart = match.group(at: 2) {
-                    if let varpart = match.group(at: 3) {
-                        let sign = match.group(at: 1) ?? ""
-                        if let num = Int(sign + numpart) {
-                            return Mul(NumExp(num), Unassigned(varpart))
-                        }
+        } else if let match = #"^(-?)([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
+            if let varpart = match.group(at: 2) {
+                if match.group(at: 1) == "-" {
+                    return Negate(Unassigned(varpart))
+                } else {
+                    return Unassigned(varpart)
+                }
+            }
+        } else if let match = "^(-?)(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
+            if let numpart = match.group(at: 2) {
+                if let varpart = match.group(at: 3) {
+                    let sign = match.group(at: 1) ?? ""
+                    if let num = Int(sign + numpart) {
+                        return Mul(NumExp(num), Unassigned(varpart))
                     }
                 }
             }
-            
-            return nil
+        } else if let match = #"^(-?)(\d+)\/([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
+            if let numpart = match.group(at: 2) {
+                if let varpart = match.group(at: 3) {
+                    let sign = match.group(at: 1) ?? ""
+                    if let num = Int(sign + numpart) {
+                        return Fraction(numerator: NumExp(num), denominator: Unassigned(varpart))
+                    }
+                }
+            }
         }
+        return nil
     }
     
     ///Dismiss and fulfill the user input if possible.
@@ -252,11 +264,6 @@ class ApplyTableCell:UITableViewCell {
     @IBOutlet weak var lbl:UILabel!
 }
 
-extension String {
-    var isAlphabets: Bool {
-        return !isEmpty && range(of: "[^a-zA-Z]", options: .regularExpression) == nil
-    }
-}
 class VarCell:UICollectionViewCell {
     @IBOutlet weak var lbl:UILabel!
 }
