@@ -109,7 +109,7 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         self.del = del
         latex.set(exp.latex())
     }
-    @IBOutlet private weak var latex: LatexView!
+    @IBOutlet weak var latex: LatexView!
     
     @IBAction func ontap(_ sender: Any) {
         del?.onTap(view: self)
@@ -141,9 +141,10 @@ class MatrixView:UIView {
         cellsDrawingSignal.debounce(.milliseconds(500), scheduler: MainScheduler.instance).subscribe(onNext: {[weak self] (n) in
             print("drawn")
             if let self = self {
-                let changedMat = self.cellViews.filter { (cellv) -> Bool in
+                let affectedCells = self.cellViews.filter { (cellv) -> Bool in
                     !cellv.drawing.isEmpty
-                }.reduce(self.mat as Exp, { (mat, cellv) -> Exp in
+                }
+                let changedMat = affectedCells.reduce(self.mat as Exp, { (mat, cellv) -> Exp in
                     let res = recognize(paths: seperate(path: cellv.drawing))
                     let most = mostLikely(sign: res.0, results: res.1)
                     cellv.drawing = CGMutablePath()
@@ -157,7 +158,11 @@ class MatrixView:UIView {
                     }
                 })
                 if changedMat.isEq(self.mat) {
-                    
+                    affectedCells.forEach { (cellv) in
+                        cellv.drawing = CGMutablePath()
+                        cellv.latex.isHidden = false
+                        cellv.setNeedsDisplay()
+                    }
                 } else {
                     UserDefaultsManager().showTooltip = false
                     (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.singleTipView?.dismiss()
