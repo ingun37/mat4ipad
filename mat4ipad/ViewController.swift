@@ -191,8 +191,6 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                     preview.set("\\text{Can't invert a non-square matrix}")
                 case .NotAMatrixForRowEchelonForm(let e):
                     preview.set("\\text{Can't turn not a matrix expression into row echelon form.}" + e.latex())
-                case .NotAMatrixForGaussJordanElimination(let e):
-                    preview.set("\\text{Can't Gauss-Jordan-Eliminate not a matrix expression.}" + e.latex())
                 case .InvertingSingularMatrix(let m):
                     preview.set("\\text{Can't invert a singular matrix." + m.latex())
                 case .NotAMatrixForDeterminant(let e):
@@ -263,26 +261,25 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         let a = UserDefaultsManager()
         
         if !tipShown && a.showTooltip {
-            if let prev = singleTipView {
-                prev.dismiss()
-            }
-            var preferences = EasyTipView.Preferences()
-            preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
-            preferences.drawing.foregroundColor = .white
-            preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
-            preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
-            
             if let cell = (mats.last?.stack.arrangedSubviews.last as? MatrixRow)?.stack.arrangedSubviews.last as? MatrixCell {
-                
-                let tipview = EasyTipView(text: """
-Try handwriting an integer with Apple Pencil within a cell!
-e.g 37, -16
-""", preferences: preferences, delegate: self)
-                
-                tipview.show(forView: cell)
-                self.singleTipView = tipview
+                if let prev = singleTipView {
+                    prev.show(forView: cell)
+                } else {
+                    var preferences = EasyTipView.Preferences()
+                    preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
+                    preferences.drawing.foregroundColor = .white
+                    preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
+                    preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
+                    
+                    let tipview = EasyTipView(text: """
+            Try handwriting an integer with Apple Pencil within a cell!
+            e.g 37, -16
+            """, preferences: preferences, delegate: self)
+                    
+                    tipview.show(forView: cell)
+                    self.singleTipView = tipview
+                }
             }
-            
         }
     }
     var singleTipView:EasyTipView? = nil

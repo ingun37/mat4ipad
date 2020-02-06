@@ -31,7 +31,7 @@ extension Exp {
                 switch reflect() {
                 case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown, .Subtract(_):
                     return nil
-                case .RowEchelonForm(_), .GaussJordanElimination(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_):
+                case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_):
                     return kids().first
                 }
             } else {
@@ -71,7 +71,7 @@ extension Exp {
                 } else {
                     return nil
                 }
-            case .RowEchelonForm(_), .GaussJordanElimination(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_):
+            case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_):
                 if let m = newKids[0] {
                     return cloneWith(kids: [m])
                 } else {
@@ -136,8 +136,8 @@ enum ExpReflection {
     case Unassigned(Unassigned)
     case NumExp(NumExp)
     case Power(Power)
-    case RowEchelonForm(RowEchelonForm)
-    case GaussJordanElimination(GaussJordanElimination)
+    case RowEchelon(RowEchelon)
+    case ReducedRowEchelon(ReducedRowEchelon)
     case Transpose(Transpose)
     case Determinant(Determinant)
     case Fraction(Fraction)
@@ -163,10 +163,10 @@ extension Exp {
             return .NumExp(e)
         } else if let e = self as? Power {
             return .Power(e)
-        } else if let e = self as? RowEchelonForm {
-            return .RowEchelonForm(e)
-        } else if let e = self as? GaussJordanElimination {
-            return .GaussJordanElimination(e)
+        } else if let e = self as? RowEchelon {
+            return .RowEchelon(e)
+        } else if let e = self as? ReducedRowEchelon {
+            return .ReducedRowEchelon(e)
         } else if let e = self as? Transpose {
             return .Transpose(e)
         } else if let e = self as? Determinant {
@@ -198,8 +198,8 @@ extension Exp {
         case .Unassigned(let e): return []
         case .NumExp(let e): return []
         case .Power(let e): return [e.base, e.exponent]
-        case .RowEchelonForm(let e): return [e.mat]
-        case .GaussJordanElimination(let e): return [e.mat]
+        case .RowEchelon(let e): return [e.mat]
+        case .ReducedRowEchelon(let e): return [e.mat]
         case .Transpose(let e): return [e.mat]
         case .Determinant(let e):  return [e.mat]
         case .Fraction(let e): return [e.numerator, e.denominator]
@@ -224,8 +224,8 @@ extension Exp {
         case .Unassigned(_): return self
         case .NumExp(_): return self
         case .Power(_): return Power(changed[0], changed[1])
-        case .RowEchelonForm(_): return RowEchelonForm(mat: changed[0])
-        case .GaussJordanElimination(_): return GaussJordanElimination(changed[0])
+        case .RowEchelon(_): return RowEchelon(mat: changed[0])
+        case .ReducedRowEchelon(_): return ReducedRowEchelon(changed[0])
         case .Transpose(_): return Transpose(changed[0])
         case .Determinant(_): return Determinant(changed[0])
         case .Fraction(_): return Fraction(numerator: changed[0], denominator: changed[1])
