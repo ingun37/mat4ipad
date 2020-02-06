@@ -13,6 +13,7 @@ import RxCocoa
 import Promises
 import ExpressiveAlgebra
 import NumberKit
+import Regex
 
 //
 //protocol ApplyTableDelegate {
@@ -173,10 +174,21 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return NumExp(value)
         } else if let r = Rational<Int>(from: txt){
             return NumExp(r)
-        } else if txt.isAlphanumeric {
+        } else if txt.isAlphabets {
             return Unassigned(txt)
+        } else {
+            if let match = "^(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
+                if let numpart = match.group(at: 1) {
+                    if let varpart = match.group(at: 2) {
+                        if let num = Int(numpart) {
+                            return Mul(NumExp(num), Unassigned(varpart))
+                        }
+                    }
+                }
+            }
+            
+            return nil
         }
-        return nil
     }
     
     ///Dismiss and fulfill the user input if possible.
@@ -192,7 +204,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 let alert = UIAlertController(title: "Invalid expression", message: """
 Following formats are accepted
 123, -123, 1/2, 3.14 ...
-x, xy, A ...
+x, A, 6y ...
 """, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true)
@@ -240,8 +252,8 @@ class ApplyTableCell:UITableViewCell {
 }
 
 extension String {
-    var isAlphanumeric: Bool {
-        return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
+    var isAlphabets: Bool {
+        return !isEmpty && range(of: "[^a-zA-Z]", options: .regularExpression) == nil
     }
 }
 class VarCell:UICollectionViewCell {
