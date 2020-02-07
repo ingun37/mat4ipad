@@ -220,6 +220,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         
         singleTipView?.dismiss()
         varTipView?.dismiss()
+        handleTipView?.dismiss()
         
 //        self.view.layoutIfNeeded()
         matrixResizerTimer.onNext(0)

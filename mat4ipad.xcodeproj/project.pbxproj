@@ -31,6 +31,7 @@
 		6BEC780822FE86F3007AE58B /* ExpViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BEC780722FE86F3007AE58B /* ExpViewable.swift */; };
 		6BFE54CB22F4A0E800476825 /* MathScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE54CA22F4A0E800476825 /* MathScrollView.swift */; };
 		925E586F23EC116C0061F1A5 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 925E586E23EC116C0061F1A5 /* Regex */; };
+		925E587323EC71970061F1A5 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 925E587223EC71960061F1A5 /* icons */; };
 		925F4F7523E80972009E6ED6 /* lexiFreeMonoid in Frameworks */ = {isa = PBXBuildFile; productRef = 925F4F7423E80972009E6ED6 /* lexiFreeMonoid */; };
 		925F4F7723E85FE6009E6ED6 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925F4F7623E85FE6009E6ED6 /* About.swift */; };
 		9266034223E939660002DE1C /* HelpPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9266034123E939660002DE1C /* HelpPageVC.swift */; };
@@ -82,7 +83,7 @@
 		6B83576922EDEA8B003C6C48 /* ModelDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDataHandler.swift; sourceTree = "<group>"; };
 		6B83576B22EDEABB003C6C48 /* converted_model.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = converted_model.tflite; sourceTree = "<group>"; };
 		6B83576D22EE5FAE003C6C48 /* labels.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = labels.txt; sourceTree = "<group>"; };
-		6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mat4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Expressive Algebra Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BBE5BA2229D9A77006A56D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		6BBE5BA5229D9A77006A56D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -101,6 +102,7 @@
 		6BEC780722FE86F3007AE58B /* ExpViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpViewable.swift; sourceTree = "<group>"; };
 		6BFE54CA22F4A0E800476825 /* MathScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathScrollView.swift; sourceTree = "<group>"; };
 		6F24F6C796DEEA6B97B096B5 /* Pods-mat4ipadUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadUITests/Pods-mat4ipadUITests.release.xcconfig"; sourceTree = "<group>"; };
+		925E587223EC71960061F1A5 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		925F4F7623E85FE6009E6ED6 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		9266034123E939660002DE1C /* HelpPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpPageVC.swift; sourceTree = "<group>"; };
 		926E12C923E6D09C007A23C7 /* PaddedLatexView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaddedLatexView.xib; sourceTree = "<group>"; };
@@ -186,7 +188,7 @@
 		6BBE5B9E229D9A77006A56D8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */,
+				6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */,
 				6BBE5BB1229D9A77006A56D8 /* mat4ipadTests.xctest */,
 				6BBE5BBC229D9A77006A56D8 /* mat4ipadUITests.xctest */,
 			);
@@ -223,6 +225,7 @@
 				9266034123E939660002DE1C /* HelpPageVC.swift */,
 				929FAC5E23EABC3F004192D2 /* HandwiringTooltip.xib */,
 				929FAC6023EABCCD004192D2 /* HandwiringTooltip.swift */,
+				925E587223EC71960061F1A5 /* icons */,
 			);
 			path = mat4ipad;
 			sourceTree = "<group>";
@@ -284,7 +287,7 @@
 				925E586E23EC116C0061F1A5 /* Regex */,
 			);
 			productName = mat4ipad;
-			productReference = 6BBE5B9D229D9A77006A56D8 /* mat4ipad.app */;
+			productReference = 6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */;
 			productType = "com.apple.product-type.application";
 		};
 		6BBE5BB0229D9A77006A56D8 /* mat4ipadTests */ = {
@@ -390,6 +393,7 @@
 				926E12CA23E6D09C007A23C7 /* PaddedLatexView.xib in Resources */,
 				6B83576C22EDEABB003C6C48 /* converted_model.tflite in Resources */,
 				6BBE5BA6229D9A77006A56D8 /* Main.storyboard in Resources */,
+				925E587323EC71970061F1A5 /* icons in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,7 +692,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ingun37.mat4ipad;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Expressive Algebra Calculator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -708,7 +712,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ingun37.mat4ipad;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Expressive Algebra Calculator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};

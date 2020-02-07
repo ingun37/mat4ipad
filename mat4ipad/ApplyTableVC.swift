@@ -82,9 +82,11 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }
         if !(exp is NumExp) && !(exp is Fraction) && !(exp is Power) {
             options.append(Represent(Transpose(exp)))
-            options.append(Represent(Determinant(exp), show: "\\text{Determinant}(\(exp.latex()))"))
-            options.append(Represent(RowEchelon(mat: exp), show: "\\text{Row Echelon Form}(\(exp.latex()))"))
-            options.append(Represent(ReducedRowEchelon(exp), show: "\\text{Reduced Row Echelon Form}(\(exp.latex()))"))
+            options.append(Represent(Determinant(exp), show: "\\text{Determinant of }\(exp.latex())"))
+            options.append(Represent(RowEchelon(mat: exp), show: "\\text{Row Echelon Form of } \(exp.latex())"))
+            options.append(Represent(ReducedRowEchelon(exp), show: "\\text{Reduced Row Echelon Form of } \(exp.latex())"))
+            options.append(Represent(Rank(exp), show: "\\text{Rank of } \(exp.latex())"))
+            options.append(Represent(Nullity(exp), show: "\\text{Nullity of } \(exp.latex())"))
         }
         
         
