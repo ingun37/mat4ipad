@@ -111,9 +111,10 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         latex.set(exp.latex())
     }
     @IBOutlet weak var latex: LatexView!
-    
+    let tapped = PublishSubject<MatrixCell>()
     @IBAction func ontap(_ sender: Any) {
-        del?.onTap(view: self)
+//        del?.onTap(view: self)
+        tapped.onNext(self)
     }
     static func loadViewFromNib() -> MatrixCell {
         let bundle = Bundle(for: self)
@@ -182,6 +183,7 @@ class MatrixView:UIView {
     var del:ExpViewableDelegate? = nil
     @IBOutlet weak var stack: UIStackView!
     var lineage:Lineage = Lineage(chain: [], exp: Unassigned("M"))
+    let cellTapped = PublishSubject<MatrixCell>()
     func set(_ m:Mat, lineage:Lineage, del:ExpViewableDelegate?) {
         self.del = del
         self.mat = m
@@ -194,6 +196,7 @@ class MatrixView:UIView {
                 cell.set(del:del, lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
                 rowView.stack.addArrangedSubview(cell)
                 cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)
+                cell.tapped.subscribe(cellTapped).disposed(by: dBag)
                 cellViews.append(cell)
             }
             stack.addArrangedSubview(rowView)

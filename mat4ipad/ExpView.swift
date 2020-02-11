@@ -41,7 +41,24 @@ class ExpView: UIView, ExpViewable {
 
     @IBAction func ontap(_ sender: Any) {
         print("ExpView tapped:\(self)")
-        del?.onTap(view: self)
+        guard let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "apply") as? ApplyTableVC else { return }
+        guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
+        
+        vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.sourceView = padLatexView
+        
+        vc.set(exp: exp, parentExp: nil, varNames: Array(root.history.top.vars.keys), availableVarName: root.availableVarName())
+        vc.promise.then { (r) in
+            switch r {
+            case let .changed(to):
+                self.del?.changeto(view: self, to: to)
+            case .removed:
+                root.remove(view: self)
+            case .nothin:
+                break
+            }
+        }
+        root.present(vc, animated: true, completion: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -64,6 +81,24 @@ class ExpView: UIView, ExpViewable {
         matrixView.changed.subscribe(onNext:{newMat in
             self.del?.changeto(view: self, to: newMat)
             }).disposed(by: dbag)
+        matrixView.cellTapped.subscribe(onNext:{cell in
+            guard let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "apply") as? ApplyTableVC else { return }
+            guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
+            vc.modalPresentationStyle = .popover
+            vc.popoverPresentationController?.sourceView = cell
+            vc.set(exp: cell.exp, parentExp: nil, varNames: Array(root.history.top.vars.keys), availableVarName: root.availableVarName())
+            vc.promise.then { (r) in
+                switch r {
+                case let .changed(to):
+                    self.del?.changeto(view: cell, to: to)
+                case .removed:
+                    root.remove(view: cell)
+                case .nothin:
+                    break
+                }
+            }
+            root.present(vc, animated: true, completion: nil)
+        }).disposed(by: dbag)
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
