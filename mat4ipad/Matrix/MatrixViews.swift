@@ -99,13 +99,14 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         follow(touch: touch)
     }
     
-    var exp:Exp = Unassigned("z")
+    var exp:Exp {
+        return lineage.exp
+    }
     var del:ExpViewableDelegate?
-    var lineage:[ParentInfo] = []
-    var parentMatrix:Mat {lineage.last!.exp as! Mat}
-    func set(_ exp:Exp, del:ExpViewableDelegate?, lineage:[ParentInfo]) {
+    var lineage:Lineage = Lineage(chain: [], exp: Unassigned("c"))
+    
+    func set(del:ExpViewableDelegate?, lineage:Lineage) {
         self.lineage = lineage
-        self.exp = exp
         self.del = del
         latex.set(exp.latex())
     }
@@ -149,7 +150,7 @@ class MatrixView:UIView {
                     let most = mostLikely(sign: res.0, results: res.1)
                     cellv.drawing = CGMutablePath()
                     if let i = Int(most) {
-                        let kididx = cellv.lineage.last!.kidNumber
+                        let kididx = cellv.lineage.chain.last!
                         var elements = mat.kids()
                         elements[kididx] = NumExp(i)
                         return mat.cloneWith(kids: elements)
@@ -180,8 +181,8 @@ class MatrixView:UIView {
     var cellViews:[MatrixCell] = []
     var del:ExpViewableDelegate? = nil
     @IBOutlet weak var stack: UIStackView!
-    var lineage:[ParentInfo] = []
-    func set(_ m:Mat, lineage:[ParentInfo], del:ExpViewableDelegate?) {
+    var lineage:Lineage = Lineage(chain: [], exp: Unassigned("M"))
+    func set(_ m:Mat, lineage:Lineage, del:ExpViewableDelegate?) {
         self.del = del
         self.mat = m
         self.lineage = lineage
@@ -190,7 +191,7 @@ class MatrixView:UIView {
             for ci in (0..<m.cols) {
                 let cell = MatrixCell.loadViewFromNib()
                 let kididx = ri*m.cols + ci
-                cell.set(m.row(ri)[ci], del:del, lineage: lineage + [ParentInfo(exp: m, kidNumber: kididx)])
+                cell.set(del:del, lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
                 rowView.stack.addArrangedSubview(cell)
                 cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)
                 cellViews.append(cell)

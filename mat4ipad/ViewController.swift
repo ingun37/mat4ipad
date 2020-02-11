@@ -100,7 +100,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         if mainExpView.contentView?.allSubExpViewables.contains(where: { (viewable) in
             viewable == view
         }) ?? false {
-            let newMain = mainExpView.contentView?.exp.refRemove(chain: view.lineage.map({$0.kidNumber}), from: view.exp) ?? Unassigned("A")
+            let newMain = mainExpView.contentView?.exp.refRemove(chain: view.lineage.chain, from: view.exp) ?? Unassigned("A")
             
             history.push(main: newMain)
             refresh()
@@ -109,7 +109,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
                 if varview.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
                     let nm = varview.name
-                    let newExp = varview.exp.refRemove(chain: view.lineage.map({$0.kidNumber}), from: view.exp) ?? Unassigned(nm)
+                    let newExp = varview.exp.refRemove(chain: view.lineage.chain, from: view.exp) ?? Unassigned(nm)
                     return (nm, newExp)
                 } else {
                     return (varview.name, varview.exp)
@@ -138,8 +138,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
                 anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
             }
             let aa = Array(history.top.vars.keys)
-
-            vc.set(exp: expview.exp, parentExp: expview.lineage.last?.exp, varNames: aa, availableVarName: availableVarName())
+            vc.set(exp: expview.exp, parentExp: nil, varNames: aa, availableVarName: availableVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
@@ -402,7 +401,7 @@ extension ViewController: ExpViewableDelegate {
     func changeto(view:ExpViewable, to: Exp) {
         if mainExpView.contentView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
             if let mainExpView = mainExpView.contentView {
-                let changedMain = mainExpView.exp.refChanged(chain: view.lineage.map({$0.kidNumber}), from: exp, to: to)
+                let changedMain = mainExpView.exp.refChanged(chain: view.lineage.chain, from: exp, to: to)
                 history.push(main: changedMain, vars: history.top.vars)
                 refresh()
             }
@@ -410,7 +409,7 @@ extension ViewController: ExpViewableDelegate {
             let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
                 if varv.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
                     let nm = varv.name
-                    let newExp = varv.exp.refChanged(chain: view.lineage.map({$0.kidNumber}), from: exp, to: to)
+                    let newExp = varv.exp.refChanged(chain: view.lineage.chain, from: exp, to: to)
                     return (nm, newExp)
                 } else {
                     return (varv.name, varv.exp)

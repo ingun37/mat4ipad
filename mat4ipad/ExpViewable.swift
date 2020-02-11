@@ -10,15 +10,16 @@ import Foundation
 import UIKit
 import ExpressiveAlgebra
 
-struct ParentInfo {
+struct Lineage {
+    let chain:[Int]
     let exp:Exp
-    let kidNumber:Int
 }
 protocol ExpViewable: UIView {
-    var lineage:[ParentInfo] {get}
+    var lineage:Lineage {get}
     var exp:Exp {get}
     var directSubExpViews:[ExpViewable] {get}
 }
+
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
     func changeto(view:ExpViewable, to: Exp)

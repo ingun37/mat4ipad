@@ -75,11 +75,12 @@ class ExpView: UIView, ExpViewable {
         return nib.instantiate(withOwner: nil, options: nil).first as! ExpView
     }
     let dbag = DisposeBag()
-    var exp:Exp = Unassigned("z")
-    var lineage:[ParentInfo] = []
-    func setExp(exp:Exp, del:ExpViewableDelegate, lineage:[ParentInfo]) {
+    var exp:Exp  {
+        return lineage.exp
+    }
+    var lineage:Lineage = Lineage(chain: [], exp: Unassigned("X"))
+    func setExp(del:ExpViewableDelegate, lineage:Lineage) {
         self.lineage = lineage
-        self.exp = exp
         self.del = del
         padLatexView.contentView.mathv?.latex = exp.latex()
         if let exp = exp as? Mat {
@@ -93,9 +94,9 @@ class ExpView: UIView, ExpViewable {
             matrixView.isHidden = true
             stack.isHidden = false
             
-            directCommutativeKids(exp: exp).forEach { (kidExp, relLineage) in
+            directCommutativeKids(exp: exp).forEach { (relLineage) in
                 let v = ExpView.loadViewFromNib()
-                v.setExp(exp: kidExp, del:del, lineage: lineage+relLineage)
+                v.setExp(del: del, lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
                 stack.addArrangedSubview(v)
             }
         }
@@ -105,19 +106,19 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
 
-func directCommutativeKids(exp:Exp)-> [(Exp, [ParentInfo])] {
+func directCommutativeKids(exp:Exp)-> [Lineage] {
     let kids = exp.kids()
     
-    let commutativeKids = (0..<kids.count).flatMap { (idx) -> [(Exp, [ParentInfo])] in
+    let commutativeKids = (0..<kids.count).flatMap { (idx) -> [Lineage] in
         let kid = kids[idx]
-        let baseLineage = [ParentInfo(exp: exp, kidNumber: idx)]
+        let baseChain = [idx]
         if exp is Add && kid is Add || exp is Mul && kid is Mul {
             let granCommuteKids = directCommutativeKids(exp: kid)
-            return granCommuteKids.map { (grankidExp, relLineage) -> (Exp, [ParentInfo]) in
-                return (grankidExp, baseLineage + relLineage)
+            return granCommuteKids.map { (relLineage) -> (Lineage) in
+                return Lineage(chain: baseChain + relLineage.chain, exp: relLineage.exp)
             }
         } else {
-            return [(kid, baseLineage)]
+            return [Lineage(chain: baseChain, exp: kid)]
         }
     }
     return commutativeKids
@@ -150,8 +151,7 @@ class ExpInitView:UIView {
         eview.layoutMarginsGuide.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
         
         contentView = eview
-        
-        eview.setExp(exp: exp, del: del, lineage: [])
+        eview.setExp(del: del, lineage: Lineage(chain: [], exp: exp))
         return eview
     }
     
