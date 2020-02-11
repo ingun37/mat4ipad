@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/ingun37/ExpressiveAlgebra.git",
         "state": {
           "branch": null,
-          "revision": "c5ae961b8c161facc8f22cdaf66ebd00e5881d51",
-          "version": "1.1.6"
+          "revision": "081274801bf0f2f94ad3010992ad2d3b0365e740",
+          "version": "1.2.1"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/objecthub/swift-numberkit.git",
         "state": {
           "branch": null,
-          "revision": "ebb6c284b3fed8bbe2bd105bb8e41537f75bc950",
-          "version": "2.3.2"
+          "revision": "5f9c41eb20777801a0d7ecb5bafe83e5f490a42a",
+          "version": "2.3.4"
         }
       }
     ]
