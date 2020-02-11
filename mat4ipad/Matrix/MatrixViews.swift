@@ -58,7 +58,8 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
         case .ended:
             if lastPhase == .began {
                 drawing = CGMutablePath()
-                del?.onTap(view: self)
+                self.ontap(self)
+//                del?.onTap(view: self)
             } else {
                 
                     
@@ -201,6 +202,27 @@ class MatrixView:UIView {
             }
             stack.addArrangedSubview(rowView)
         }
+    }
+    func expandBy(row: Int, col: Int) {
+        let co = mat.cols
+        var kids2d = mat.elements
+        if col < 0 && 0 < co + col {
+            kids2d = kids2d.map({row in row.dropLast(-col)})
+        } else if 0 < col {
+            kids2d = kids2d.map({$0 + (0..<col).map({_ in 0.exp})})
+        }
+        
+        if row < 0 && 0 < mat.rows + row {
+            kids2d = kids2d.dropLast(-row)
+        } else if 0 < row {
+            let colLen = kids2d[0].count
+            kids2d = kids2d + (0..<row).map({_ in
+                (0..<colLen).map({_ in 0.exp})
+            })
+        }
+        
+        let newMat = Mat(kids2d)
+        changed.onNext(newMat)
     }
     static func loadViewFromNib() -> MatrixView {
         let bundle = Bundle(for: self)

@@ -11,7 +11,10 @@ import iosMath
 import RxSwift
 import RxCocoa
 import ExpressiveAlgebra
-
+enum Emit {
+    case removed(Lineage)
+    case changed(Lineage)
+}
 class ExpView: UIView, ExpViewable {
     var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
@@ -51,9 +54,11 @@ class ExpView: UIView, ExpViewable {
         vc.promise.then { (r) in
             switch r {
             case let .changed(to):
-                self.del?.changeto(view: self, to: to)
+                self.emit.onNext(.changed(Lineage(chain: self.lineage.chain, exp: to)))
+//                self.del?.changeto(view: self, to: to)
             case .removed:
-                root.remove(view: self)
+                self.emit.onNext(.removed(self.lineage))
+//                root.remove(view: self)
             case .nothin:
                 break
             }
@@ -68,7 +73,7 @@ class ExpView: UIView, ExpViewable {
         super.init(frame: frame)
         commonInit()
     }
-    
+    let emit = PublishSubject<Emit>()
 //    private var dragStartPosition:CGPoint = CGPoint.zero
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,8 +84,9 @@ class ExpView: UIView, ExpViewable {
         padLatexView.layer.shadowRadius = 1
         
         matrixView.changed.subscribe(onNext:{newMat in
-            self.del?.changeto(view: self, to: newMat)
-            }).disposed(by: dbag)
+            self.emit.onNext(.changed(Lineage(chain: self.lineage.chain, exp: newMat)))
+//            self.del?.changeto(view: self, to: newMat)
+        }).disposed(by: dbag)
         matrixView.cellTapped.subscribe(onNext:{cell in
             guard let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "apply") as? ApplyTableVC else { return }
             guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
@@ -90,9 +96,11 @@ class ExpView: UIView, ExpViewable {
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
-                    self.del?.changeto(view: cell, to: to)
+                    self.emit.onNext(.changed(Lineage(chain: cell.lineage.chain, exp: to)))
+//                    self.del?.changeto(view: cell, to: to)
                 case .removed:
-                    root.remove(view: cell)
+                    self.emit.onNext(.removed(cell.lineage))
+//                    root.remove(view: cell)
                 case .nothin:
                     break
                 }
@@ -132,6 +140,7 @@ class ExpView: UIView, ExpViewable {
             directCommutativeKids(exp: exp).forEach { (relLineage) in
                 let v = ExpView.loadViewFromNib()
                 v.setExp(del: del, lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
+                v.emit.subscribe(self.emit).disposed(by: self.dbag)
                 stack.addArrangedSubview(v)
             }
         }
@@ -168,11 +177,15 @@ class ExpInitView:UIView {
         
         translatesAutoresizingMaskIntoConstraints = false
     }
-    
+    let emit = PublishSubject<Emit>()
+    var prev:Disposable? = nil
     func set(exp:Exp, del:ExpViewableDelegate)-> ExpView {
+        
         if let v = contentView {
             willRemoveSubview(v)
         }
+        prev?.dispose()
+        
         contentView?.removeFromSuperview()
         
         let eview = ExpView.loadViewFromNib()
@@ -187,6 +200,8 @@ class ExpInitView:UIView {
         
         contentView = eview
         eview.setExp(del: del, lineage: Lineage(chain: [], exp: exp))
+        
+        prev = eview.emit.subscribe(emit)
         return eview
     }
     

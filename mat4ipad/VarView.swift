@@ -9,6 +9,8 @@
 import UIKit
 import Promises
 import ExpressiveAlgebra
+import RxSwift
+import RxCocoa
 
 protocol VarDelegate {
     func varNameChanged(from:String, to:String)->Promise<Bool>
@@ -47,9 +49,12 @@ class VarView: UIView, UITextFieldDelegate {
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
         return nib.instantiate(withOwner: nil, options: nil).first as! VarView
     }
+    var prev:Disposable?
+    let emit = PublishSubject<Emit>()
     
     @discardableResult
     func set(name:String, exp:Exp, expDel:ExpViewableDelegate, varDel:VarDelegate)-> ExpView {
+        prev?.dispose()
         self.del = varDel
         namelbl.text = name + " ="
         let eview = ExpView.loadViewFromNib()
@@ -60,6 +65,7 @@ class VarView: UIView, UITextFieldDelegate {
         expView = eview
         stack.addArrangedSubview(eview)
         eview.setExp(del: expDel, lineage: Lineage(chain: [], exp: exp))
+        prev = eview.emit.subscribe(emit)
         self.name = name
         return eview
     }

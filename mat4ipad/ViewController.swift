@@ -66,28 +66,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     @IBOutlet weak var preview: LatexView!
     func expandBy(matrix: MatrixView, row: Int, col: Int) {
-        guard let view = findOwnerOf(matrix: matrix) else {return}
-        guard let mat = view.exp as? Mat else {return}
-        print("expanding \(view)")
-        let co = mat.cols
-        var kids2d = mat.elements
-        if col < 0 && 0 < co + col {
-            kids2d = kids2d.map({row in row.dropLast(-col)})
-        } else if 0 < col {
-            kids2d = kids2d.map({$0 + (0..<col).map({_ in 0.exp})})
-        }
-        
-        if row < 0 && 0 < mat.rows + row {
-            kids2d = kids2d.dropLast(-row)
-        } else if 0 < row {
-            let colLen = kids2d[0].count
-            kids2d = kids2d + (0..<row).map({_ in
-                (0..<colLen).map({_ in 0.exp})
-            })
-        }
-        
-        let newMat = Mat(kids2d)
-        changeto(view: view, to: newMat)
+        matrix.expandBy(row: row, col: col)
     }
     
     var history = History()
@@ -100,24 +79,9 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         if mainExpView.contentView?.allSubExpViewables.contains(where: { (viewable) in
             viewable == view
         }) ?? false {
-            let newMain = mainExpView.contentView?.exp.refRemove(chain: view.lineage.chain, from: view.exp) ?? Unassigned("A")
             
-            history.push(main: newMain)
-            refresh()
         } else {
             
-            let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
-                if varview.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
-                    let nm = varview.name
-                    let newExp = varview.exp.refRemove(chain: view.lineage.chain, from: view.exp) ?? Unassigned(nm)
-                    return (nm, newExp)
-                } else {
-                    return (varview.name, varview.exp)
-                }
-            })
-            
-            history.push(main: history.top.main, vars: Dictionary(uniqueKeysWithValues: newVars))
-            refresh()
         }
     }
     
@@ -190,6 +154,21 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }) {
             let varview = VarView.loadViewFromNib()
             let expview = varview.set(name: varname, exp: varExp, expDel: self, varDel: self)
+            varview.emit.subscribe(onNext: { (e) in
+                switch e {
+                case .removed(let l):
+                    let newExp = varExp.refRemove(chain: l.chain) ?? Unassigned(varname)
+                    var vars = self.history.top.vars
+                    vars[varname] = newExp
+                    self.history.push(main: self.history.top.main, vars: vars)
+                case .changed(let l):
+                    let newExp = varExp.refChanged(chain: l.chain, to: l.exp)
+                    var vars = self.history.top.vars
+                    vars[varname] = newExp
+                    self.history.push(main: self.history.top.main, vars: vars)
+                }
+                self.refresh()
+                }).disposed(by: dbag)
             varStack.addArrangedSubview(varview)
             setHierarchyBG(e: expview, f: 0.9)
         }
@@ -250,8 +229,23 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         }
     }
     let matrixResizerTimer = PublishSubject<Int>()
+    let dbag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainExpView.emit.subscribe(onNext:{ e in
+            switch e {
+            case .removed(let l):
+                let newMain = self.history.top.main.refRemove(chain: l.chain) ?? Unassigned("A")
+                self.history.push(main: newMain)
+                self.refresh()
+            case .changed(let l):
+                let changedMain = self.history.top.main.refChanged(chain: l.chain, to: l.exp)
+                self.history.push(main: changedMain, vars: self.history.top.vars)
+                self.refresh()
+            }
+        }).disposed(by: dbag)
+        
+        
         
         matrixResizerTimer.debounce(RxTimeInterval.milliseconds(100), scheduler: MainScheduler.instance).subscribe { (_) in
             self.makeResizers()
@@ -400,23 +394,8 @@ extension ViewController: ExpViewableDelegate {
     
     func changeto(view:ExpViewable, to: Exp) {
         if mainExpView.contentView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
-            if let mainExpView = mainExpView.contentView {
-                let changedMain = mainExpView.exp.refChanged(chain: view.lineage.chain, from: exp, to: to)
-                history.push(main: changedMain, vars: history.top.vars)
-                refresh()
-            }
+            
         } else {
-            let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
-                if varv.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
-                    let nm = varv.name
-                    let newExp = varv.exp.refChanged(chain: view.lineage.chain, from: exp, to: to)
-                    return (nm, newExp)
-                } else {
-                    return (varv.name, varv.exp)
-                }
-            })
-            history.push(main: history.top.main, vars:Dictionary(uniqueKeysWithValues: changedVarPairs))
-            refresh()
         }
     }
     func onTap(view: ExpViewable) {

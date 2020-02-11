@@ -27,14 +27,14 @@ protocol ExpViewableDelegate {
 }
 
 extension Exp {
-    func refRemove(chain:[Int], from:Exp)-> Exp? {
+    func refRemove(chain:[Int])-> Exp? {
         guard let head = chain.first else {
             return nil
         }
     
         let newKids = (0..<kids().count).map({ (idx) -> Exp? in
             if idx == head {
-                return kids()[idx].refRemove(chain: []+chain.dropFirst(), from: from)
+                return kids()[idx].refRemove(chain: []+chain.dropFirst())
             } else {
                 return kids()[idx]
             }
@@ -100,13 +100,13 @@ extension Exp {
         }
         return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
     }
-    func refChanged(chain:[Int], from: Exp, to:Exp)-> Exp {
+    func refChanged(chain:[Int], to:Exp)-> Exp {
         guard let head = chain.first else {
             return to
         }
         return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
             if idx == head {
-                return kids()[idx].refChanged(chain: []+chain.dropFirst(), from: from, to: to)
+                return kids()[idx].refChanged(chain: []+chain.dropFirst(), to: to)
             } else {
                 return kids()[idx]
             }
