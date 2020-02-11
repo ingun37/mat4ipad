@@ -26,6 +26,13 @@ class ExpView: UIView, ExpViewable {
     var allSubExpViews:[ExpView] {
         return [self] + directSubExpViews.compactMap({($0 as? ExpView)?.allSubExpViews}).flatMap({$0})
     }
+    var allSubExpViewables:[ExpViewable] {
+        let cells =  matrixView.stack.arrangedSubviews.map({$0 as! MatrixRow}).flatMap({
+            $0.stack.arrangedSubviews.map({($0 as! MatrixCell)})
+        })
+        let subviews = stack.arrangedSubviews.compactMap({$0 as? ExpView})
+        return [self] + cells + subviews.flatMap({$0.allSubExpViewables})
+    }
     @IBOutlet weak var padLatexView: PaddedLatexViewStory!
     
     @IBOutlet weak var matrixView: MatrixView!

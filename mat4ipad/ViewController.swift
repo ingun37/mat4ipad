@@ -97,15 +97,28 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     func remove(view: ExpViewable) {
         //(varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
-        let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned("A")
-        let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
-            let nm = varview.name
-            let newExp = varview.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned(nm)
-            return (nm, newExp)
-        })
-        
-        history.push(main: newMain, vars: Dictionary(uniqueKeysWithValues: newVars))
-        refresh()
+        if mainExpView.contentView?.allSubExpViewables.contains(where: { (viewable) in
+            viewable == view
+        }) ?? false {
+            let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned("A")
+            
+            history.push(main: newMain)
+            refresh()
+        } else {
+            
+            let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
+                if varview.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
+                    let nm = varview.name
+                    let newExp = varview.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned(nm)
+                    return (nm, newExp)
+                } else {
+                    return (varview.name, varview.exp)
+                }
+            })
+            
+            history.push(main: history.top.main, vars: Dictionary(uniqueKeysWithValues: newVars))
+            refresh()
+        }
     }
     
     @IBAction func undo(_ sender: Any) {
