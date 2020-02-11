@@ -22,80 +22,70 @@ protocol ExpViewable: UIView {
 protocol ExpViewableDelegate {
     func onTap(view:ExpViewable)
     func changeto(view:ExpViewable, to: Exp)
-    func changeto(exp:Exp, lineage:[ParentInfo], to: Exp)
+    
 }
 
 extension Exp {
-    func refRemove(lineage:[ParentInfo], from:Exp)-> Exp? {
-        guard let head = lineage.first else {
-            if isEq(from) {
-                switch reflect() {
-                case .Add(_), .Mul(_), .Mat(_), .Unassigned(_), .NumExp(_), .Power(_), .Fraction(_), .Unknown, .Subtract(_):
-                    return nil
-                case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Norm(_), .Nullity(_), .Negate(_):
-                    return kids().first
+    func refRemove(chain:[Int], from:Exp)-> Exp? {
+        guard let head = chain.first else {
+            return nil
+        }
+    
+        let newKids = (0..<kids().count).map({ (idx) -> Exp? in
+            if idx == head {
+                return kids()[idx].refRemove(chain: []+chain.dropFirst(), from: from)
+            } else {
+                return kids()[idx]
+            }
+        })
+        
+        switch reflect() {
+        case .Add(_), .Mul(_), .Subtract(_):
+            let remainingKids = newKids.compactMap({$0})
+            if remainingKids.isEmpty {
+                return nil
+            } else if remainingKids.count == 1 {
+                return remainingKids[0]
+            } else {
+                return cloneWith(kids: remainingKids)
+            }
+        case .Mat(_):
+            return cloneWith(kids: newKids.map({$0 ?? NumExp(0)}))
+        case .Unassigned(_), .NumExp(_):
+            return self
+        case .Power(_):
+            if let base = newKids[0] {
+                if let exponent = newKids[1] {
+                    return Power(base, exponent)
+                } else {
+                    return base
                 }
             } else {
-                return self
+                return nil
             }
-        }
-        if isEq(head.exp) {
-            let newKids = (0..<kids().count).map({ (idx) -> Exp? in
-                if idx == head.kidNumber {
-                    return kids()[idx].refRemove(lineage: []+lineage.dropFirst(), from: from)
-                } else {
-                    return kids()[idx]
-                }
-            })
-            
-            switch reflect() {
-            case .Add(_), .Mul(_), .Subtract(_):
-                let remainingKids = newKids.compactMap({$0})
-                if remainingKids.isEmpty {
-                    return nil
-                } else if remainingKids.count == 1 {
-                    return remainingKids[0]
-                } else {
-                    return cloneWith(kids: remainingKids)
-                }
-            case .Mat(_):
-                return cloneWith(kids: newKids.map({$0 ?? NumExp(0)}))
-            case .Unassigned(_), .NumExp(_):
-                return self
-            case .Power(_):
-                if let base = newKids[0] {
-                    if let exponent = newKids[1] {
-                        return Power(base, exponent)
-                    } else {
-                        return base
-                    }
-                } else {
-                    return nil
-                }
-            case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_), .Negate(_):
-                if let m = newKids[0] {
-                    return cloneWith(kids: [m])
-                } else {
-                    return nil
-                }
-            case .Fraction(_):
-                if let numerator = newKids[0] {
-                    if let denominator = newKids[1] {
-                        return Fraction(numerator: numerator, denominator: denominator)
-                    }
-                    else {
-                        return numerator
-                    }
-                } else if let denominator = newKids[1] {
-                    return Fraction(numerator: NumExp(1), denominator: denominator)
-                } else {
-                    return nil
-                }
-            case .Unknown:
-                return self
+        case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_), .Negate(_):
+            if let m = newKids[0] {
+                return cloneWith(kids: [m])
+            } else {
+                return nil
             }
+        case .Fraction(_):
+            if let numerator = newKids[0] {
+                if let denominator = newKids[1] {
+                    return Fraction(numerator: numerator, denominator: denominator)
+                }
+                else {
+                    return numerator
+                }
+            } else if let denominator = newKids[1] {
+                return Fraction(numerator: NumExp(1), denominator: denominator)
+            } else {
+                return nil
+            }
+        case .Unknown:
+            return self
         }
-        return self
+        
     }
     /// Return all it's direct sub exps.
     ///
@@ -109,24 +99,18 @@ extension Exp {
         }
         return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
     }
-    func refChanged(lineage:[ParentInfo], from: Exp, to:Exp)-> Exp {
-        guard let head = lineage.first else {
-            if isEq(from) {
-                return to
+    func refChanged(chain:[Int], from: Exp, to:Exp)-> Exp {
+        guard let head = chain.first else {
+            return to
+        }
+        return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
+            if idx == head {
+                return kids()[idx].refChanged(chain: []+chain.dropFirst(), from: from, to: to)
             } else {
-                return self
+                return kids()[idx]
             }
-        }
-        if isEq(head.exp) {
-            return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
-                if idx == head.kidNumber {
-                    return kids()[idx].refChanged(lineage: []+lineage.dropFirst(), from: from, to: to)
-                } else {
-                    return kids()[idx]
-                }
-            }))
-        }
-        return self
+        }))
+    
     }
 }
 

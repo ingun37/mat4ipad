@@ -167,11 +167,13 @@ class MatrixView:UIView {
                     
                     (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.singleTipView?.dismiss()
                     (UIApplication.shared.windows.first?.rootViewController as? ViewController)?.tipShown = true
-                    self.del?.changeto(exp: self.mat, lineage: self.lineage, to: changedMat)
+                    self.changed.onNext(changedMat)
+//                    self.del?.changeto(exp: self.mat, lineage: self.lineage, to: changedMat)
                 }
             }
         }).disposed(by: dBag)
     }
+    let changed = PublishSubject<Exp>()
     let cellsDrawingSignal = PublishSubject<Int>()
     let dBag = DisposeBag()
     var mat:Mat!

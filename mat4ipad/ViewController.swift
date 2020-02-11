@@ -100,7 +100,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         if mainExpView.contentView?.allSubExpViewables.contains(where: { (viewable) in
             viewable == view
         }) ?? false {
-            let newMain = mainExpView.contentView?.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned("A")
+            let newMain = mainExpView.contentView?.exp.refRemove(chain: view.lineage.map({$0.kidNumber}), from: view.exp) ?? Unassigned("A")
             
             history.push(main: newMain)
             refresh()
@@ -109,7 +109,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             let newVars = varStack.arrangedSubviews.compactMap({ $0 as? VarView }).map({(varview)-> (String, Exp) in
                 if varview.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
                     let nm = varview.name
-                    let newExp = varview.exp.refRemove(lineage: view.lineage, from: view.exp) ?? Unassigned(nm)
+                    let newExp = varview.exp.refRemove(chain: view.lineage.map({$0.kidNumber}), from: view.exp) ?? Unassigned(nm)
                     return (nm, newExp)
                 } else {
                     return (varview.name, varview.exp)
@@ -398,24 +398,27 @@ extension ViewController: UITextFieldDelegate {
 }
 
 extension ViewController: ExpViewableDelegate {
-    func changeto(exp: Exp, lineage: [ParentInfo], to: Exp) {
-        //($0.name, $0.expView!.changed(view: view, to: to))
-        let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
-            let nm = varv.name
-            let newExp = varv.exp.refChanged(lineage: lineage, from: exp, to: to)
-            return (nm, newExp)
-        })
-        
-        if let mainExpView = mainExpView.contentView {
-            let changedMain = mainExpView.exp.refChanged(lineage: lineage, from: exp, to: to)
-            history.push(main: changedMain, vars:
-                Dictionary(uniqueKeysWithValues: changedVarPairs))
-            refresh()
-        }
-    }
     
     func changeto(view:ExpViewable, to: Exp) {
-        changeto(exp: view.exp, lineage: view.lineage, to: to)
+        if mainExpView.contentView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
+            if let mainExpView = mainExpView.contentView {
+                let changedMain = mainExpView.exp.refChanged(chain: view.lineage.map({$0.kidNumber}), from: exp, to: to)
+                history.push(main: changedMain, vars: history.top.vars)
+                refresh()
+            }
+        } else {
+            let changedVarPairs = varStack.arrangedSubviews.map({$0 as! VarView}).map({varv-> (String, Exp) in
+                if varv.expView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
+                    let nm = varv.name
+                    let newExp = varv.exp.refChanged(chain: view.lineage.map({$0.kidNumber}), from: exp, to: to)
+                    return (nm, newExp)
+                } else {
+                    return (varv.name, varv.exp)
+                }
+            })
+            history.push(main: history.top.main, vars:Dictionary(uniqueKeysWithValues: changedVarPairs))
+            refresh()
+        }
     }
     func onTap(view: ExpViewable) {
         performSegue(withIdentifier: "op", sender: view)

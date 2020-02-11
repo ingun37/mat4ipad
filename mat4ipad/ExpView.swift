@@ -60,6 +60,10 @@ class ExpView: UIView, ExpViewable {
         padLatexView.layer.shadowOpacity = 0.5
         padLatexView.layer.shadowOffset = CGSize(width: 1, height: 1)
         padLatexView.layer.shadowRadius = 1
+        
+        matrixView.changed.subscribe(onNext:{newMat in
+            self.del?.changeto(view: self, to: newMat)
+            }).disposed(by: dbag)
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +74,7 @@ class ExpView: UIView, ExpViewable {
         let nib = UINib(nibName: String(describing:self), bundle: bundle)
         return nib.instantiate(withOwner: nil, options: nil).first as! ExpView
     }
-    
+    let dbag = DisposeBag()
     var exp:Exp = Unassigned("z")
     var lineage:[ParentInfo] = []
     func setExp(exp:Exp, del:ExpViewableDelegate, lineage:[ParentInfo]) {
