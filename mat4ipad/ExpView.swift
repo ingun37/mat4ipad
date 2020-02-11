@@ -16,7 +16,6 @@ enum Emit {
     case changed(Lineage)
 }
 class ExpView: UIView, ExpViewable {
-    var del:ExpViewableDelegate?
     @IBOutlet weak var stack: UIStackView!
     var directSubExpViews:[ExpViewable] {
         if exp is Mat {
@@ -29,13 +28,7 @@ class ExpView: UIView, ExpViewable {
     var allSubExpViews:[ExpView] {
         return [self] + directSubExpViews.compactMap({($0 as? ExpView)?.allSubExpViews}).flatMap({$0})
     }
-    var allSubExpViewables:[ExpViewable] {
-        let cells =  matrixView.stack.arrangedSubviews.map({$0 as! MatrixRow}).flatMap({
-            $0.stack.arrangedSubviews.map({($0 as! MatrixCell)})
-        })
-        let subviews = stack.arrangedSubviews.compactMap({$0 as? ExpView})
-        return [self] + cells + subviews.flatMap({$0.allSubExpViewables})
-    }
+    
     @IBOutlet weak var padLatexView: PaddedLatexViewStory!
     
     @IBOutlet weak var matrixView: MatrixView!
@@ -122,14 +115,13 @@ class ExpView: UIView, ExpViewable {
         return lineage.exp
     }
     var lineage:Lineage = Lineage(chain: [], exp: Unassigned("X"))
-    func setExp(del:ExpViewableDelegate, lineage:Lineage) {
+    func setExp(lineage:Lineage) {
         self.lineage = lineage
-        self.del = del
         padLatexView.contentView.mathv?.latex = exp.latex()
         if let exp = exp as? Mat {
             matrixView.isHidden = false
             stack.isHidden = true
-            matrixView.set(exp, lineage: lineage, del:del)
+            matrixView.set(exp, lineage: lineage)
         } else if exp.subExps().isEmpty {
             matrixView.isHidden = true
             stack.isHidden = false
@@ -139,7 +131,7 @@ class ExpView: UIView, ExpViewable {
             
             directCommutativeKids(exp: exp).forEach { (relLineage) in
                 let v = ExpView.loadViewFromNib()
-                v.setExp(del: del, lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
+                v.setExp(lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
                 v.emit.subscribe(self.emit).disposed(by: self.dbag)
                 stack.addArrangedSubview(v)
             }
@@ -179,7 +171,7 @@ class ExpInitView:UIView {
     }
     let emit = PublishSubject<Emit>()
     var prev:Disposable? = nil
-    func set(exp:Exp, del:ExpViewableDelegate)-> ExpView {
+    func set(exp:Exp)-> ExpView {
         
         if let v = contentView {
             willRemoveSubview(v)
@@ -199,7 +191,7 @@ class ExpInitView:UIView {
         eview.layoutMarginsGuide.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
         
         contentView = eview
-        eview.setExp(del: del, lineage: Lineage(chain: [], exp: exp))
+        eview.setExp(lineage: Lineage(chain: [], exp: exp))
         
         prev = eview.emit.subscribe(emit)
         return eview

@@ -103,12 +103,10 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     var exp:Exp {
         return lineage.exp
     }
-    var del:ExpViewableDelegate?
     var lineage:Lineage = Lineage(chain: [], exp: Unassigned("c"))
     
-    func set(del:ExpViewableDelegate?, lineage:Lineage) {
+    func set(lineage:Lineage) {
         self.lineage = lineage
-        self.del = del
         latex.set(exp.latex())
     }
     @IBOutlet weak var latex: LatexView!
@@ -181,12 +179,11 @@ class MatrixView:UIView {
     let dBag = DisposeBag()
     var mat:Mat!
     var cellViews:[MatrixCell] = []
-    var del:ExpViewableDelegate? = nil
+    
     @IBOutlet weak var stack: UIStackView!
     var lineage:Lineage = Lineage(chain: [], exp: Unassigned("M"))
     let cellTapped = PublishSubject<MatrixCell>()
-    func set(_ m:Mat, lineage:Lineage, del:ExpViewableDelegate?) {
-        self.del = del
+    func set(_ m:Mat, lineage:Lineage) {
         self.mat = m
         self.lineage = lineage
         for ri in (0..<m.rows) {
@@ -194,7 +191,7 @@ class MatrixView:UIView {
             for ci in (0..<m.cols) {
                 let cell = MatrixCell.loadViewFromNib()
                 let kididx = ri*m.cols + ci
-                cell.set(del:del, lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
+                cell.set(lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
                 rowView.stack.addArrangedSubview(cell)
                 cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)
                 cell.tapped.subscribe(cellTapped).disposed(by: dBag)

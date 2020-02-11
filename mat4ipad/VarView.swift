@@ -53,7 +53,7 @@ class VarView: UIView, UITextFieldDelegate {
     let emit = PublishSubject<Emit>()
     
     @discardableResult
-    func set(name:String, exp:Exp, expDel:ExpViewableDelegate, varDel:VarDelegate)-> ExpView {
+    func set(name:String, exp:Exp, varDel:VarDelegate)-> ExpView {
         prev?.dispose()
         self.del = varDel
         namelbl.text = name + " ="
@@ -64,7 +64,7 @@ class VarView: UIView, UITextFieldDelegate {
         }
         expView = eview
         stack.addArrangedSubview(eview)
-        eview.setExp(del: expDel, lineage: Lineage(chain: [], exp: exp))
+        eview.setExp(lineage: Lineage(chain: [], exp: exp))
         prev = eview.emit.subscribe(emit)
         self.name = name
         return eview

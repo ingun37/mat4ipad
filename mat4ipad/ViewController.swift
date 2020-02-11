@@ -46,7 +46,7 @@ struct History {
         return _history.popLast()
     }
 }
-class ViewController: UIViewController, ResizePreviewDelegate {
+class ViewController: UIViewController {
     @IBOutlet weak var mathRollv: MathScrollView!
     @IBSegueAction func addHelpSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: HelpView())
@@ -57,66 +57,19 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         let controller = UIHostingController(coder: coder, rootView: about)
         return controller
     }
-    @IBOutlet weak var anchorView: UIView!
-    func findOwnerOf(matrix:MatrixView)->ExpView? {
-        let views = varStack.arrangedSubviews.compactMap({($0 as? VarView)?.expView}).flatMap({$0.allSubExpViews}) + (mainExpView.contentView?.allSubExpViews ?? [])
-        return views.first(where: { (v) -> Bool in
-            v.matrixView == matrix
-        })
-    }
+    
     @IBOutlet weak var preview: LatexView!
-    func expandBy(matrix: MatrixView, row: Int, col: Int) {
-        matrix.expandBy(row: row, col: col)
-    }
     
     var history = History()
     
     private var exp:Exp {
         return history.top.main
     }
-    func remove(view: ExpViewable) {
-        //(varview.name, varview.expView!.removed(view: view) ?? Unassigned(varview.name))
-        if mainExpView.contentView?.allSubExpViewables.contains(where: { (viewable) in
-            viewable == view
-        }) ?? false {
-            
-        } else {
-            
-        }
-    }
     
     @IBAction func undo(_ sender: Any) {
         history.pop()
         refresh()
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "op" {
-            guard let vc = segue.destination as? ApplyTableVC else { return }
-            guard let expview = sender as? ExpViewable else {return}
-
-            print("ExpView is preparing for segue: \(expview)")
-            if let expview = expview as? ExpView {
-                anchorView.frame.origin = expview.padLatexView.convert(CGPoint(x: expview.padLatexView.frame.size.width/2, y: expview.padLatexView.frame.size.height), to: anchorView.superview)
-            } else if let matcell = expview as? MatrixCell {
-                anchorView.frame.origin = matcell.convert(CGPoint(x: matcell.frame.size.width/2, y: matcell.frame.size.height/2), to: anchorView.superview)
-            }
-            let aa = Array(history.top.vars.keys)
-            vc.set(exp: expview.exp, parentExp: nil, varNames: aa, availableVarName: availableVarName())
-            vc.promise.then { (r) in
-                switch r {
-                case let .changed(to):
-                    self.changeto(view: expview, to: to)
-                case .removed:
-                    self.remove(view: expview)
-                case .nothin:
-                    break
-                }
-            }
-        }
-    }
-    
-    
     
     @IBOutlet weak var mathStackView:UIStackView!
     @IBOutlet weak var mainExpView:ExpInitView!
@@ -134,7 +87,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
     }
     
     func refresh() {
-        let mainexpview = mainExpView.set(exp: exp, del: self)
+        let mainexpview = mainExpView.set(exp: exp)
         setHierarchyBG(e: mainexpview, f: 0.9)
         
         for v in varStack.arrangedSubviews {
@@ -153,7 +106,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
         }) {
             let varview = VarView.loadViewFromNib()
-            let expview = varview.set(name: varname, exp: varExp, expDel: self, varDel: self)
+            let expview = varview.set(name: varname, exp: varExp, varDel: self)
             varview.emit.subscribe(onNext: { (e) in
                 switch e {
                 case .removed(let l):
@@ -245,8 +198,6 @@ class ViewController: UIViewController, ResizePreviewDelegate {
             }
         }).disposed(by: dbag)
         
-        
-        
         matrixResizerTimer.debounce(RxTimeInterval.milliseconds(100), scheduler: MainScheduler.instance).subscribe { (_) in
             self.makeResizers()
         }
@@ -278,7 +229,7 @@ class ViewController: UIViewController, ResizePreviewDelegate {
         matrixResizePreviews = allMatViews.filter({ (mv:MatrixView) -> Bool in
             mathRollv.bounds.contains(mv.convert(CGPoint(x: mv.bounds.size.width, y: mv.bounds.size.height), to: mathRollv))
         }).map({
-            ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view), del:self)
+            ResizePreview.newWith(resizingMatrixView:$0, resizingFrame:$0.convert($0.bounds, to: self.view))
         })
         matrixResizePreviews.forEach({self.view.addSubview($0)})
         let a = UserDefaultsManager()
@@ -390,18 +341,7 @@ extension ViewController: UITextFieldDelegate {
     }
 }
 
-extension ViewController: ExpViewableDelegate {
-    
-    func changeto(view:ExpViewable, to: Exp) {
-        if mainExpView.contentView?.allSubExpViewables.contains(where: {$0 == view}) ?? false {
-            
-        } else {
-        }
-    }
-    func onTap(view: ExpViewable) {
-        performSegue(withIdentifier: "op", sender: view)
-    }
-}
+
 
 extension ViewController: VarDelegate {
     func changeVarName(original: String) -> Promise<String> {

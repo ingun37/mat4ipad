@@ -20,11 +20,6 @@ protocol ExpViewable: UIView {
     var directSubExpViews:[ExpViewable] {get}
 }
 
-protocol ExpViewableDelegate {
-    func onTap(view:ExpViewable)
-    func changeto(view:ExpViewable, to: Exp)
-    
-}
 
 extension Exp {
     func refRemove(chain:[Int])-> Exp? {

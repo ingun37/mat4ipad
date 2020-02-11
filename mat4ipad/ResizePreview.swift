@@ -11,12 +11,8 @@ import RxSwift
 import RxCocoa
 import ExpressiveAlgebra
 
-protocol ResizePreviewDelegate {
-    func expandBy(matrix: MatrixView, row: Int, col: Int)
-}
 class ResizePreview: UIView {
     @IBOutlet weak var handle: UIView!
-    var del:ResizePreviewDelegate?
     @IBOutlet weak var dragPan: UIPanGestureRecognizer!
     @IBOutlet weak var blue: UIView!
     /*
@@ -32,13 +28,12 @@ class ResizePreview: UIView {
         return nib.instantiate(withOwner: nil, options: nil).first as! ResizePreview
     }
     weak var matrixView:MatrixView?
-    static func newWith(resizingMatrixView:MatrixView, resizingFrame:CGRect, del:ResizePreviewDelegate) -> ResizePreview {
+    static func newWith(resizingMatrixView:MatrixView, resizingFrame:CGRect) -> ResizePreview {
         let view = loadViewFromNib()
         let right = view.frame.width - view.blue.frame.width
         let bottom = view.frame.height - view.blue.frame.height
         view.frame = resizingFrame.insetBy(dx: -right/2, dy: -bottom/2).offsetBy(dx: right/2, dy: bottom/2)
         view.matrixView = resizingMatrixView
-        view.del = del
         return view
     }
     let disposeBag = DisposeBag()
@@ -78,7 +73,7 @@ class ResizePreview: UIView {
             let oldcol = matrixView.mat.cols
             self.previewResizedMatrix(newRow: newRow, newCol: newCol)
             if state == .ended {
-                self.del?.expandBy(matrix: matrixView, row: newRow - oldrow, col: newCol - oldcol)
+                matrixView.expandBy(row: newRow - oldrow, col: newCol - oldcol)
             }
             if state == .began {
 //                self.matrixView.layer.borderWidth = 0
