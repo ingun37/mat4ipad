@@ -16,6 +16,7 @@ enum Emit {
     case changed(Lineage)
 }
 class ExpView: UIView, ExpViewable {
+    @IBOutlet weak var diagramView: DiagramView!
     @IBOutlet weak var stack: UIStackView!
     var directSubExpViews:[ExpViewable] {
         if exp is Mat {
@@ -100,6 +101,17 @@ class ExpView: UIView, ExpViewable {
             }
             root.present(vc, animated: true, completion: nil)
         }).disposed(by: dbag)
+        diagramCue.debounce(.milliseconds(50), scheduler: MainScheduler.instance).subscribe(onNext:{_ in
+            if let mathview = self.padLatexView.contentView.mathv {
+                let r = mathview.bounds.size
+                let center = CGPoint(x: r.width/2, y: r.height/2)
+                let converted = mathview.convert(center, to: self.diagramView)
+                let aaa = self.directSubExpViews.map({v in
+                    v.convert(CGPoint(x: v.bounds.size.width/2, y: 0), to: self.diagramView).x
+                })
+                self.diagramView.setInfo(root: converted.x, marks: aaa)
+            }
+        }).disposed(by: dbag)
     }
     func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -114,30 +126,38 @@ class ExpView: UIView, ExpViewable {
     var exp:Exp  {
         return lineage.exp
     }
+    func setBGColor(_ color:UIColor) {
+        backgroundColor = color
+        diagramView.backgroundColor = color
+    }
     var lineage:Lineage = Lineage(chain: [], exp: Unassigned("X"))
     func setExp(lineage:Lineage) {
         self.lineage = lineage
         padLatexView.contentView.mathv?.latex = exp.latex()
+        
         if let exp = exp as? Mat {
             matrixView.isHidden = false
             stack.isHidden = true
+            diagramView.isHidden = true
             matrixView.set(exp, lineage: lineage)
         } else if exp.subExps().isEmpty {
             matrixView.isHidden = true
             stack.isHidden = false
+            diagramView.isHidden = true
         } else {
             matrixView.isHidden = true
             stack.isHidden = false
-            
+            diagramView.isHidden = false
             directCommutativeKids(exp: exp).forEach { (relLineage) in
                 let v = ExpView.loadViewFromNib()
                 v.setExp(lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
                 v.emit.subscribe(self.emit).disposed(by: self.dbag)
                 stack.addArrangedSubview(v)
             }
+            diagramCue.onNext(nil)
         }
     }
-
+    let diagramCue = PublishSubject<Any?>()
     @IBOutlet weak var matrixHeight: NSLayoutConstraint!
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
@@ -197,4 +217,34 @@ class ExpInitView:UIView {
         return eview
     }
     
+}
+
+class DiagramView:UIView {
+    var marks:[CGFloat] = []
+    var rootMark:CGFloat = 0
+    
+    func setInfo(root:CGFloat, marks:[CGFloat]) {
+        self.rootMark = root
+        self.marks = marks
+        setNeedsDisplay()
+        
+    }
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+          return
+        }
+        context.setStrokeColor(UIColor.darkGray.cgColor)
+        context.setLineWidth(2)
+        context.move(to: CGPoint(x: rootMark, y: 0))
+        context.addLine(to: CGPoint(x: rootMark, y: 15))
+        marks.forEach { (c) in
+            context.move(to: CGPoint(x: c, y: 15))
+            context.addLine(to: CGPoint(x: c, y: 30))
+        }
+        let sorted = (marks + [rootMark]).sorted()
+        context.move(to: CGPoint(x: sorted.first!, y: 15))
+        context.addLine(to: CGPoint(x: sorted.last!, y: 15))
+        context.strokePath()
+    }
 }

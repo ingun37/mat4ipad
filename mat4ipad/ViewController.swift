@@ -80,7 +80,7 @@ class ViewController: UIViewController {
     }
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
-        e.backgroundColor = color
+        e.setBGColor(color)
         e.directSubExpViews.compactMap({$0 as? ExpView}).forEach { (v) in
             self.setHierarchyBG(e: v, f:f - 0.1)
         }
