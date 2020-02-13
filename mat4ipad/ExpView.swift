@@ -71,12 +71,12 @@ class ExpView: UIView, ExpViewable {
 //    private var dragStartPosition:CGPoint = CGPoint.zero
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        padLatexView.layer.shadowColor = UIColor.black.cgColor
-        padLatexView.layer.shadowOpacity = 0.5
-        padLatexView.layer.shadowOffset = CGSize(width: 1, height: 1)
-        padLatexView.layer.shadowRadius = 1
-        
+//        
+//        padLatexView.layer.shadowColor = UIColor.black.cgColor
+//        padLatexView.layer.shadowOpacity = 0.5
+//        padLatexView.layer.shadowOffset = CGSize(width: 1, height: 1)
+//        padLatexView.layer.shadowRadius = 1
+//        
         matrixView.changed.subscribe(onNext:{newMat in
             self.emit.onNext(.changed(Lineage(chain: self.lineage.chain, exp: newMat)))
 //            self.del?.changeto(view: self, to: newMat)

@@ -243,18 +243,19 @@
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="acO-HQ-5WS">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                            <rect key="frame" x="8" y="8" width="34" height="34"/>
                                                                             <fontDescription key="fontDescription" name="Palatino-Italic" family="Palatino" pointSize="19"/>
-                                                                            <nil key="textColor"/>
-                                                                            <nil key="highlightedColor"/>
+                                                                            <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </label>
                                                                     </subviews>
                                                                 </view>
+                                                                <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="trailing" secondItem="acO-HQ-5WS" secondAttribute="trailing" id="7oH-Dn-SdW"/>
-                                                                    <constraint firstItem="acO-HQ-5WS" firstAttribute="leading" secondItem="XIS-74-VFG" secondAttribute="leading" id="JNr-rY-Ic4"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="acO-HQ-5WS" secondAttribute="bottom" id="VVy-KC-VQm"/>
-                                                                    <constraint firstItem="acO-HQ-5WS" firstAttribute="top" secondItem="XIS-74-VFG" secondAttribute="top" id="jlF-mI-hPy"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="acO-HQ-5WS" secondAttribute="trailing" constant="8" id="7oH-Dn-SdW"/>
+                                                                    <constraint firstItem="acO-HQ-5WS" firstAttribute="leading" secondItem="XIS-74-VFG" secondAttribute="leading" constant="8" id="JNr-rY-Ic4"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="acO-HQ-5WS" secondAttribute="bottom" constant="8" id="VVy-KC-VQm"/>
+                                                                    <constraint firstItem="acO-HQ-5WS" firstAttribute="top" secondItem="XIS-74-VFG" secondAttribute="top" constant="8" id="jlF-mI-hPy"/>
                                                                 </constraints>
                                                                 <connections>
                                                                     <outlet property="lbl" destination="acO-HQ-5WS" id="N4y-ty-4UT"/>
