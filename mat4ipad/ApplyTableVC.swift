@@ -61,33 +61,33 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
-        if !(parentExp is Mat) {
-            options.append(Represent(Mat.identityOf(2, 2)))
-        }
-        if !(parentExp is Mat) && !(exp is Mat) {
-            options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
-        }
-        if !(exp is Mat) {
-            options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
-        }
+        
+        options.append(Represent(Mat.identityOf(2, 2)))
+    
+    
+        options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
+    
+    
+        options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
+    
         options.append(Represent(Inverse(exp)))
-        if !(parentExp is Mat) {
-            options.append(Represent(Mul(exp, Unassigned(availableVarName))))
-            options.append(Represent(Mul(Unassigned(availableVarName), exp)))
-            options.append(Represent(Add(exp, Unassigned(availableVarName))))
-            options.append(Represent(Add(Unassigned(availableVarName), exp)))
-            options.append(Represent(Subtract(exp, Unassigned(availableVarName))))
-            options.append(Represent(Subtract(Unassigned(availableVarName), exp)))
-            options.append(Represent(Power(exp, Unassigned(availableVarName))))
-        }
-        if !(exp is NumExp) && !(exp is Fraction) && !(exp is Power) {
-            options.append(Represent(Transpose(exp)))
-            options.append(Represent(Determinant(exp), show: "\\text{Determinant of }\(exp.latex())"))
-            options.append(Represent(RowEchelon(mat: exp), show: "\\text{Row Echelon Form of } \(exp.latex())"))
-            options.append(Represent(ReducedRowEchelon(exp), show: "\\text{Reduced Row Echelon Form of } \(exp.latex())"))
-            options.append(Represent(Rank(exp), show: "\\text{Rank of } \(exp.latex())"))
-            options.append(Represent(Nullity(exp), show: "\\text{Nullity of } \(exp.latex())"))
-        }
+        
+        options.append(Represent(Mul(exp, Unassigned(availableVarName))))
+        options.append(Represent(Mul(Unassigned(availableVarName), exp)))
+        options.append(Represent(Add(exp, Unassigned(availableVarName))))
+        options.append(Represent(Add(Unassigned(availableVarName), exp)))
+        options.append(Represent(Subtract(exp, Unassigned(availableVarName))))
+        options.append(Represent(Subtract(Unassigned(availableVarName), exp)))
+        options.append(Represent(Power(exp, Unassigned(availableVarName))))
+    
+    
+        options.append(Represent(Transpose(exp)))
+        options.append(Represent(Determinant(exp), show: "\\text{Determinant of }\(exp.latex())"))
+        options.append(Represent(RowEchelon(mat: exp), show: "\\text{Row Echelon Form of } \(exp.latex())"))
+        options.append(Represent(ReducedRowEchelon(exp), show: "\\text{Reduced Row Echelon Form of } \(exp.latex())"))
+        options.append(Represent(Rank(exp), show: "\\text{Rank of } \(exp.latex())"))
+        options.append(Represent(Nullity(exp), show: "\\text{Nullity of } \(exp.latex())"))
+    
         
         
         return options

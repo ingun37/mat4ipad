@@ -15,19 +15,42 @@ import ExpressiveAlgebra
 import lexiFreeMonoid
 import SwiftUI
 import EasyTipView
-
+extension Int {
+    var e:Exp {
+        return NumExp(self)
+    }
+}
+extension String {
+    var e:Exp {
+        return Unassigned(self)
+    }
+}
+func sampllevarZ()->Exp {
+    return (-1).e
+}
+func sampllevarA()->Exp {
+    let x = "x".e
+    let p = Power(x, (-2).e)
+    let f = Fraction(numerator: 1.e, denominator: "z".e)
+    return Mat([[f, 2.e],[3.e, p]])
+}
+func sampleMain()->Exp {
+    let x = "x".e
+    let z = "z".e
+    let A = "A".e
+    return Add(Power(Mat([[1.e, x  ],
+                          [0.e, 1.e]]), 2.e),
+               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
+}
 struct History {
     struct State {
         let main:Exp
         let vars:[String:Exp]
     }
     private var _history:[State] = [
-        State(main: Add(
-                        Power(Mat([[NumExp(1), Unassigned("x")],
-                                   [NumExp(0), NumExp(1)]]), NumExp(2)),
-                    Mul(Mat([[NumExp(1), NumExp(0)],[Unassigned("z"), NumExp(1)]]), Unassigned("A"))),
-              vars: ["A" : Mat([[NumExp(1), NumExp(2)],[NumExp(3), NumExp(1)]]),
-                     "z" : NumExp(-1)])
+        State(main: sampleMain(),
+              vars: ["A" : sampllevarA(),
+                     "z" : sampllevarZ()])
     ]
     mutating func push(main:Exp, vars:[String:Exp]) {
         _history.append(State(main: main, vars: vars))
