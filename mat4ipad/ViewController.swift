@@ -45,14 +45,14 @@ func sampleMain()->Exp {
 struct History {
     struct State {
         let main:Exp
-        let vars:[String:Exp]
+        let vars:[(String,Exp)]
     }
     private var _history:[State] = [
         State(main: sampleMain(),
-              vars: ["A" : sampllevarA(),
-                     "z" : sampllevarZ()])
+              vars: [("A", sampllevarA()),
+                     ("z", sampllevarZ())])
     ]
-    mutating func push(main:Exp, vars:[String:Exp]) {
+    mutating func push(main:Exp, vars:[(String,Exp)]) {
         _history.append(State(main: main, vars: vars))
     }
     mutating func push(main:Exp) {
@@ -62,7 +62,7 @@ struct History {
         _history.append(state)
     }
     var top:State {
-        return _history.last ?? State(main: Unassigned("A"), vars: [:])
+        return _history.last ?? State(main: Unassigned("A"), vars: [])
     }
     @discardableResult
     mutating func pop()-> State? {
@@ -104,11 +104,31 @@ class ViewController: UIViewController {
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.setBGColor(color)
-        e.directSubExpViews.compactMap({$0 as? ExpView}).forEach { (v) in
-            self.setHierarchyBG(e: v, f:f - 0.1)
+        if let x = e.exp as? Unassigned {
+            if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
+                e.setBGColor(varColor(varname: y.0))
+            }
+        }
+        e.directSubExpViews.forEach { (v) in
+            if let v = v as? ExpView {
+                self.setHierarchyBG(e: v, f:f - 0.1)
+            } else if let v = v as? MatrixCell {
+                if let x = v.exp as? Unassigned {
+                    if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
+                        v.backgroundColor = varColor(varname: y.0)
+                        v.latex.mathView.textColor = .white
+                    }
+                }
+            }
         }
     }
-    
+    func varColor(varname:String)-> UIColor {
+        let varcnt = history.top.vars.count
+        let idx = history.top.vars.firstIndex { (x,y) -> Bool in
+            x == varname
+        } ?? 0
+        return UIColor(hue: CGFloat(idx)/CGFloat(varcnt), saturation: 0.8, brightness: 0.8, alpha: 1)
+    }
     func refresh() {
         let mainexpview = mainExpView.set(exp: exp)
         setHierarchyBG(e: mainexpview, f: 0.9)
@@ -119,28 +139,24 @@ class ViewController: UIViewController {
             v.removeFromSuperview()
         }
         
-        for (varname, varExp) in history.top.vars.sorted(by: { (l, r) -> Bool in
-            let lt = self.variableAddTimes[l.key] ?? Date(timeIntervalSince1970: 0)
-            let rt = self.variableAddTimes[r.key] ?? Date(timeIntervalSince1970: 0)
-            if lt == rt {
-                return l.key < r.key
-            } else {
-                return lt < rt
-            }
-        }) {
+        let varcnt = history.top.vars.count
+        
+        let sorted = history.top.vars
+        
+        for (varname, varExp) in sorted {
             let varview = VarView.loadViewFromNib()
             let expview = varview.set(name: varname, exp: varExp, varDel: self)
+            
+            varview.backgroundColor = varColor(varname: varname)
             varview.emit.subscribe(onNext: { (e) in
                 switch e {
                 case .removed(let l):
                     let newExp = varExp.refRemove(chain: l.chain) ?? Unassigned(varname)
-                    var vars = self.history.top.vars
-                    vars[varname] = newExp
+                    let vars = self.history.top.vars.map({ varname == $0.0 ? ($0.0, newExp) : $0})
                     self.history.push(main: self.history.top.main, vars: vars)
                 case .changed(let l):
                     let newExp = varExp.refChanged(chain: l.chain, to: l.exp)
-                    var vars = self.history.top.vars
-                    vars[varname] = newExp
+                    let vars = self.history.top.vars.map({ varname == $0.0 ? ($0.0, newExp) : $0})
                     self.history.push(main: self.history.top.main, vars: vars)
                 }
                 self.refresh()
@@ -336,7 +352,7 @@ class ViewController: UIViewController {
             allSubVarNames(of: v)
         })
         return lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map({"\($0)"})).first(where: {name in
-            !self.history.top.vars.keys.contains(name) && !allSubVars.contains(name)
+            !self.history.top.vars.map({$0.0}).contains(name) && !allSubVars.contains(name)
         })!
     }
     var variableAddTimes:[String: Date] = [:]
@@ -345,14 +361,14 @@ class ViewController: UIViewController {
         let varname = availableVarName()
         
         let last = history.top
-        var newVars = last.vars
-        newVars[varname] = Unassigned(varname)
+        let newVars = last.vars + [(varname, Unassigned(varname))]
+        
         variableAddTimes[varname] = Date()
         history.push(main: last.main, vars: newVars)
         refresh()
     }
     @IBAction func clearClick(_ sender: Any) {
-        history.push(main: Unassigned("A"), vars: [:])
+        history.push(main: Unassigned("A"), vars: [])
         refresh()
     }
 }
@@ -412,9 +428,9 @@ extension ViewController: VarDelegate {
         let (allowed, reason) = isVarNameValid(name: to)
         if allowed {
             let last = history.top
-            var lastVars = last.vars
-            lastVars[to] = last.vars[from]
-            lastVars.removeValue(forKey: from)
+            let lastVars = last.vars.map { (name, e) in
+                name == from ? (to, e) : (name, e)
+            }
             history.push(main: last.main, vars: lastVars)
             refresh()
             return Promise(true)

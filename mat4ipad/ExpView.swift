@@ -44,7 +44,7 @@ class ExpView: UIView, ExpViewable {
         vc.modalPresentationStyle = .popover
         vc.popoverPresentationController?.sourceView = padLatexView
         
-        vc.set(exp: exp, parentExp: nil, varNames: Array(root.history.top.vars.keys), availableVarName: root.availableVarName())
+        vc.set(exp: exp, parentExp: nil, varNames: Array(root.history.top.vars.map({$0.0})), availableVarName: root.availableVarName())
         vc.promise.then { (r) in
             switch r {
             case let .changed(to):
@@ -86,7 +86,7 @@ class ExpView: UIView, ExpViewable {
             guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
             vc.modalPresentationStyle = .popover
             vc.popoverPresentationController?.sourceView = cell
-            vc.set(exp: cell.exp, parentExp: nil, varNames: Array(root.history.top.vars.keys), availableVarName: root.availableVarName())
+            vc.set(exp: cell.exp, parentExp: nil, varNames: Array(root.history.top.vars.map({$0.0})), availableVarName: root.availableVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):

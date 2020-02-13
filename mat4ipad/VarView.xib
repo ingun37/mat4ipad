@@ -9,15 +9,15 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="VarView" customModule="mat4ipad" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="VarView" customModule="Expressive_Algebra_Calculator" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="EVc-Vd-ZnN">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
+                    <rect key="frame" x="8" y="8" width="398" height="661"/>
                     <subviews>
                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" verticalCompressionResistancePriority="754" text="assigned name: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rM1-gd-NUD">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="677"/>
+                            <rect key="frame" x="0.0" y="0.0" width="398" height="661"/>
                             <gestureRecognizers/>
                             <fontDescription key="fontDescription" name="Palatino-Italic" family="Palatino" pointSize="21"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -30,10 +30,10 @@
                 </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="EVc-Vd-ZnN" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="1Zj-ir-VLk"/>
-                <constraint firstAttribute="bottom" secondItem="EVc-Vd-ZnN" secondAttribute="bottom" id="Rvv-ih-WpH"/>
-                <constraint firstAttribute="trailing" secondItem="EVc-Vd-ZnN" secondAttribute="trailing" id="wKy-Dx-sgb"/>
-                <constraint firstItem="EVc-Vd-ZnN" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="yb1-3Y-Adz"/>
+                <constraint firstItem="EVc-Vd-ZnN" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="1Zj-ir-VLk"/>
+                <constraint firstAttribute="bottom" secondItem="EVc-Vd-ZnN" secondAttribute="bottom" constant="8" id="Rvv-ih-WpH"/>
+                <constraint firstAttribute="trailing" secondItem="EVc-Vd-ZnN" secondAttribute="trailing" constant="8" id="wKy-Dx-sgb"/>
+                <constraint firstItem="EVc-Vd-ZnN" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="yb1-3Y-Adz"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
