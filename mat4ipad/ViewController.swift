@@ -15,6 +15,8 @@ import ExpressiveAlgebra
 import lexiFreeMonoid
 import SwiftUI
 import EasyTipView
+import SwiftGraph
+
 extension Int {
     var e:Exp {
         return NumExp(self)
@@ -166,12 +168,34 @@ class ViewController: UIViewController {
         }
         
         let mainExp = mainexpview.exp
-        let varviews = varStack.arrangedSubviews.compactMap({$0 as? VarView})
-        let final = varviews.reduce(mainExp) { (exp, vv) -> Exp in
-            exp.changed(eqTo: Unassigned(vv.name), to: vv.exp)
+        let vars = history.top.vars
+        
+        var graph = UnweightedGraph(vertices: vars.map({$0.0}))
+        
+        vars.forEach { (name,exp) in
+            dependentVariables(e: exp).forEach { (dep) in
+                graph.addEdge(from: name, to: dep, directed: true)
+            }
         }
         
+        while true {
+            guard let cycle = graph.detectCycles().first else {break}
+            if graph.edgeExists(from: cycle[0], to: cycle[1]) {
+                graph.removeAllEdges(from: cycle[0], to: cycle[1])
+            } else {
+                graph.removeAllEdges(from: cycle[1], to: cycle[0])
+            }
+        }
         
+        let topo = graph.topologicalSort()!
+        
+        let final = topo.reduce(mainExp) { (exp, vname) -> Exp in
+            if let vexp = vars.first(where: {$0.0 == vname}) {
+                return exp.changed(eqTo: Unassigned(vname), to: vexp.1)
+            } else {
+                return exp
+            }
+        }
         
         do {
             try preview.set("= {\(final.v().latex())}")
@@ -469,4 +493,11 @@ extension ViewController: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.removeMatrixResizers()
     }
+}
+
+func dependentVariables(e:Exp)-> [String] {
+    if let e = e as? Unassigned {
+        return [e.letter]
+    }
+    return e.kids().flatMap({dependentVariables(e: $0)})
 }
