@@ -31,7 +31,7 @@ func sampllevarZ()->Exp {
 func sampllevarA()->Exp {
     let x = "x".e
     let p = Power(x, (-2).e)
-    let f = Fraction(numerator: 1.e, denominator: "z".e)
+    let f = Negate(Fraction(numerator: 1.e, denominator: "z".e))
     return Mat([[f, 2.e],[3.e, p]])
 }
 func sampleMain()->Exp {

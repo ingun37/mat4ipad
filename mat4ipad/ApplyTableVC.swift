@@ -63,13 +63,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         var options:[Represent] = []
         
         options.append(Represent(Mat.identityOf(2, 2)))
-    
-    
+        options.append(Represent(Negate(exp)))
         options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
-    
-    
         options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
-    
         options.append(Represent(Inverse(exp)))
         
         options.append(Represent(Mul(exp, Unassigned(availableVarName))))
