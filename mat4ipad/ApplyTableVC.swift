@@ -61,15 +61,15 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
-        
+        let holder = Unassigned(availableVarName)
         options.append(Represent(Mat.identityOf(2, 2)))
         options.append(Represent(Negate(exp)))
         options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
         options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
         options.append(Represent(Inverse(exp)))
         
-        options.append(Represent(Mul(exp, Unassigned(availableVarName))))
-        options.append(Represent(Mul(Unassigned(availableVarName), exp)))
+        options.append(Represent(Mul(exp, Unassigned(availableVarName)), show: "\(exp.latex()) \\times \(holder.latex())"))
+        options.append(Represent(Mul(Unassigned(availableVarName), exp), show: "\(holder.latex()) \\times \(exp.latex())"))
         options.append(Represent(Add(exp, Unassigned(availableVarName))))
         options.append(Represent(Add(Unassigned(availableVarName), exp)))
         options.append(Represent(Subtract(exp, Unassigned(availableVarName))))
