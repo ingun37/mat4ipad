@@ -84,7 +84,7 @@
 		6B83576922EDEA8B003C6C48 /* ModelDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDataHandler.swift; sourceTree = "<group>"; };
 		6B83576B22EDEABB003C6C48 /* converted_model.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = converted_model.tflite; sourceTree = "<group>"; };
 		6B83576D22EE5FAE003C6C48 /* labels.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = labels.txt; sourceTree = "<group>"; };
-		6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Expressive Algebra Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BBE5B9D229D9A77006A56D8 /* Expressive Matrix Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Expressive Matrix Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BBE5BA2229D9A77006A56D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		6BBE5BA5229D9A77006A56D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		6BBE5B9E229D9A77006A56D8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */,
+				6BBE5B9D229D9A77006A56D8 /* Expressive Matrix Calculator.app */,
 				6BBE5BB1229D9A77006A56D8 /* mat4ipadTests.xctest */,
 				6BBE5BBC229D9A77006A56D8 /* mat4ipadUITests.xctest */,
 			);
@@ -290,7 +290,7 @@
 				9202DCFA23F5B81300A9F6FD /* SwiftGraph */,
 			);
 			productName = mat4ipad;
-			productReference = 6BBE5B9D229D9A77006A56D8 /* Expressive Algebra Calculator.app */;
+			productReference = 6BBE5B9D229D9A77006A56D8 /* Expressive Matrix Calculator.app */;
 			productType = "com.apple.product-type.application";
 		};
 		6BBE5BB0229D9A77006A56D8 /* mat4ipadTests */ = {
@@ -688,15 +688,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5P825H2NY5;
+				DEVELOPMENT_TEAM = 77Y25UN242;
 				INFOPLIST_FILE = mat4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ingun37.mat4ipad;
-				PRODUCT_NAME = "Expressive Algebra Calculator";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ingun37.algebra;
+				PRODUCT_NAME = "Expressive Matrix Calculator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -708,15 +708,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5P825H2NY5;
+				DEVELOPMENT_TEAM = 77Y25UN242;
 				INFOPLIST_FILE = mat4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ingun37.mat4ipad;
-				PRODUCT_NAME = "Expressive Algebra Calculator";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ingun37.algebra;
+				PRODUCT_NAME = "Expressive Matrix Calculator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
