@@ -23,7 +23,7 @@ class VarView: UIView, UITextFieldDelegate {
     @IBOutlet weak var namelbl: UILabel!
     var del:VarDelegate?
     var exp: Exp {
-        return expView?.exp ?? Unassigned(namelbl.text ?? "Var")
+        return expView?.exp ?? Var(namelbl.text ?? "Var")
     }
     
     @IBOutlet weak var stack:UIStackView!

@@ -130,7 +130,7 @@ class ExpView: UIView, ExpViewable {
         backgroundColor = color
         diagramView.backgroundColor = color
     }
-    var lineage:Lineage = Lineage(chain: [], exp: Unassigned("X"))
+    var lineage:Lineage = Lineage(chain: [], exp: Var("X"))
     func setExp(lineage:Lineage) {
         self.lineage = lineage
         padLatexView.contentView.mathv?.latex = exp.latex()

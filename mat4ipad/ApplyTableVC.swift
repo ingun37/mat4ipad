@@ -61,20 +61,20 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
-        let holder = Unassigned(availableVarName)
+        let holder = Var(availableVarName)
         options.append(Represent(Mat.identityOf(2, 2)))
         options.append(Represent(Negate(exp)))
-        options.append(Represent(Fraction(numerator: exp, denominator: Unassigned(availableVarName))))
-        options.append(Represent(Fraction(numerator: NumExp(1), denominator: exp)))
+        options.append(Represent(Fraction(numerator: exp, denominator: Var(availableVarName))))
+        options.append(Represent(Fraction(numerator: Scalar(1), denominator: exp)))
         options.append(Represent(Inverse(exp)))
         
-        options.append(Represent(Mul(exp, Unassigned(availableVarName)), show: "\(exp.latex()) \\times \(holder.latex())"))
-        options.append(Represent(Mul(Unassigned(availableVarName), exp), show: "\(holder.latex()) \\times \(exp.latex())"))
-        options.append(Represent(Add(exp, Unassigned(availableVarName))))
-        options.append(Represent(Add(Unassigned(availableVarName), exp)))
-        options.append(Represent(Subtract(exp, Unassigned(availableVarName))))
-        options.append(Represent(Subtract(Unassigned(availableVarName), exp)))
-        options.append(Represent(Power(exp, Unassigned(availableVarName))))
+        options.append(Represent(Mul(exp, Var(availableVarName)), show: "\(exp.latex()) \\times \(holder.latex())"))
+        options.append(Represent(Mul(Var(availableVarName), exp), show: "\(holder.latex()) \\times \(exp.latex())"))
+        options.append(Represent(Add(exp, Var(availableVarName))))
+        options.append(Represent(Add(Var(availableVarName), exp)))
+        options.append(Represent(Subtract(exp, Var(availableVarName))))
+        options.append(Represent(Subtract(Var(availableVarName), exp)))
+        options.append(Represent(Power(exp, Var(availableVarName))))
     
     
         options.append(Represent(Transpose(exp)))
@@ -170,10 +170,10 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             return value.exp
         }
         if let value = Float(txt) {
-            return NumExp(value)
+            return Scalar(value)
         }
         if let r = Rational<Int>(from: txt){
-            return NumExp(r)
+            return Scalar(r)
         }
         if let match = #"^([a-zA-Z0-9]+)\+([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
             if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
@@ -192,9 +192,9 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         if let match = #"^(-?)([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
             if let varpart = match.group(at: 2) {
                 if match.group(at: 1) == "-" {
-                    return Negate(Unassigned(varpart))
+                    return Negate(Var(varpart))
                 } else {
-                    return Unassigned(varpart)
+                    return Var(varpart)
                 }
             }
         } else if let match = "^(-?)(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
@@ -202,7 +202,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 if let varpart = match.group(at: 3) {
                     let sign = match.group(at: 1) ?? ""
                     if let num = Int(sign + numpart) {
-                        return Mul(NumExp(num), Unassigned(varpart))
+                        return Mul(Scalar(num), Var(varpart))
                     }
                 }
             }
@@ -211,15 +211,15 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 if let part2 = match.group(at: 3) {
                     let exp1:Exp
                     if let num1 = Int(part1) {
-                        exp1 = NumExp(num1)
+                        exp1 = Scalar(num1)
                     } else {
-                        exp1 = Unassigned(part1)
+                        exp1 = Var(part1)
                     }
                     let exp2:Exp
                     if let num2 = Int(part2) {
-                        exp2 = NumExp(num2)
+                        exp2 = Scalar(num2)
                     } else {
-                        exp2 = Unassigned(part2)
+                        exp2 = Var(part2)
                     }
                     let result = Fraction(numerator: exp1, denominator: exp2)
                     if match.group(at: 1) == "-" {
@@ -234,15 +234,15 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 if let part2 = match.group(at: 3) {
                     let exp1:Exp
                     if let num1 = Int(part1) {
-                        exp1 = NumExp(num1)
+                        exp1 = Scalar(num1)
                     } else {
-                        exp1 = Unassigned(part1)
+                        exp1 = Var(part1)
                     }
                     let exp2:Exp
                     if let num2 = Int(part2) {
-                        exp2 = NumExp(num2)
+                        exp2 = Scalar(num2)
                     } else {
-                        exp2 = Unassigned(part2)
+                        exp2 = Var(part2)
                     }
                     let result = Power(exp1, exp2)
                     if match.group(at: 1) == "-" {
@@ -332,7 +332,7 @@ extension ApplyTableVC:UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         dismiss(animated: false) { [unowned self] in
-            self.promise.fulfill(.changed(Unassigned(self.varNames[indexPath.row])))
+            self.promise.fulfill(.changed(Var(self.varNames[indexPath.row])))
         }
     }
 }

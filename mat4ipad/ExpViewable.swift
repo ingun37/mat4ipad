@@ -24,7 +24,11 @@ protocol ExpViewable: UIView {
 extension Exp {
     func refRemove(chain:[Int])-> Exp? {
         guard let head = chain.first else {
-            return nil
+            if let firstKid = kids().first {
+                return firstKid
+            } else {
+                return nil
+            }
         }
     
         let newKids = (0..<kids().count).map({ (idx) -> Exp? in
@@ -46,8 +50,8 @@ extension Exp {
                 return cloneWith(kids: remainingKids)
             }
         case .Mat(_):
-            return cloneWith(kids: newKids.map({$0 ?? NumExp(0)}))
-        case .Unassigned(_), .NumExp(_):
+            return cloneWith(kids: newKids.map({$0 ?? Scalar(0)}))
+        case .Var(_), .Scalar(_):
             return self
         case .Power(_):
             if let base = newKids[0] {
@@ -74,7 +78,7 @@ extension Exp {
                     return numerator
                 }
             } else if let denominator = newKids[1] {
-                return Fraction(numerator: NumExp(1), denominator: denominator)
+                return Fraction(numerator: Scalar(1), denominator: denominator)
             } else {
                 return nil
             }
@@ -114,8 +118,8 @@ enum ExpReflection {
     case Add(Add)
     case Mul(Mul)
     case Mat(Mat)
-    case Unassigned(Unassigned)
-    case NumExp(NumExp)
+    case Var(Var)
+    case Scalar(Scalar)
     case Power(Power)
     case RowEchelon(RowEchelon)
     case ReducedRowEchelon(ReducedRowEchelon)
@@ -139,10 +143,10 @@ extension Exp {
             return .Mul(e)
         } else if let e = self as? Mat {
             return .Mat(e)
-        } else if let e = self as? Unassigned {
-            return .Unassigned(e)
-        } else if let e = self as? NumExp {
-            return .NumExp(e)
+        } else if let e = self as? Var {
+            return .Var(e)
+        } else if let e = self as? Scalar {
+            return .Scalar(e)
         } else if let e = self as? Power {
             return .Power(e)
         } else if let e = self as? RowEchelon {
@@ -179,8 +183,8 @@ extension Exp {
         case .Add(let e): return [e.l, e.r]
         case .Mul(let e): return [e.l, e.r]
         case .Mat(let e): return e.elements.flatMap { $0 }
-        case .Unassigned(let e): return []
-        case .NumExp(let e): return []
+        case .Var(let e): return []
+        case .Scalar(let e): return []
         case .Power(let e): return [e.base, e.exponent]
         case .RowEchelon(let e): return [e.mat]
         case .ReducedRowEchelon(let e): return [e.mat]
@@ -206,8 +210,8 @@ extension Exp {
                 Array(changed[$0..<$0+e.cols])
             })
             return Mat(arrIn2D)
-        case .Unassigned(_): return self
-        case .NumExp(_): return self
+        case .Var(_): return self
+        case .Scalar(_): return self
         case .Power(_): return Power(changed[0], changed[1])
         case .RowEchelon(_): return RowEchelon(mat: changed[0])
         case .ReducedRowEchelon(_): return ReducedRowEchelon(changed[0])

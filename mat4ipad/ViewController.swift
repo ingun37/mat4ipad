@@ -19,12 +19,12 @@ import SwiftGraph
 
 extension Int {
     var e:Exp {
-        return NumExp(self)
+        return Scalar(self)
     }
 }
 extension String {
     var e:Exp {
-        return Unassigned(self)
+        return Var(self)
     }
 }
 func sampllevarZ()->Exp {
@@ -64,7 +64,7 @@ struct History {
         _history.append(state)
     }
     var top:State {
-        return _history.last ?? State(main: Unassigned("A"), vars: [])
+        return _history.last ?? State(main: Var("A"), vars: [])
     }
     @discardableResult
     mutating func pop()-> State? {
@@ -106,7 +106,7 @@ class ViewController: UIViewController {
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.setBGColor(color)
-        if let x = e.exp as? Unassigned {
+        if let x = e.exp as? Var {
             if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
                 e.setBGColor(varColor(varname: y.0))
             }
@@ -115,7 +115,7 @@ class ViewController: UIViewController {
             if let v = v as? ExpView {
                 self.setHierarchyBG(e: v, f:f - 0.1)
             } else if let v = v as? MatrixCell {
-                if let x = v.exp as? Unassigned {
+                if let x = v.exp as? Var {
                     if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
                         v.backgroundColor = varColor(varname: y.0)
                         v.latex.mathView.textColor = .white
@@ -153,7 +153,7 @@ class ViewController: UIViewController {
             varview.emit.subscribe(onNext: { (e) in
                 switch e {
                 case .removed(let l):
-                    let newExp = varExp.refRemove(chain: l.chain) ?? Unassigned(varname)
+                    let newExp = varExp.refRemove(chain: l.chain) ?? Var(varname)
                     let vars = self.history.top.vars.map({ varname == $0.0 ? ($0.0, newExp) : $0})
                     self.history.push(main: self.history.top.main, vars: vars)
                 case .changed(let l):
@@ -191,7 +191,7 @@ class ViewController: UIViewController {
         
         let final = topo.reduce(mainExp) { (exp, vname) -> Exp in
             if let vexp = vars.first(where: {$0.0 == vname}) {
-                return exp.changed(eqTo: Unassigned(vname), to: vexp.1)
+                return exp.changed(eqTo: Var(vname), to: vexp.1)
             } else {
                 return exp
             }
@@ -251,7 +251,7 @@ class ViewController: UIViewController {
         mainExpView.emit.subscribe(onNext:{ e in
             switch e {
             case .removed(let l):
-                let newMain = self.history.top.main.refRemove(chain: l.chain) ?? Unassigned("A")
+                let newMain = self.history.top.main.refRemove(chain: l.chain) ?? Var("A")
                 self.history.push(main: newMain)
                 self.refresh()
             case .changed(let l):
@@ -264,7 +264,7 @@ class ViewController: UIViewController {
         matrixResizerTimer.debounce(RxTimeInterval.milliseconds(100), scheduler: MainScheduler.instance).subscribe { (_) in
             self.makeResizers()
         }
-//        history.push(main: Mul([Mat.identityOf(2, 2), Unassigned("A")]))
+//        history.push(main: Mul([Mat.identityOf(2, 2), Var("A")]))
         preview.mathView.fontSize = preview.mathView.fontSize * 1.5
         refresh()
     }
@@ -385,14 +385,14 @@ class ViewController: UIViewController {
         let varname = availableVarName()
         
         let last = history.top
-        let newVars = last.vars + [(varname, Unassigned(varname))]
+        let newVars = last.vars + [(varname, Var(varname))]
         
         variableAddTimes[varname] = Date()
         history.push(main: last.main, vars: newVars)
         refresh()
     }
     @IBAction func clearClick(_ sender: Any) {
-        history.push(main: Unassigned("A"), vars: [])
+        history.push(main: Var("A"), vars: [])
         refresh()
     }
 }
@@ -472,7 +472,7 @@ func allSubExps(of:Exp)->[Exp] {
     return [of] + of.subExps().flatMap({allSubExps(of:$0)})
 }
 func allSubVarNames(of:Exp)->[String] {
-    return allSubExps(of: of).compactMap({($0 as? Unassigned)?.letter})
+    return allSubExps(of: of).compactMap({($0 as? Var)?.letter})
 }
 
 extension ViewController: EasyTipViewDelegate {
@@ -496,7 +496,7 @@ extension ViewController: UIScrollViewDelegate {
 }
 
 func dependentVariables(e:Exp)-> [String] {
-    if let e = e as? Unassigned {
+    if let e = e as? Var {
         return [e.letter]
     }
     return e.kids().flatMap({dependentVariables(e: $0)})
