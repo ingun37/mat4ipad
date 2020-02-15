@@ -1,5 +1,7 @@
 # Privacy Policy
 
+This document covers both CCPA & GDPR
+
 This privacy policy will explain how our organization uses the personal data we collect from you when you use our application.
 
 Topics:
