@@ -198,7 +198,7 @@ class ViewController: UIViewController {
         }
         
         do {
-            try preview.set("= {\(final.eval().latex())}")
+            try preview.set("= {\(evaluate( final).latex())}")
         } catch {
             if let e = error as? evalErr {
                 switch e {

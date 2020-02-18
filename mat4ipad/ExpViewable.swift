@@ -63,7 +63,7 @@ extension Exp {
             } else {
                 return nil
             }
-        case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Norm(_), .Negate(_):
+        case .RowEchelon(_), .ReducedRowEchelon(_), .Transpose(_), .Determinant(_), .Inverse(_), .Rank(_), .Nullity(_), .Negate(_):
             if let m = newKids[0] {
                 return cloneWith(kids: [m])
             } else {
@@ -129,7 +129,6 @@ enum ExpReflection {
     case Inverse(Inverse)
     case Rank(Rank)
     case Nullity(Nullity)
-    case Norm(Norm)
     case Subtract(Subtract)
     case Negate(Negate)
     case Unknown
@@ -165,8 +164,6 @@ extension Exp {
             return .Rank(e)
         } else if let e = self as? Nullity {
             return .Nullity(e)
-        } else if let e = self as? Norm {
-            return .Norm(e)
         } else if let e = self as? Subtract {
             return .Subtract(e)
         } else if let e = self as? Negate {
@@ -194,7 +191,6 @@ extension Exp {
         case .Inverse(let e): return [e.mat]
         case .Rank(let e): return [e.mat]
         case .Nullity(let e): return [e.mat]
-        case .Norm(let e): return [e.mat]
         case .Unknown: return []
         case .Subtract(let e): return [e.l, e.r]
         case .Negate(let e): return [e.e]
@@ -221,7 +217,6 @@ extension Exp {
         case .Inverse(_): return Inverse(changed[0])
         case .Rank(_): return Rank(changed[0])
         case .Nullity(_): return Nullity(changed[0])
-        case .Norm(_): return Norm(changed[0])
         case .Unknown: return self
         case .Subtract(_): return Subtract(changed[0], changed[1])
         case .Negate(_): return Negate(changed[0])
