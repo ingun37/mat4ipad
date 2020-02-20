@@ -688,7 +688,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0;
+				CURRENT_PROJECT_VERSION = 1.2.1;
 				DEVELOPMENT_TEAM = 77Y25UN242;
 				INFOPLIST_FILE = mat4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
@@ -696,7 +696,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ingun37.algebra;
 				PRODUCT_NAME = "Expressive Matrix Calculator";
 				SWIFT_VERSION = 5.0;
@@ -710,7 +710,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0;
+				CURRENT_PROJECT_VERSION = 1.2.1;
 				DEVELOPMENT_TEAM = 77Y25UN242;
 				INFOPLIST_FILE = mat4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
@@ -718,7 +718,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ingun37.algebra;
 				PRODUCT_NAME = "Expressive Matrix Calculator";
 				SWIFT_VERSION = 5.0;
