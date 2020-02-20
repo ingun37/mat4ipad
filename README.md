@@ -1,6 +1,6 @@
 # Expressive Matrix Calculator
 
-Checkout in [AppStore](https://apps.apple.com/us/app/expressive-matrix-calculator/id1499036623?ls=1)
+Checkout in [AppStore](https://apps.apple.com/us/app/expressive-matrix-calculator/id1499036623)
 
 ## Algebraic evaluation
 
