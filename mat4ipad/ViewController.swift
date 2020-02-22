@@ -111,18 +111,18 @@ class ViewController: UIViewController {
                 e.setBGColor(varColor(varname: y.0))
             }
         }
-        e.directSubExpViews.forEach { (v) in
-            if let v = v as? ExpView {
-                self.setHierarchyBG(e: v, f:f - 0.1)
-            } else if let v = v as? MatrixCell {
-                if let x = v.exp as? Var {
-                    if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
-                        v.backgroundColor = varColor(varname: y.0)
-                        v.latex.mathView.textColor = .white
-                    }
+        e.kidExpViews.forEach { (v) in
+            self.setHierarchyBG(e: v, f:f - 0.1)
+        }
+        e.matrixCells.forEach { v in
+            if let x = v.exp as? Var {
+                if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
+                    v.backgroundColor = varColor(varname: y.0)
+                    v.latex.mathView.textColor = .white
                 }
             }
         }
+
     }
     func varColor(varname:String)-> UIColor {
         let varcnt = history.top.vars.count

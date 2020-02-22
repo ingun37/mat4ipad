@@ -15,7 +15,6 @@ enum DrawErr:Error {
     case canceled
 }
 class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
-    var directSubExpViews: [ExpViewable] { return []}
     let rxDrawing = PublishSubject<Int>()
     
     override func awakeFromNib() {

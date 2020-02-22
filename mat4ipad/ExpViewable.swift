@@ -17,7 +17,6 @@ struct Lineage {
 protocol ExpViewable: UIView {
     var lineage:Lineage {get}
     var exp:Exp {get}
-    var directSubExpViews:[ExpViewable] {get}
 }
 
 

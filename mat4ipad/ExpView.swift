@@ -18,16 +18,20 @@ enum Emit {
 class ExpView: UIView, ExpViewable {
     @IBOutlet weak var diagramView: DiagramView!
     @IBOutlet weak var stack: UIStackView!
-    var directSubExpViews:[ExpViewable] {
+
+    var matrixCells:[MatrixCell] {
         if exp is Mat {
             return matrixView.stack.arrangedSubviews.map({$0 as! MatrixRow}).flatMap({
                 $0.stack.arrangedSubviews.map({($0 as! MatrixCell)})
             })
         }
+        return []
+    }
+    var kidExpViews:[ExpView] {
         return stack.arrangedSubviews.compactMap({$0 as? ExpView})
     }
     var allSubExpViews:[ExpView] {
-        return [self] + directSubExpViews.compactMap({($0 as? ExpView)?.allSubExpViews}).flatMap({$0})
+        return [self] + kidExpViews.compactMap({($0 as? ExpView)?.allSubExpViews}).flatMap({$0})
     }
     
     @IBOutlet weak var padLatexView: PaddedLatexViewStory!
@@ -106,7 +110,7 @@ class ExpView: UIView, ExpViewable {
                 let r = mathview.bounds.size
                 let center = CGPoint(x: r.width/2, y: r.height/2)
                 let converted = mathview.convert(center, to: self.diagramView)
-                let aaa = self.directSubExpViews.map({v in
+                let aaa = self.kidExpViews.map({v in
                     v.convert(CGPoint(x: v.bounds.size.width/2, y: 0), to: self.diagramView).x
                 })
                 self.diagramView.setInfo(root: converted.x, marks: aaa)
