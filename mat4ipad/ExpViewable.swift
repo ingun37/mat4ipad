@@ -50,7 +50,7 @@ extension Exp {
             }
         case .Mat(_):
             return cloneWith(kids: newKids.map({$0 ?? Scalar(0)}))
-        case .Var(_), .Scalar(_):
+        case .ScalarVar(_), .Scalar(_), .MatrixVar(_):
             return self
         case .Power(_):
             if let base = newKids[0] {
@@ -117,7 +117,8 @@ enum ExpReflection {
     case Add(Add)
     case Mul(Mul)
     case Mat(Mat)
-    case Var(Var)
+    case MatrixVar(MatrixVar)
+    case ScalarVar(ScalarVar)
     case Scalar(Scalar)
     case Power(Power)
     case RowEchelon(RowEchelon)
@@ -141,8 +142,10 @@ extension Exp {
             return .Mul(e)
         } else if let e = self as? Mat {
             return .Mat(e)
-        } else if let e = self as? Var {
-            return .Var(e)
+        } else if let e = self as? MatrixVar {
+            return .MatrixVar(e)
+        } else if let e = self as? ScalarVar {
+            return .ScalarVar(e)
         } else if let e = self as? Scalar {
             return .Scalar(e)
         } else if let e = self as? Power {
@@ -179,7 +182,7 @@ extension Exp {
         case .Add(let e): return [e.l, e.r]
         case .Mul(let e): return [e.l, e.r]
         case .Mat(let e): return e.elements.flatMap { $0 }
-        case .Var(let e): return []
+        case .MatrixVar(_), .ScalarVar(_): return []
         case .Scalar(let e): return []
         case .Power(let e): return [e.base, e.exponent]
         case .RowEchelon(let e): return [e.mat]
@@ -205,7 +208,7 @@ extension Exp {
                 Array(changed[$0..<$0+e.cols])
             })
             return Mat(arrIn2D)
-        case .Var(_): return self
+        case .MatrixVar(_), .ScalarVar(_): return self
         case .Scalar(_): return self
         case .Power(_): return Power(changed[0], changed[1])
         case .RowEchelon(_): return RowEchelon(mat: changed[0])

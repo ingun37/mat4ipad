@@ -102,7 +102,7 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     var exp:Exp {
         return lineage.exp
     }
-    var lineage:Lineage = Lineage(chain: [], exp: Var("c"))
+    var lineage:Lineage = Lineage(chain: [], exp: "c".e)
     
     func set(lineage:Lineage) {
         self.lineage = lineage
@@ -180,7 +180,7 @@ class MatrixView:UIView {
     var cellViews:[MatrixCell] = []
     
     @IBOutlet weak var stack: UIStackView!
-    var lineage:Lineage = Lineage(chain: [], exp: Var("M"))
+    var lineage:Lineage = Lineage(chain: [], exp: "M".e)
     let cellTapped = PublishSubject<MatrixCell>()
     func set(_ m:Mat, lineage:Lineage) {
         self.mat = m
