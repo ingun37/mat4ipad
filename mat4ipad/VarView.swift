@@ -22,9 +22,6 @@ enum Err:Error {
 class VarView: UIView, UITextFieldDelegate {
     @IBOutlet weak var namelbl: UILabel!
     var del:VarDelegate?
-    var exp: Exp {
-        return expView?.exp ?? Var(namelbl.text ?? "Var")
-    }
     
     @IBOutlet weak var stack:UIStackView!
     
