@@ -14,13 +14,14 @@ import Promises
 import ExpressiveAlgebra
 import NumberKit
 import Regex
-
+import EasyTipView
+import ReSwift
 //
 //protocol ApplyTableDelegate {
 //    func changeto(uid:String, to:Exp)
 //    func remove(uid:String)
 //}
-class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
+class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, StoreSubscriber{
     enum Result {
         case changed(Exp)
         case removed
@@ -164,6 +165,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         DispatchQueue.main.async {
             self.varcvlayout.invalidateLayout()
         }
+        
     }
     func txt2exp(txt:String)->Exp? {
         if let value = Int(txt) {
@@ -308,6 +310,39 @@ Following formats are accepted
         dismiss(animated: false) {
             self.promise.fulfill(.nothin)
         }
+    }
+    func newState(state: TooltipState) {
+        let u = UserDefaultsManager()
+        guard !state.applyTipShown && u.showTooltip else {return}
+        if let tv = tipview {
+            tv.show(forView: numberTextField)
+        } else {
+            var preferences = EasyTipView.Preferences()
+            preferences.drawing.font = UIFont(name: "Futura-Medium", size: 13)!
+            preferences.drawing.foregroundColor = .white
+            preferences.drawing.textAlignment = .justified
+            preferences.drawing.backgroundColor = UIColor(hue:0.46, saturation:0.99, brightness:0.6, alpha:1)
+            preferences.drawing.arrowPosition = EasyTipView.ArrowPosition.left
+            
+            let tipview = EasyTipView(text: """
+Lower case like "x" will be treated as scalar.
+Upper case like "A" will be treated as matrix.
+""", preferences: preferences, delegate: nil)
+            
+            tipview.show(forView: numberTextField)
+            self.tipview = tipview
+        }
+        tooltipStore.dispatch(ApplyTipShownAction())
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tooltipStore.subscribe(self)
+    }
+    var tipview:EasyTipView?
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tooltipStore.unsubscribe(self)
+        tipview?.dismiss()
     }
 }
 class ApplyTableCell:UITableViewCell {
