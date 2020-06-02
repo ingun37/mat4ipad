@@ -10,7 +10,6 @@ import UIKit
 import iosMath
 import RxSwift
 import RxCocoa
-import ExpressiveAlgebra
 enum Emit {
     case removed(Lineage)
     case changed(Lineage)

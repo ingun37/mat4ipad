@@ -11,7 +11,6 @@ import iosMath
 import RxSwift
 import RxCocoa
 import Promises
-import ExpressiveAlgebra
 import lexiFreeMonoid
 import SwiftUI
 import EasyTipView

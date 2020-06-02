@@ -10,7 +10,6 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
-import ExpressiveAlgebra
 enum DrawErr:Error {
     case canceled
 }

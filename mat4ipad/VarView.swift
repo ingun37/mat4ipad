@@ -8,7 +8,6 @@
 
 import UIKit
 import Promises
-import ExpressiveAlgebra
 import RxSwift
 import RxCocoa
 

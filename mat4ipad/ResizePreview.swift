@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import ExpressiveAlgebra
 
 class ResizePreview: UIView {
     @IBOutlet weak var handle: UIView!

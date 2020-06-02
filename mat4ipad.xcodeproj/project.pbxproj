@@ -31,6 +31,8 @@
 		6BEC780822FE86F3007AE58B /* ExpViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BEC780722FE86F3007AE58B /* ExpViewable.swift */; };
 		6BFE54CB22F4A0E800476825 /* MathScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE54CA22F4A0E800476825 /* MathScrollView.swift */; };
 		9202DCFB23F5B81300A9F6FD /* SwiftGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 9202DCFA23F5B81300A9F6FD /* SwiftGraph */; };
+		924060C92482B1DD00353967 /* ComplexMatrixAlgebra in Frameworks */ = {isa = PBXBuildFile; productRef = 924060C82482B1DD00353967 /* ComplexMatrixAlgebra */; };
+		924060CB2482B2A600353967 /* AlgebraImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924060CA2482B2A600353967 /* AlgebraImp.swift */; };
 		924E3D122401116A0069B54D /* ReSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 924E3D112401116A0069B54D /* ReSwift */; };
 		924E3D142401117F0069B54D /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924E3D132401117F0069B54D /* Store.swift */; };
 		925E586F23EC116C0061F1A5 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 925E586E23EC116C0061F1A5 /* Regex */; };
@@ -42,8 +44,8 @@
 		926E12CC23E6D63D007A23C7 /* PaddedLatexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926E12CB23E6D63D007A23C7 /* PaddedLatexView.swift */; };
 		929FAC5F23EABC3F004192D2 /* HandwiringTooltip.xib in Resources */ = {isa = PBXBuildFile; fileRef = 929FAC5E23EABC3F004192D2 /* HandwiringTooltip.xib */; };
 		929FAC6123EABCCD004192D2 /* HandwiringTooltip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FAC6023EABCCD004192D2 /* HandwiringTooltip.swift */; };
-		92D37B3923E6777500393C50 /* ExpressiveAlgebra in Frameworks */ = {isa = PBXBuildFile; productRef = 92D37B3823E6777500393C50 /* ExpressiveAlgebra */; };
 		92DBA8CF23E91334001C95FF /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBA8CE23E91334001C95FF /* HelpView.swift */; };
+		92E8D90624853B6C00A61021 /* NonEmpty in Frameworks */ = {isa = PBXBuildFile; productRef = 92E8D90524853B6C00A61021 /* NonEmpty */; };
 		938EB633D6E260C6692C6AAB /* libPods-mat4ipadTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDCE23A62859008EA8258E6 /* libPods-mat4ipadTests.a */; };
 		BDE01773B50BD0A4832320A6 /* libPods-mat4ipadUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B72D52F9A364EC58398667 /* libPods-mat4ipadUITests.a */; };
 		C4CCF3B9DAF574FB1025A0DE /* libPods-mat4ipad.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C91D4B5C0327D1BEF208BA57 /* libPods-mat4ipad.a */; };
@@ -105,6 +107,7 @@
 		6BEC780722FE86F3007AE58B /* ExpViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpViewable.swift; sourceTree = "<group>"; };
 		6BFE54CA22F4A0E800476825 /* MathScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathScrollView.swift; sourceTree = "<group>"; };
 		6F24F6C796DEEA6B97B096B5 /* Pods-mat4ipadUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mat4ipadUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-mat4ipadUITests/Pods-mat4ipadUITests.release.xcconfig"; sourceTree = "<group>"; };
+		924060CA2482B2A600353967 /* AlgebraImp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgebraImp.swift; sourceTree = "<group>"; };
 		924E3D132401117F0069B54D /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		925E587223EC71960061F1A5 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		925F4F7623E85FE6009E6ED6 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
@@ -129,10 +132,11 @@
 			files = (
 				925E586F23EC116C0061F1A5 /* Regex in Frameworks */,
 				C4CCF3B9DAF574FB1025A0DE /* libPods-mat4ipad.a in Frameworks */,
-				92D37B3923E6777500393C50 /* ExpressiveAlgebra in Frameworks */,
+				92E8D90624853B6C00A61021 /* NonEmpty in Frameworks */,
 				924E3D122401116A0069B54D /* ReSwift in Frameworks */,
 				9202DCFB23F5B81300A9F6FD /* SwiftGraph in Frameworks */,
 				925F4F7523E80972009E6ED6 /* lexiFreeMonoid in Frameworks */,
+				924060C92482B1DD00353967 /* ComplexMatrixAlgebra in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +210,7 @@
 			children = (
 				6B4989A122A6B76B00F47A5E /* Matrix */,
 				6BBE5BA0229D9A77006A56D8 /* AppDelegate.swift */,
+				924060CA2482B2A600353967 /* AlgebraImp.swift */,
 				6BBE5BA2229D9A77006A56D8 /* ViewController.swift */,
 				6B83576B22EDEABB003C6C48 /* converted_model.tflite */,
 				6B83576D22EE5FAE003C6C48 /* labels.txt */,
@@ -289,11 +294,12 @@
 			);
 			name = mat4ipad;
 			packageProductDependencies = (
-				92D37B3823E6777500393C50 /* ExpressiveAlgebra */,
 				925F4F7423E80972009E6ED6 /* lexiFreeMonoid */,
 				925E586E23EC116C0061F1A5 /* Regex */,
 				9202DCFA23F5B81300A9F6FD /* SwiftGraph */,
 				924E3D112401116A0069B54D /* ReSwift */,
+				924060C82482B1DD00353967 /* ComplexMatrixAlgebra */,
+				92E8D90524853B6C00A61021 /* NonEmpty */,
 			);
 			productName = mat4ipad;
 			productReference = 6BBE5B9D229D9A77006A56D8 /* Expressive Matrix Calculator.app */;
@@ -370,11 +376,12 @@
 			);
 			mainGroup = 6BBE5B94229D9A77006A56D8;
 			packageReferences = (
-				92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */,
 				925F4F7323E80972009E6ED6 /* XCRemoteSwiftPackageReference "lexiFreeMonoid" */,
 				925E586D23EC116C0061F1A5 /* XCRemoteSwiftPackageReference "Regex" */,
 				9202DCF923F5B81300A9F6FD /* XCRemoteSwiftPackageReference "SwiftGraph" */,
 				924E3D102401116A0069B54D /* XCRemoteSwiftPackageReference "ReSwift" */,
+				924060C72482B1DD00353967 /* XCRemoteSwiftPackageReference "ComplexMatrixAlgebra" */,
+				92E8D90424853B6C00A61021 /* XCRemoteSwiftPackageReference "swift-nonempty" */,
 			);
 			productRefGroup = 6BBE5B9E229D9A77006A56D8 /* Products */;
 			projectDirPath = "";
@@ -504,6 +511,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BEC780822FE86F3007AE58B /* ExpViewable.swift in Sources */,
+				924060CB2482B2A600353967 /* AlgebraImp.swift in Sources */,
 				6B4989A522A6B85B00F47A5E /* MatrixViews.swift in Sources */,
 				6B2F5C27229E64DC00A634B3 /* ExpView.swift in Sources */,
 				92DBA8CF23E91334001C95FF /* HelpView.swift in Sources */,
@@ -866,6 +874,14 @@
 				version = 3.0.0;
 			};
 		};
+		924060C72482B1DD00353967 /* XCRemoteSwiftPackageReference "ComplexMatrixAlgebra" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ingun37/ComplexMatrixAlgebra";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		924E3D102401116A0069B54D /* XCRemoteSwiftPackageReference "ReSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReSwift/ReSwift.git";
@@ -890,12 +906,12 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */ = {
+		92E8D90424853B6C00A61021 /* XCRemoteSwiftPackageReference "swift-nonempty" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ingun37/ExpressiveAlgebra.git";
+			repositoryURL = "https://github.com/pointfreeco/swift-nonempty";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 0.2.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -905,6 +921,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9202DCF923F5B81300A9F6FD /* XCRemoteSwiftPackageReference "SwiftGraph" */;
 			productName = SwiftGraph;
+		};
+		924060C82482B1DD00353967 /* ComplexMatrixAlgebra */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 924060C72482B1DD00353967 /* XCRemoteSwiftPackageReference "ComplexMatrixAlgebra" */;
+			productName = ComplexMatrixAlgebra;
 		};
 		924E3D112401116A0069B54D /* ReSwift */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -921,10 +942,10 @@
 			package = 925F4F7323E80972009E6ED6 /* XCRemoteSwiftPackageReference "lexiFreeMonoid" */;
 			productName = lexiFreeMonoid;
 		};
-		92D37B3823E6777500393C50 /* ExpressiveAlgebra */ = {
+		92E8D90524853B6C00A61021 /* NonEmpty */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 92D37B3723E6777500393C50 /* XCRemoteSwiftPackageReference "ExpressiveAlgebra" */;
-			productName = ExpressiveAlgebra;
+			package = 92E8D90424853B6C00A61021 /* XCRemoteSwiftPackageReference "swift-nonempty" */;
+			productName = NonEmpty;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
