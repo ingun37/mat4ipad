@@ -39,37 +39,19 @@ extension Exp {
             }
         })
         let remainingKids = newKids.compactMap({$0})
-        let whenMBinary = { (_ cloner:(Matrix<Real>, Matrix<Real>)->Matrix<Real>)->Exp? in
-            if case let .M(x) = remainingKids.first {
-                if case let .M(y) = remainingKids.dropFirst().first {
-                    return .M(cloner(x,y))
+        let whenBinary:()->Exp? = {
+            if let x = remainingKids.first {
+                if let y = remainingKids.dropFirst().first {
+                    return self.cloneWith(kids: [x,y])
                 }
-                return .M(x)
+                return x
             }
             return nil
         }
-        let whenRBinary = { (_ cloner:(Real,Real)->Real)->Exp? in
-            if case let .R(x) = remainingKids.first {
-                if case let .R(y) = remainingKids.dropFirst().first {
-                    return .R(cloner(x,y))
-                }
-                return .R(x)
-            }
-            return nil
-        }
-        let whenMUnary = { (_ cloner:(Matrix<Real>)->Matrix<Real>) -> Exp? in
-            if case let .M(m) = newKids.first {
-                return .M(cloner(m))
-            } else {
-                return nil
-            }
-        }
-        let whenRUnary = { (_ cloner:(Real)->Real) -> Exp? in
-            if case let .R(m) = newKids.first {
-                return .R(cloner(m))
-            } else {
-                return nil
-            }
+        let whenUnary:()->Exp? = {
+            if let x = remainingKids.first {
+                return self.cloneWith(kids: [x])
+            } else { return nil }
         }
         switch self {
         case let .M(m):
@@ -77,21 +59,23 @@ extension Exp {
             case let .e(e): return self
             case let .o(o):
                 switch o {
-                case .Echelon(_): return whenMUnary{Matrix(.o(.Echelon($0)))}
+                case .ReducedEchelon(_): return whenUnary()
+                case .Inverse(_): return whenUnary()
+                case .Echelon(_): return whenUnary()
                 case let .Ring(r):
                     switch r {
                     case let .Abelian(o):
                         switch o {
                         case let .Monoid(o):
                             switch o {
-                            case .Add(_): return whenMBinary {Matrix(amonoidOp: .Add(.init(l: $0, r: $1)))}
+                            case .Add(_): return whenBinary()
                             }
-                        case .Negate(_): return whenMUnary{Matrix(abelianOp: .Negate($0))}
-                        case .Subtract(_, _): return whenMBinary {Matrix(abelianOp: .Subtract($0, $1))}
+                        case .Negate(_): return whenUnary()
+                        case .Subtract(_, _):  return whenBinary()
                         }
                     case let .MMonoid(o):
                         switch o {
-                        case .Mul(_): return whenMBinary {Matrix(mmonoidOp: .Mul(.init(l: $0, r: $1)))}
+                        case .Mul(_):  return whenBinary()
                         }
                     }
                 case .Scale(_, _):
@@ -100,8 +84,6 @@ extension Exp {
                     } else {
                         return nil
                     }
-                case .ReducedEchelon(_): return whenMUnary{Matrix(.o(.ReducedEchelon($0)))}
-                case .Inverse(_): return whenMUnary{Matrix(.o(.Inverse($0)))}
                 }
             }
         case let .R(r):
@@ -115,12 +97,12 @@ extension Exp {
                         switch a {
                         case let .Monoid(m):
                             switch m {
-                            case .Add(_): return whenRBinary {Real(amonoidOp: .Add(.init(l: $0, r: $1)))}
+                            case .Add(_): return whenBinary()
                             }
-                        case .Negate(_): return whenRUnary({Real(abelianOp: .Negate($0))})
-                        case .Subtract(_, _): return whenRBinary {Real(abelianOp: .Subtract($0, $1))}
+                        case .Negate(_): return whenUnary()
+                        case .Subtract(_, _): return whenBinary()
                         }
-                    case .Conjugate(_): return whenRUnary({Real(fieldOp: .Conjugate($0))})
+                    case .Conjugate(_): return whenUnary()
                     case .Determinant(_):
                         if case let .M(m) = newKids.first {
                             return .R(Real(fieldOp: .Determinant(m)))
@@ -129,10 +111,10 @@ extension Exp {
                         }
                     case let .Mabelian(ma):
                         switch ma {
-                        case .Inverse(_): whenRUnary({Real(mabelianOp: .Inverse($0))})
+                        case .Inverse(_): return whenUnary()
                         case let .Monoid(m):
                             switch m {
-                            case .Mul(_): return whenRBinary {Real(mmonoidOp: .Mul(.init(l: $0, r: $1)))}
+                            case .Mul(_): return whenBinary()
                             }
                         case .Quotient(_, _):
                             if case let .R(denom) = newKids[1] {
@@ -164,12 +146,82 @@ extension Exp {
     ///
     /// The order of exps in return array is preserved
     func subExps()->[Exp] {
-        return kids()
+        switch self {
+        case let .M(m):
+            switch m.c {
+            case let .e(m):
+                switch m {
+                case let .Basis(mb):
+                    switch mb {
+                    case let .Matrix(m):
+                        return m.rows.all.flatMap({$0.all}).map({.R($0)})
+                    case .id(_): return []
+                    case .zero: return []
+                    }
+                case .Var(_): return []
+                }
+            case let .o(o):
+                switch o {
+                case let .Echelon(m): return [.M(m)]
+                case let .Inverse(m): return [.M(m)]
+                case let .ReducedEchelon(m): return [.M(m)]
+                case let .Ring(r):
+                    switch r {
+                    case let .Abelian(ab):
+                        switch ab {
+                        case let .Monoid(m):
+                            switch m {
+                            case let .Add(a): return [.M(a.l), .M(a.r)]
+                            }
+                        case let .Negate(m): return [.M(m)]
+                        case let .Subtract(x,y): return [.M(x), .M(y)]
+                        }
+                    case let .MMonoid(ma):
+                        switch ma {
+                        case let .Mul(m): return [.M(m.l), .M(m.r)]
+                        }
+                    }
+                case let .Scale(k, m): return [.R(k), .M(m)]
+                }
+            }
+        case let .R(r):
+            switch r.c {
+            case let .e(e): return []
+            case let .o(o):
+                switch o {
+                case let .f(f):
+                    switch f {
+                    case let .Abelian(ab):
+                        switch ab {
+                        case let .Monoid(m):
+                            switch m {
+                            case let .Add(b): return [.R(b.l), .R(b.r)]
+                            }
+                        case let .Negate(r): return [.R(r)]
+                        case let .Subtract(x, y): return [.R(x), .R(y)]
+                        }
+                    case let .Conjugate(r): return [.R(r)]
+                    case let .Determinant(m): return [.M(m)]
+                    case let .Mabelian(ma):
+                        switch ma {
+                        case let .Inverse(r): return [.R(r)]
+                        case let .Monoid(mon):
+                            switch mon {
+                            case let .Mul(b): return [.R(b.l), .R(b.r)]
+                            }
+                        case let .Quotient(x, y): return [.R(x), .R(y)]
+                        }
+                    case .Power(let base, let exponent): return [.R(base), .R(exponent)]
+                    }
+                }
+            }
+        }
     }
     func changed(eqTo:Exp, to:Exp)->Exp {
-        if isEq(eqTo) {
+        if self == eqTo {
             return to
         }
+        
         return cloneWith(kids: kids().map({$0.changed(eqTo: eqTo, to: to)}))
     }
     func refChanged(chain:[Int], to:Exp)-> Exp {
@@ -187,84 +239,114 @@ extension Exp {
     }
 }
 
-enum ExpReflection {
-    case Add(Exp, Exp)
-    case Mul(Exp, Exp)
-    case Mat(MatrixB)
-    case Var(String)
-    case Scalar(RealBasis)
-    case Power(base:Exp, exponent:Exp)
-    case RowEchelon(NonEmpty<[NonEmpty<[Exp]>]>)
-    case ReducedRowEchelon(NonEmpty<[NonEmpty<[Exp]>]>)
-    case Determinant(NonEmpty<[NonEmpty<[Exp]>]>)
-    case Subtract(Exp, Exp)
-    case Negate(Exp)
-    case Unknown
+extension NonEmptyArray {
+    var list:List<Element> {
+        return List(first, dropFirst())
+    }
 }
-
 extension Exp {
-    func reflect()->ExpReflection {
+    func kids()->[Exp] {
+        return subExps()
+    }
+    func cloneWith(kids:[Exp])->Exp {
+        let m1:Matrix<Real>?
+        if case let .M(m) = kids.first {
+            m1 = m
+        } else { m1 = nil }
+        let m2:Matrix<Real>?
+        if case let .M(m) = kids.dropFirst().first {
+            m2 = m
+        } else { m2 = nil }
+        let r1:Real?
+        if case let .R(r) = kids.first {
+            r1 = r
+        } else { r1 = nil }
+        let r2:Real?
+        if case let .R(r) = kids.first {
+            r2 = r
+        } else { r2 = nil }
         switch self {
         case let .M(m):
             switch m.c {
             case let .e(e):
                 switch e {
-                case let .Basis(b): return .Mat(b.)
-                case let .Var(v): <#code#>
+                case let .Basis(mb):
+                    switch mb {
+                    case let .Matrix(m):
+                        let realKids = kids.map { (k) -> Real in
+                            if case let .R(r) = k {
+                                return r
+                            } else {return Real(.e(.Basis(.N(0))))}
+                        }
+                        let newElements:List<List<Real>> = NonEmpty(0, 1..<m.rowLen).map { (rowIdx)-> List<Real> in
+                            let cRng = NonEmpty(0, 1..<m.colLen)
+                            let realRow = cRng.map({colIdx in
+                                realKids[rowIdx * m.colLen + colIdx]
+                            })
+                            return realRow.list
+                        }.list
+                        return .M(Matrix<Real>(.e(.Basis(.Matrix(.init(e: newElements))))))
+                    case .id(_): return self
+                    case .zero: return self
+                    }
+                case .Var(_): return self
                 }
-            case let .o(o): <#code#>
+            case let .o(o):
+                switch o {
+                case let .Echelon(m): return .M(.init(.o(.Echelon(m1 ?? m))))
+                case let .Inverse(m): return .M(.init(.o(.Echelon(m1 ?? m))))
+                case let .ReducedEchelon(m): return .M(.init(.o(.Echelon(m1 ?? m))))
+                case let .Ring(r):
+                    switch r {
+                    case let .Abelian(abe):
+                        switch abe {
+                        case let .Monoid(mon):
+                            switch mon {
+                            case let .Add(b): return .M(.init(amonoidOp: .Add(.init(l: m1 ?? b.l, r: m2 ?? b.r))))
+                            }
+                        case let .Negate(m): return .M(.init(.o(.Echelon(m1 ?? m))))
+                        case let .Subtract(l, r): return .M(.init(abelianOp: .Subtract(m1 ?? l, m2 ?? r)))
+                        }
+                    case let .MMonoid(mon):
+                        switch mon {
+                        case let .Mul(b): return .M(.init(mmonoidOp: .Mul(.init(l: m1 ?? b.l, r: m2 ?? b.r))))
+                        }
+                    }
+                case let .Scale(k, m):
+                    return .M(.init(.o(.Scale(r1 ?? k, m2 ?? m))))
+                }
             }
-        case let .R(r): <#code#>
-        }
-    }
-}
-
-extension Exp {
-    func kids()->[Exp] {
-        switch reflect() {
-        case .Add(let e): return [e.l, e.r]
-        case .Mul(let e): return [e.l, e.r]
-        case .Mat(let e): return e.elements.flatMap { $0 }
-        case .MatrixVar(_), .ScalarVar(_): return []
-        case .Scalar(let e): return []
-        case .Power(let e): return [e.base, e.exponent]
-        case .RowEchelon(let e): return [e.mat]
-        case .ReducedRowEchelon(let e): return [e.mat]
-        case .Transpose(let e): return [e.mat]
-        case .Determinant(let e):  return [e.mat]
-        case .Fraction(let e): return [e.numerator, e.denominator]
-        case .Inverse(let e): return [e.mat]
-        case .Rank(let e): return [e.mat]
-        case .Nullity(let e): return [e.mat]
-        case .Unknown: return []
-        case .Subtract(let e): return [e.l, e.r]
-        case .Negate(let e): return [e.e]
-        }
-    }
-    func cloneWith(kids:[Exp])->Exp {
-        let changed = kids
-        switch reflect() {
-        case .Add(_): return Add(changed[0], changed[1])
-        case .Mul(_): return Mul(changed[0], changed[1])
-        case .Mat(let e):
-            let arrIn2D = stride(from: 0, to: changed.count, by: e.cols).map({
-                Array(changed[$0..<$0+e.cols])
-            })
-            return Mat(arrIn2D)
-        case .MatrixVar(_), .ScalarVar(_): return self
-        case .Scalar(_): return self
-        case .Power(_): return Power(changed[0], changed[1])
-        case .RowEchelon(_): return RowEchelon(mat: changed[0])
-        case .ReducedRowEchelon(_): return ReducedRowEchelon(changed[0])
-        case .Transpose(_): return Transpose(changed[0])
-        case .Determinant(_): return Determinant(changed[0])
-        case .Fraction(_): return Fraction(numerator: changed[0], denominator: changed[1])
-        case .Inverse(_): return Inverse(changed[0])
-        case .Rank(_): return Rank(changed[0])
-        case .Nullity(_): return Nullity(changed[0])
-        case .Unknown: return self
-        case .Subtract(_): return Subtract(changed[0], changed[1])
-        case .Negate(_): return Negate(changed[0])
+        case let .R(r):
+            switch r.c {
+            case .e(_): return self
+            case let .o(o):
+                switch o {
+                case let .f(f):
+                    switch f {
+                    case let .Abelian(abe):
+                        switch abe {
+                        case let .Monoid(mon):
+                            switch mon {
+                            case let .Add(b): return .R(.init(amonoidOp: .Add(.init(l: r1 ?? b.l, r: r2 ?? b.r))))
+                            }
+                        case let .Negate(r): return .R(.init(abelianOp: .Negate(r1 ?? r)))
+                        case let .Subtract(x, y): return .R(.init(abelianOp: .Subtract(r1 ?? x, r2 ?? y)))
+                        }
+                    case let .Conjugate(r): return .R(.init(fieldOp: .Conjugate(r1 ?? r)))
+                    case let .Determinant(m): return .R(.init(fieldOp: .Determinant(m1 ?? m)))
+                    case let .Mabelian(ma):
+                        switch ma {
+                        case let .Inverse(r): return .R(.init(mabelianOp: .Inverse(r1 ?? r)))
+                        case let .Monoid(mon):
+                            switch mon {
+                            case let .Mul(b): return .R(.init(mmonoidOp: .Mul(.init(l: r1 ?? b.l, r: r2 ?? b.r))))
+                            }
+                        case let .Quotient(x, y): return .R(.init(mabelianOp: .Quotient(r1 ?? x, r2 ?? y)))
+                        }
+                    case .Power(let base, let exponent): return .R(.init(fieldOp: .Power(base: r1 ?? base, exponent: r2 ?? exponent)))
+                    }
+                }
+            }
         }
     }
 }

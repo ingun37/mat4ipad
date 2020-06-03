@@ -10,6 +10,8 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
+import ComplexMatrixAlgebra
+
 enum DrawErr:Error {
     case canceled
 }
@@ -175,20 +177,20 @@ class MatrixView:UIView {
     let changed = PublishSubject<Exp>()
     let cellsDrawingSignal = PublishSubject<Int>()
     let dBag = DisposeBag()
-    var mat:Mat!
+    var mat:Mat<Real>!
     var cellViews:[MatrixCell] = []
     
     @IBOutlet weak var stack: UIStackView!
     var lineage:Lineage = Lineage(chain: [], exp: "M".e)
     let cellTapped = PublishSubject<MatrixCell>()
-    func set(_ m:Mat, lineage:Lineage) {
+    func set(_ m:Mat<Real>, lineage:Lineage) {
         self.mat = m
         self.lineage = lineage
-        for ri in (0..<m.rows) {
+        for ri in (0..<m.rowLen) {
             let rowView = MatrixRow.loadViewFromNib()
-            for ci in (0..<m.cols) {
+            for ci in (0..<m.colLen) {
                 let cell = MatrixCell.loadViewFromNib()
-                let kididx = ri*m.cols + ci
+                let kididx = ri*m.colLen + ci
                 cell.set(lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
                 rowView.stack.addArrangedSubview(cell)
                 cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)

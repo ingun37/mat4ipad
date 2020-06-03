@@ -9,7 +9,7 @@
 import Foundation
 import ComplexMatrixAlgebra
 
-enum Exp {
+enum Exp:Equatable {
     case R(Real)
     case M(Matrix<Real>)
 }
