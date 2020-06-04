@@ -435,6 +435,7 @@ class ViewController: UIViewController {
         case .Matrix: history = matrixInitalHistory
         case .Real: history = realInitalHistory
         }
+        history.pop()
         refresh()
     }
     enum Mode {
@@ -445,7 +446,7 @@ class ViewController: UIViewController {
     @IBAction func modeChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             if mode != .Matrix {
-                mode = .Real
+                mode = .Matrix
                 clearClick(sender)
             }
         } else {

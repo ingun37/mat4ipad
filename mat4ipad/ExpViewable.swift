@@ -228,11 +228,12 @@ extension Exp {
         guard let head = chain.first else {
             return to
         }
-        return cloneWith(kids: (0..<kids().count).map({ (idx) -> Exp in
+        let kids = self.kids()
+        return cloneWith(kids: (0..<kids.count).map({ (idx) -> Exp in
             if idx == head {
-                return kids()[idx].refChanged(chain: []+chain.dropFirst(), to: to)
+                return kids[idx].refChanged(chain: []+chain.dropFirst(), to: to)
             } else {
-                return kids()[idx]
+                return kids[idx]
             }
         }))
     
@@ -282,7 +283,7 @@ extension Exp {
             r1 = r
         } else { r1 = nil }
         let r2:Real?
-        if case let .R(r) = kids.first {
+        if case let .R(r) = kids.dropFirst().first {
             r2 = r
         } else { r2 = nil }
         switch self {
