@@ -245,6 +245,26 @@ extension NonEmptyArray {
     }
 }
 extension Exp {
+    func eval()->Exp {
+        switch self {
+        case let .M(m): return .M(m.eval())
+        case let .R(r): return .R(r.eval())
+        }
+    }
+    func latex()->String {
+        switch self {
+        case let .M(m):
+            return ComplexMatrixAlgebra.latex(m)
+        case let .R(r):
+            return ComplexMatrixAlgebra.latex(r)
+        }
+    }
+    func sameTypeVar(name:String)->Exp {
+        switch self {
+        case let .M(m): return .M(.init(.e(.Var(name))))
+        case let .R(r): return .R(.init(.e(.Var(name))))
+        }
+    }
     func kids()->[Exp] {
         return subExps()
     }

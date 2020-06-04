@@ -15,38 +15,40 @@ import lexiFreeMonoid
 import SwiftUI
 import EasyTipView
 import SwiftGraph
+import ComplexMatrixAlgebra
 
 extension Int {
     var e:Exp {
-        return Scalar(self)
+        return .R(.init(.e(.Basis(.N(self)))))
     }
 }
 extension String {
-    var e:Exp {
-        if uppercased() == self {
-            return MatrixVar(self)
-        } else if lowercased() == self {
-            return ScalarVar(self)
-        }
-        return MatrixVar(self)
+    var rvar:Exp {
+        return .R(.init(.e(.Var(self))))
+    }
+    var mvar:Exp {
+        return .M(.init(.e(.Var(self))))
     }
 }
 func sampllevarZ()->Exp {
     return (-1).e
 }
 func sampllevarA()->Exp {
-    let x = "x".e
-    let p = Power(x, (-2).e)
-    let f = Negate(Fraction(numerator: 1.e, denominator: "z".e))
-    return Mat([[f, 2.e],[3.e, p]])
+    let m = Exp.M(.init(.e(.Basis(.zero))))
+    return m
+//    let x = "x".e
+//    let p = Power(x, (-2).e)
+//    let f = Negate(Fraction(numerator: 1.e, denominator: "z".e))
+//    return Mat([[f, 2.e],[3.e, p]])
 }
 func sampleMain()->Exp {
-    let x = "x".e
-    let z = "z".e
-    let A = "A".e
-    return Add(Power(Mat([[1.e, x  ],
-                          [0.e, 1.e]]), 2.e),
-               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
+    return "A".mvar
+//    let x = "x".e
+//    let z = "z".e
+//    let A = "A".e
+//    return Add(Power(Mat([[1.e, x  ],
+//                          [0.e, 1.e]]), 2.e),
+//               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
 }
 struct History {
     struct State {
@@ -68,7 +70,7 @@ struct History {
         _history.append(state)
     }
     var top:State {
-        return _history.last ?? State(main: "A".e, vars: [])
+        return _history.last ?? State(main: "A".mvar, vars: [])
     }
     @discardableResult
     mutating func pop()-> State? {
@@ -110,8 +112,12 @@ class ViewController: UIViewController {
     func setHierarchyBG(e:ExpView, f:CGFloat) {
         let color = UIColor(hue: 0, saturation: 0, brightness: max(f, 0.5), alpha: 1)
         e.setBGColor(color)
-        if let x = e.exp as? ExpressiveAlgebra.Variable {
-            if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
+        if case let .M(m) = e.exp, case let .e(.Var(letter)) = m.c {
+            if let y = history.top.vars.first(where: {$0.0 == letter}) {
+                e.setBGColor(varColor(varname: y.0))
+            }
+        } else if case let .R(r) = e.exp, case let .e(.Var(letter)) = r.c {
+            if let y = history.top.vars.first(where: {$0.0 == letter}) {
                 e.setBGColor(varColor(varname: y.0))
             }
         }
@@ -119,8 +125,13 @@ class ViewController: UIViewController {
             self.setHierarchyBG(e: v, f:f - 0.1)
         }
         e.matrixCells.forEach { v in
-            if let x = v.exp as? ExpressiveAlgebra.Variable {
-                if let y = history.top.vars.first(where: {$0.0 == x.letter}) {
+            if case let .M(m) = v.exp, case let .e(.Var(letter)) = m.c {
+                if let y = history.top.vars.first(where: {$0.0 == letter}) {
+                    v.backgroundColor = varColor(varname: y.0)
+                    v.latex.mathView.textColor = .white
+                }
+            } else if case let .R(r) = v.exp, case let .e(.Var(letter)) = r.c {
+                if let y = history.top.vars.first(where: {$0.0 == letter}) {
                     v.backgroundColor = varColor(varname: y.0)
                     v.latex.mathView.textColor = .white
                 }
@@ -157,7 +168,12 @@ class ViewController: UIViewController {
             varview.emit.subscribe(onNext: { (e) in
                 switch e {
                 case .removed(let l):
-                    let newExp = varExp.refRemove(chain: l.chain) ?? varname.e
+                    let fallback:Exp
+                    switch varExp {
+                    case .M(_): fallback = .M(.init(.e(.Var(varname))))
+                    case .R(_): fallback = .R(.init(.e(.Var(varname))))
+                    }
+                    let newExp = varExp.refRemove(chain: l.chain) ?? fallback
                     let vars = self.history.top.vars.map({ varname == $0.0 ? ($0.0, newExp) : $0})
                     self.history.push(main: self.history.top.main, vars: vars)
                 case .changed(let l):
@@ -195,38 +211,38 @@ class ViewController: UIViewController {
         
         let final = topo.reduce(mainExp) { (exp, vname) -> Exp in
             if let vexp = vars.first(where: {$0.0 == vname}) {
-                return exp.changed(eqTo: vname.e, to: vexp.1)
+                return exp.changed(eqTo: vexp.1.sameTypeVar(name: vname), to: vexp.1)
             } else {
                 return exp
             }
         }
         
         do {
-            try preview.set("= {\(evaluate( final).latex())}")
+            try preview.set("= {\(final.eval().latex())}")
         } catch {
-            if let e = error as? evalErr {
-                switch e {
-                case .MatrixSizeNotMatchForMultiplication(let a, let b):
-                    preview.set("\\text{Matrix size does not match for multiplication}" + a.latex() + " " + b.latex())
-                case .InvertingNonSquareMatrix(let m):
-                    preview.set("\\text{Can't invert a non-square matrix}"+m.latex())
-                case .MatrixNotCompleteForRowEchelonForm(_):
-                    preview.set("\\text{Can't invert a non-square matrix}")
-                case .NotAMatrixForRowEchelonForm(let e):
-                    preview.set("\\text{Can't turn not a matrix expression into row echelon form.}" + e.latex())
-                case .InvertingSingularMatrix(let m):
-                    preview.set("\\text{Can't invert a singular matrix." + m.latex())
-                case .NotAMatrixForDeterminant(let e):
-                    preview.set("\\text{Can't get a determinant of not a matrix.}" + e.latex())
-                case .NotAMatrixForTranspose(let e):
-                    preview.set("\\text{Can't transpose a not a matrix.}" + e.latex())
-
-                @unknown default:
-                    preview.set("\\text{UnknownError}")
-                }
-            } else {
-                preview.set("= \\text{invalid}")
-            }
+//            if let e = error as? evalErr {
+//                switch e {
+//                case .MatrixSizeNotMatchForMultiplication(let a, let b):
+//                    preview.set("\\text{Matrix size does not match for multiplication}" + a.latex() + " " + b.latex())
+//                case .InvertingNonSquareMatrix(let m):
+//                    preview.set("\\text{Can't invert a non-square matrix}"+m.latex())
+//                case .MatrixNotCompleteForRowEchelonForm(_):
+//                    preview.set("\\text{Can't invert a non-square matrix}")
+//                case .NotAMatrixForRowEchelonForm(let e):
+//                    preview.set("\\text{Can't turn not a matrix expression into row echelon form.}" + e.latex())
+//                case .InvertingSingularMatrix(let m):
+//                    preview.set("\\text{Can't invert a singular matrix." + m.latex())
+//                case .NotAMatrixForDeterminant(let e):
+//                    preview.set("\\text{Can't get a determinant of not a matrix.}" + e.latex())
+//                case .NotAMatrixForTranspose(let e):
+//                    preview.set("\\text{Can't transpose a not a matrix.}" + e.latex())
+//
+//                @unknown default:
+//                    preview.set("\\text{UnknownError}")
+//                }
+//            } else {
+//                preview.set("= \\text{invalid}")
+//            }
         }
         
         singleTipView?.dismiss()
@@ -255,7 +271,7 @@ class ViewController: UIViewController {
         mainExpView.emit.subscribe(onNext:{ e in
             switch e {
             case .removed(let l):
-                let newMain = self.history.top.main.refRemove(chain: l.chain) ?? "A".e
+                let newMain = self.history.top.main.refRemove(chain: l.chain) ?? "A".mvar
                 self.history.push(main: newMain)
                 self.refresh()
             case .changed(let l):
@@ -389,14 +405,14 @@ class ViewController: UIViewController {
         let varname = availableVarName()
         
         let last = history.top
-        let newVars = last.vars + [(varname, varname.e)]
+        let newVars = last.vars + [(varname, varname.rvar)]
         
         variableAddTimes[varname] = Date()
         history.push(main: last.main, vars: newVars)
         refresh()
     }
     @IBAction func clearClick(_ sender: Any) {
-        history.push(main: "A".e, vars: [])
+        history.push(main: "A".mvar, vars: [])
         refresh()
     }
 }
@@ -476,7 +492,15 @@ func allSubExps(of:Exp)->[Exp] {
     return [of] + of.subExps().flatMap({allSubExps(of:$0)})
 }
 func allSubVarNames(of:Exp)->[String] {
-    return allSubExps(of: of).compactMap({($0 as? ExpressiveAlgebra.Variable)?.letter})
+    return allSubExps(of: of).compactMap({ e in
+        switch e {
+        case let .M(m):
+            if case let .Var(v) = m.element { return v }
+        case let .R(r):
+            if case let .Var(v) = r.element { return v }
+        }
+        return nil
+    })
 }
 
 extension ViewController: EasyTipViewDelegate {
@@ -500,8 +524,7 @@ extension ViewController: UIScrollViewDelegate {
 }
 
 func dependentVariables(e:Exp)-> [String] {
-    if let e = e as? ExpressiveAlgebra.Variable {
-        return [e.letter]
-    }
+    if case let .M(m) = e, case let .Var(v) = m.element { return [v] }
+    if case let .R(r) = e, case let .Var(v) = r.element { return [v] }
     return e.kids().flatMap({dependentVariables(e: $0)})
 }

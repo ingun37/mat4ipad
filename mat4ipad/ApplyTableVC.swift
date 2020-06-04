@@ -15,6 +15,8 @@ import NumberKit
 import Regex
 import EasyTipView
 import ReSwift
+import ComplexMatrixAlgebra
+import NonEmpty
 //
 //protocol ApplyTableDelegate {
 //    func changeto(uid:String, to:Exp)
@@ -61,30 +63,35 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func optionsFor(exp:Exp)-> [Represent] {
         var options:[Represent] = []
-        let holder = availableVarName.e
-        options.append(Represent(Mat.identityOf(2, 2)))
-        options.append(Represent(Negate(exp)))
-        options.append(Represent(Fraction(numerator: exp, denominator: availableVarName.e)))
-        options.append(Represent(Fraction(numerator: Scalar(1), denominator: exp)))
-        options.append(Represent(Inverse(exp)))
-        
-        options.append(Represent(Mul(exp, availableVarName.e), show: "\(exp.latex()) \\times \(holder.latex())"))
-        options.append(Represent(Mul(availableVarName.e, exp), show: "\(holder.latex()) \\times \(exp.latex())"))
-        options.append(Represent(Add(exp, availableVarName.e)))
-        options.append(Represent(Add(availableVarName.e, exp)))
-        options.append(Represent(Subtract(exp, availableVarName.e)))
-        options.append(Represent(Subtract(availableVarName.e, exp)))
-        options.append(Represent(Power(exp, availableVarName.e)))
-    
-    
-        options.append(Represent(Transpose(exp)))
-        options.append(Represent(Determinant(exp), show: "\\text{Determinant of }\(exp.latex())"))
-        options.append(Represent(RowEchelon(mat: exp), show: "\\text{Row Echelon Form of } \(exp.latex())"))
-        options.append(Represent(ReducedRowEchelon(exp), show: "\\text{Reduced Row Echelon Form of } \(exp.latex())"))
-        options.append(Represent(Rank(exp), show: "\\text{Rank of } \(exp.latex())"))
-        options.append(Represent(Nullity(exp), show: "\\text{Nullity of } \(exp.latex())"))
-    
-        
+        switch exp {
+        case let .M(m):
+            let holder:Matrix<Real> = .init(.e(.Var(availableVarName)))
+            options.append(Represent(.M(.init(.e(.Basis(.Id)))), show: "\\text{Matrix multiplicative identity}"))
+            options.append(Represent(.M(.init(abelianOp: .Negate(m)))))
+            options.append(Represent(.M(.init(.o(.Inverse(m))))))
+            options.append(Represent(.M(.init(mmonoidOp: .Mul(.init(l: m, r: holder))))))
+            options.append(Represent(.M(.init(mmonoidOp: .Mul(.init(l: holder, r: m))))))
+            options.append(Represent(.M(.init(amonoidOp: .Add(.init(l: m, r: holder))))))
+            options.append(Represent(.M(.init(amonoidOp: .Add(.init(l: holder, r: m))))))
+            options.append(Represent(.M(.init(abelianOp: .Subtract(m, holder)))))
+            options.append(Represent(.M(.init(abelianOp: .Subtract(holder, m)))))
+            options.append(Represent(.R(.init(fieldOp: .Determinant(m))), show: "\\text{Determinant of }\(exp.latex())"))
+            options.append(Represent(.M(.init(.o(.Echelon(m)))), show: "\\text{Echelon Form of } \(exp.latex())"))
+            options.append(Represent(.M(.init(.o(.ReducedEchelon(m)))), show: "\\text{Reduced Echelon Form of } \(exp.latex())"))
+
+        case let .R(r):
+            let holder:Real = .init(.e(.Var(availableVarName)))
+            options.append(Represent(.R(.init(abelianOp: .Negate(r)))))
+            options.append(Represent(.R(.init(mabelianOp: .Quotient(r, holder)))))
+            options.append(Represent(.R(.init(mabelianOp: .Inverse(r)))))
+            options.append(Represent(.R(.init(mmonoidOp: .Mul(.init(l: r, r: holder))))))
+            options.append(Represent(.R(.init(mmonoidOp: .Mul(.init(l: holder, r: r))))))
+            options.append(Represent(.R(.init(amonoidOp: .Add(.init(l: r, r: holder))))))
+            options.append(Represent(.R(.init(amonoidOp: .Add(.init(l: holder, r: r))))))
+            options.append(Represent(.R(.init(abelianOp: .Subtract(r, holder)))))
+            options.append(Represent(.R(.init(abelianOp: .Subtract(holder, r)))))
+            options.append(Represent(.R(.init(fieldOp: .Power(base: r, exponent: holder)))))
+        }
         
         return options
     }
@@ -143,13 +150,20 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
 //        }).disposed(by: disposeBag)
     }
     @IBAction func fillMatrixClick(_ sender: Any) {
-        
-        guard let mat = exp as? Mat else {return}
+        guard case let .M(matrix) = exp else {return}
+        guard case let .e(.Basis(.Matrix(m))) = matrix.c else {return}
         guard let txt = numberTextField.text else {return}
-        guard let _ = txt2exp(txt: txt) else {return}
-        let exparr = (0..<mat.rows).map({_ in (0..<mat.cols).map({_ in txt2exp(txt: txt)! })})
+        guard let r = txt2exp(txt: txt) else {return}
+        let rows = NonEmpty(0, 1..<m.rowLen)
+        let tbl = rows.map({_ in NonEmpty(0,1..<m.colLen)})
+        let rtbl = tbl.map { (row) in
+            row.map({_ in r})
+        }
+        let rLL = rtbl.map({$0.list}).list
+
+        let newMat:Matrix<Real> = .init(element: .Basis(.Matrix(.init(e: rLL))))
         dismiss(animated: false) {
-            self.promise.fulfill(.changed(Mat(exparr)))
+            self.promise.fulfill(.changed(.M(newMat)))
         }
     }
     
@@ -166,7 +180,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         }
         
     }
-    func txt2exp(txt:String)->Exp? {
+    func txt2exp(txt:String)->Real? {
         if let value = Int(txt) {
             return value.exp
         }
