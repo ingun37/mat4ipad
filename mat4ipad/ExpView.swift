@@ -173,7 +173,7 @@ func directCommutativeKids(exp:Exp)-> [Lineage] {
         let kid = kids[idx]
         let baseChain = [idx]
         let associativeOperator:Bool
-        if case let .R(r) = exp {
+        if case let .R(r) = kid {
             if case .o(.f(.Abelian(.Monoid(.Add(_))))) = r.c {
                 associativeOperator = true
             } else if case .o(.f(.Mabelian(.Monoid(.Mul(_))))) = r.c {
@@ -181,7 +181,7 @@ func directCommutativeKids(exp:Exp)-> [Lineage] {
             } else {
                 associativeOperator = false
             }
-        } else if case let .M(r) = exp {
+        } else if case let .M(r) = kid {
             if case .o(.Ring(.Abelian(.Monoid(.Add(_))))) = r.c {
                 associativeOperator = true
             } else if case .o(.Ring(.MMonoid(.Mul(_)))) = r.c {
