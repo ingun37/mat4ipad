@@ -66,7 +66,12 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         switch exp {
         case let .M(m):
             let holder:Matrix<Real> = .init(.e(.Var(availableVarName)))
-            options.append(Represent(.M(.init(.e(.Basis(.Id)))), show: "\\text{Matrix multiplicative identity}"))
+            let id22_row1 = NonEmpty(Real(element: .Basis(.N(1))), [Real(element: .Basis(.N(0)))])
+            let id22_row2 = NonEmpty(Real(element: .Basis(.N(0))), [Real(element: .Basis(.N(1)))])
+            let id22NonemptyElements = NonEmpty(id22_row1, [id22_row2])
+            let id22 = id22NonemptyElements.map({$0.list}).list
+
+            options.append(Represent(.M(.init(.e(.Basis(.Matrix(.init(e: id22))))))))
             options.append(Represent(.M(.init(abelianOp: .Negate(m)))))
             options.append(Represent(.M(.init(.o(.Inverse(m))))))
             options.append(Represent(.M(.init(mmonoidOp: .Mul(.init(l: m, r: holder))))))
