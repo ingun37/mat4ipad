@@ -11,6 +11,7 @@ import RxCocoa
 import RxSwift
 import SignedNumberRecognizer
 import ComplexMatrixAlgebra
+import NonEmpty
 
 enum DrawErr:Error {
     case canceled
@@ -103,7 +104,7 @@ class MatrixCell: UIView, ExpViewable, UIGestureRecognizerDelegate {
     var exp:Exp {
         return lineage.exp
     }
-    var lineage:Lineage = Lineage(chain: [], exp: "c".e)
+    var lineage:Lineage = Lineage(chain: [], exp: "c".rvar)
     
     func set(lineage:Lineage) {
         self.lineage = lineage
@@ -145,20 +146,21 @@ class MatrixView:UIView {
                 let affectedCells = self.cellViews.filter { (cellv) -> Bool in
                     !cellv.drawing.isEmpty
                 }
-                let changedMat = affectedCells.reduce(self.mat as Exp, { (mat, cellv) -> Exp in
+                let matAsExp:Exp = .M(.init(element: .Basis(.Matrix(self.mat))))
+                let changedMat = affectedCells.reduce(matAsExp, { (mat, cellv) -> Exp in
                     let res = recognize(paths: seperate(path: cellv.drawing))
                     let most = mostLikely(sign: res.0, results: res.1)
                     cellv.drawing = CGMutablePath()
                     if let i = Int(most) {
                         let kididx = cellv.lineage.chain.last!
                         var elements = mat.kids()
-                        elements[kididx] = Scalar(i)
+                        elements[kididx] = .R(.init(element: .Basis(.N(i))))
                         return mat.cloneWith(kids: elements)
                     } else {
                         return mat
                     }
                 })
-                if changedMat.isEq(self.mat) {
+                if case let .M(cm) = changedMat, cm == Matrix<Real>(element: .Basis(.Matrix(self.mat))) {
                     affectedCells.forEach { (cellv) in
                         cellv.drawing = CGMutablePath()
                         cellv.latex.isHidden = false
@@ -181,7 +183,7 @@ class MatrixView:UIView {
     var cellViews:[MatrixCell] = []
     
     @IBOutlet weak var stack: UIStackView!
-    var lineage:Lineage = Lineage(chain: [], exp: "M".e)
+    var lineage:Lineage = Lineage(chain: [], exp: "M".mvar)
     let cellTapped = PublishSubject<MatrixCell>()
     func set(_ m:Mat<Real>, lineage:Lineage) {
         self.mat = m
@@ -191,7 +193,7 @@ class MatrixView:UIView {
             for ci in (0..<m.colLen) {
                 let cell = MatrixCell.loadViewFromNib()
                 let kididx = ri*m.colLen + ci
-                cell.set(lineage: Lineage(chain: lineage.chain + [kididx], exp: m.row(ri)[ci]))
+                cell.set(lineage: Lineage(chain: lineage.chain + [kididx], exp: .R(m.row(ri).all[ci])))
                 rowView.stack.addArrangedSubview(cell)
                 cell.rxDrawing.map({_ in kididx}).subscribe(cellsDrawingSignal).disposed(by: dBag)
                 cell.tapped.subscribe(cellTapped).disposed(by: dBag)
@@ -201,25 +203,19 @@ class MatrixView:UIView {
         }
     }
     func expandBy(row: Int, col: Int) {
-        let co = mat.cols
-        var kids2d = mat.elements
-        if col < 0 && 0 < co + col {
-            kids2d = kids2d.map({row in row.dropLast(-col)})
-        } else if 0 < col {
-            kids2d = kids2d.map({$0 + (0..<col).map({_ in 0.exp})})
+        let co = mat.colLen
+        var kids2d = mat.e
+        let colIdx = NonEmpty(0, 1..<mat.colLen+col)
+        kids2d = kids2d.fmap { (row) in
+            colIdx.map { (ci) in row.all.safe(at: ci) ?? Real(element: .Basis(.Zero)) }.list
         }
+        let rowIdx = NonEmpty(0, 1..<mat.rowLen+row)
+        kids2d = rowIdx.map({ (ri)->List<Real> in
+            return kids2d.all.safe(at: ri) ?? colIdx.map({_ in Real(element: .Basis(.Zero))}).list
+        }).list
         
-        if row < 0 && 0 < mat.rows + row {
-            kids2d = kids2d.dropLast(-row)
-        } else if 0 < row {
-            let colLen = kids2d[0].count
-            kids2d = kids2d + (0..<row).map({_ in
-                (0..<colLen).map({_ in 0.exp})
-            })
-        }
-        
-        let newMat = Mat(kids2d)
-        changed.onNext(newMat)
+        let newMat = Mat<Real>.init(e: kids2d)
+        changed.onNext(.M(.init(.e(.Basis(.Matrix(newMat))))))
     }
     static func loadViewFromNib() -> MatrixView {
         let bundle = Bundle(for: self)
@@ -228,3 +224,12 @@ class MatrixView:UIView {
     }
 }
 
+extension Collection where Index == Int {
+    func safe(at:Int)-> Element? {
+        if at < count {
+            return self[at]
+        } else {
+            return nil
+        }
+    }
+}

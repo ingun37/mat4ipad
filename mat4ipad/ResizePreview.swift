@@ -57,8 +57,8 @@ class ResizePreview: UIView {
         
         dragPan.rx.event.map({[unowned self] rec-> (Int, Int, UIGestureRecognizer.State) in
             let matrixFrame = self.startFrame
-            let cellHeight = Int(matrixFrame.height) / (self.matrixView?.mat.rows ?? 1)
-            let cellWidth = Int(matrixFrame.width) / (self.matrixView?.mat.cols ?? 1)
+            let cellHeight = Int(matrixFrame.height) / (self.matrixView?.mat.rowLen ?? 1)
+            let cellWidth = Int(matrixFrame.width) / (self.matrixView?.mat.colLen ?? 1)
 //            print("a: \(matrixFrame)")
             let tran:CGPoint = rec.translation(in: nil)
 
@@ -68,8 +68,8 @@ class ResizePreview: UIView {
         }).subscribe(onNext: { [unowned self] (newSz) in
             let (newRow, newCol, state) = newSz
             guard let matrixView = self.matrixView else {return}
-            let oldrow = matrixView.mat.rows
-            let oldcol = matrixView.mat.cols
+            let oldrow = matrixView.mat.rowLen
+            let oldcol = matrixView.mat.colLen
             self.previewResizedMatrix(newRow: newRow, newCol: newCol)
             if state == .ended {
                 matrixView.expandBy(row: newRow - oldrow, col: newCol - oldcol)
@@ -92,8 +92,8 @@ class ResizePreview: UIView {
         guard let matrixView = matrixView else {return}
         let stackFrame = matrixView.frame
 
-        let cellw = stackFrame.size.width / CGFloat(matrixView.mat.cols)
-        let cellh = stackFrame.size.height / CGFloat(matrixView.mat.rows)
+        let cellw = stackFrame.size.width / CGFloat(matrixView.mat.colLen)
+        let cellh = stackFrame.size.height / CGFloat(matrixView.mat.rowLen)
         (0..<newRow+1).forEach({ ri in
             let line = UIView(frame: CGRect(x: 0, y: CGFloat(ri)*cellh, width: CGFloat(newCol)*cellw, height: 1))
             line.backgroundColor = UIColor.white

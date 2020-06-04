@@ -182,34 +182,34 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     }
     func txt2exp(txt:String)->Real? {
         if let value = Int(txt) {
-            return value.exp
+            return .init(element: .Basis(.N(value)))
         }
-        if let value = Float(txt) {
-            return Scalar(value)
+        if let value = Double(txt) {
+            return .init(element: .Basis(.R(value)))
         }
         if let r = Rational<Int>(from: txt){
-            return Scalar(r)
+            return .init(element: .Basis(.Q(r)))
         }
         if let match = #"^([a-zA-Z0-9]+)\+([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
             if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
                 if let partr = match.group(at: 2), let expr = txt2exp(txt: partr) {
-                    return Add(expl, expr)
+                    return .init(amonoidOp: .Add(.init(l: expl, r: expr)))
                 }
             }
         }
         if let match = #"^([a-zA-Z0-9]+)-([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
             if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
                 if let partr = match.group(at: 2), let expr = txt2exp(txt: partr) {
-                    return Subtract(expl, expr)
+                    return .init(abelianOp: .Subtract(expl, expr))
                 }
             }
         }
         if let match = #"^(-?)([a-zA-Z]+)$"#.r?.findFirst(in: txt) {
             if let varpart = match.group(at: 2) {
                 if match.group(at: 1) == "-" {
-                    return Negate(varpart.e)
+                    return .init(abelianOp: .Negate(.init(element: .Var(varpart))))
                 } else {
-                    return varpart.e
+                    return .init(element: .Var(varpart))
                 }
             }
         } else if let match = "^(-?)(\\d+)([a-zA-Z]+)$".r?.findFirst(in: txt) {
@@ -217,28 +217,28 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
                 if let varpart = match.group(at: 3) {
                     let sign = match.group(at: 1) ?? ""
                     if let num = Int(sign + numpart) {
-                        return Mul(Scalar(num), varpart.e)
+                        return .init(mmonoidOp: .Mul(.init(l: .init(element: .Basis(.N(num))), r: .init(element: .Var(varpart)))))
                     }
                 }
             }
         } else if let match = #"^(-?)(\d+|[a-zA-Z]+)\/(\d+|[a-zA-Z]+)$"#.r?.findFirst(in: txt) {
             if let part1 = match.group(at: 2) {
                 if let part2 = match.group(at: 3) {
-                    let exp1:Exp
+                    let exp1:Real
                     if let num1 = Int(part1) {
-                        exp1 = Scalar(num1)
+                        exp1 = .init(element: .Basis(.N(num1)))
                     } else {
-                        exp1 = part1.e
+                        exp1 = .init(element: .Var(part1))
                     }
-                    let exp2:Exp
+                    let exp2:Real
                     if let num2 = Int(part2) {
-                        exp2 = Scalar(num2)
+                        exp2 = .init(element: .Basis(.N(num2)))
                     } else {
-                        exp2 = part2.e
+                        exp2 = .init(element: .Var(part2))
                     }
-                    let result = Fraction(numerator: exp1, denominator: exp2)
+                    let result = Real(mabelianOp: .Quotient(exp1, exp2))
                     if match.group(at: 1) == "-" {
-                        return Negate(result)
+                        return .init(abelianOp: .Negate(result))
                     } else {
                         return result
                     }
@@ -247,21 +247,21 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         } else if let match = #"^(-?)(\d+|[a-zA-Z]+)\^(\d+|[a-zA-Z]+)$"#.r?.findFirst(in: txt) {
             if let part1 = match.group(at: 2) {
                 if let part2 = match.group(at: 3) {
-                    let exp1:Exp
+                    let exp1:Real
                     if let num1 = Int(part1) {
-                        exp1 = Scalar(num1)
+                        exp1 = .init(element: .Basis(.N(num1)))
                     } else {
-                        exp1 = part1.e
+                        exp1 = .init(element: .Var(part1))
                     }
-                    let exp2:Exp
+                    let exp2:Real
                     if let num2 = Int(part2) {
-                        exp2 = Scalar(num2)
+                        exp2 = .init(element: .Basis(.N(num2)))
                     } else {
-                        exp2 = part2.e
+                        exp2 = .init(element: .Var(part2))
                     }
-                    let result = Power(exp1, exp2)
+                    let result = Real(fieldOp: .Power(base: exp1, exponent: exp2))
                     if match.group(at: 1) == "-" {
-                        return Negate(result)
+                        return .init(abelianOp: .Negate(result))
                     } else {
                         return result
                     }
@@ -276,7 +276,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         if let input = numberTextField.text {
             if let newExp = txt2exp(txt: input) {
                 dismiss(animated: false) { [unowned self] in
-                    self.promise.fulfill(.changed(newExp))
+                    self.promise.fulfill(.changed(.R(newExp)))
                 }
             } else if input.isEmpty {
                 
@@ -380,7 +380,7 @@ extension ApplyTableVC:UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         dismiss(animated: false) { [unowned self] in
-            self.promise.fulfill(.changed(self.varNames[indexPath.row].e))
+            self.promise.fulfill(.changed(self.exp.sameTypeVar(name: self.varNames[indexPath.row])))
         }
     }
 }

@@ -19,7 +19,7 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var stack: UIStackView!
 
     var matrixCells:[MatrixCell] {
-        if exp is Mat {
+        if case let .M(_) = exp {
             return matrixView.stack.arrangedSubviews.map({$0 as! MatrixRow}).flatMap({
                 $0.stack.arrangedSubviews.map({($0 as! MatrixCell)})
             })
@@ -133,12 +133,12 @@ class ExpView: UIView, ExpViewable {
         backgroundColor = color
         diagramView.backgroundColor = color
     }
-    var lineage:Lineage = Lineage(chain: [], exp: "X".e)
+    var lineage:Lineage = Lineage(chain: [], exp: "X".mvar)
     func setExp(lineage:Lineage) {
         self.lineage = lineage
         padLatexView.contentView.mathv?.latex = exp.latex()
         
-        if let exp = exp as? Mat {
+        if case let .M(m) = exp, case let .e(.Basis(.Matrix(exp))) = m.c {
             matrixView.isHidden = false
             stack.isHidden = true
             diagramView.isHidden = true
@@ -165,13 +165,34 @@ class ExpView: UIView, ExpViewable {
     @IBOutlet weak var matrixWidth: NSLayoutConstraint!
 }
 
+///rename it to associative
 func directCommutativeKids(exp:Exp)-> [Lineage] {
     let kids = exp.kids()
     
     let commutativeKids = (0..<kids.count).flatMap { (idx) -> [Lineage] in
         let kid = kids[idx]
         let baseChain = [idx]
-        if exp is Add && kid is Add || exp is Mul && kid is Mul {
+        let associativeOperator:Bool
+        if case let .R(r) = exp {
+            if case .o(.f(.Abelian(.Monoid(.Add(_))))) = r.c {
+                associativeOperator = true
+            } else if case .o(.f(.Mabelian(.Monoid(.Mul(_))))) = r.c {
+                associativeOperator = true
+            } else {
+                associativeOperator = false
+            }
+        } else if case let .M(r) = exp {
+            if case .o(.Ring(.Abelian(.Monoid(.Add(_))))) = r.c {
+                associativeOperator = true
+            } else if case .o(.Ring(.MMonoid(.Mul(_)))) = r.c {
+                associativeOperator = true
+            } else {
+                associativeOperator = false
+            }
+        } else {
+            associativeOperator = false
+        }
+        if associativeOperator {
             let granCommuteKids = directCommutativeKids(exp: kid)
             return granCommuteKids.map { (relLineage) -> (Lineage) in
                 return Lineage(chain: baseChain + relLineage.chain, exp: relLineage.exp)
