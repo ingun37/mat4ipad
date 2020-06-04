@@ -447,12 +447,14 @@ class ViewController: UIViewController {
         if sender.selectedSegmentIndex == 0 {
             if mode != .Matrix {
                 mode = .Matrix
-                clearClick(sender)
+                history = matrixInitalHistory
+                refresh()
             }
         } else {
             if mode != .Real {
                 mode = .Real
-                clearClick(sender)
+                history = realInitalHistory
+                refresh()
             }
         }
     }
