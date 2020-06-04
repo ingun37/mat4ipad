@@ -50,16 +50,28 @@ func sampleMain()->Exp {
 //                          [0.e, 1.e]]), 2.e),
 //               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
 }
+func sampleRealMain()->Exp {
+    return "x".rvar
+//    let x = "x".e
+//    let z = "z".e
+//    let A = "A".e
+//    return Add(Power(Mat([[1.e, x  ],
+//                          [0.e, 1.e]]), 2.e),
+//               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
+}
 struct History {
     struct State {
         let main:Exp
         let vars:[(String,Exp)]
     }
-    private var _history:[State] = [
-        State(main: sampleMain(),
-              vars: [("A", sampllevarA()),
-                     ("z", sampllevarZ())])
-    ]
+    let initial:State
+    let sample:State
+    init(initial:State, sample:State) {
+        self.initial = initial
+        self.sample = sample
+        self._history = [sample]
+    }
+    private var _history:[State]
     mutating func push(main:Exp, vars:[(String,Exp)]) {
         _history.append(State(main: main, vars: vars))
     }
@@ -70,13 +82,15 @@ struct History {
         _history.append(state)
     }
     var top:State {
-        return _history.last ?? State(main: "A".mvar, vars: [])
+        return _history.last ?? initial
     }
     @discardableResult
     mutating func pop()-> State? {
         return _history.popLast()
     }
 }
+let matrixInitalHistory = History(initial: History.State(main: "A".mvar, vars: []), sample: History.State(main: sampleMain(), vars: [("A", sampllevarA()), ("z", sampllevarZ())]))
+let realInitalHistory = History(initial: History.State(main: "x".rvar, vars: []), sample: History.State(main: sampleRealMain(), vars: []))
 class ViewController: UIViewController {
     @IBOutlet weak var mathRollv: MathScrollView!
     @IBSegueAction func addHelpSwiftUIView(_ coder: NSCoder) -> UIViewController? {
@@ -91,7 +105,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var preview: LatexView!
     
-    var history = History()
+    var history = matrixInitalHistory
     
     private var exp:Exp {
         return history.top.main
@@ -401,19 +415,45 @@ class ViewController: UIViewController {
     }
     var variableAddTimes:[String: Date] = [:]
     @IBAction func addVariableClick(_ sender: Any) {
-        
         let varname = availableVarName()
-        
+        newVar(name: varname, exp: varname.rvar)
+    }
+    @IBAction func newMatrixVariableClick(_ sender: Any) {
+        let varname = availableVarName()
+        newVar(name: varname, exp: varname.mvar)
+    }
+    func newVar(name:String, exp:Exp) {
         let last = history.top
-        let newVars = last.vars + [(varname, varname.rvar)]
+        let newVars = last.vars + [(name, exp)]
         
-        variableAddTimes[varname] = Date()
+        variableAddTimes[name] = Date()
         history.push(main: last.main, vars: newVars)
         refresh()
     }
     @IBAction func clearClick(_ sender: Any) {
-        history.push(main: "A".mvar, vars: [])
+        switch mode {
+        case .Matrix: history = matrixInitalHistory
+        case .Real: history = realInitalHistory
+        }
         refresh()
+    }
+    enum Mode {
+        case Matrix
+        case Real
+    }
+    var mode:Mode = .Matrix
+    @IBAction func modeChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            if mode != .Matrix {
+                mode = .Real
+                clearClick(sender)
+            }
+        } else {
+            if mode != .Real {
+                mode = .Real
+                clearClick(sender)
+            }
+        }
     }
 }
 
