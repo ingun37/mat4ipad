@@ -61,7 +61,15 @@ func sampleMain()->Exp {
     return .M(aaa)
 }
 func sampleRealMain()->Exp {
-    return "x".rvar
+    let x = "x".r
+    let y = "y".r
+    let a = "a".r
+    let b = "b".r
+    let row1 = NonEmpty(x, [a]).list
+    let row2 = NonEmpty(b, [y]).list
+    let rows = NonEmpty(row1, [row2]).list
+    let m = Mat<Real>(e: rows)
+    return .R(Real(fieldOp: .Determinant(.init(element: .Basis(.Matrix(m))))))
 }
 struct History {
     struct State {
@@ -94,7 +102,7 @@ struct History {
     }
 }
 let matrixInitalHistory = History(initial: History.State(main: "A".mvar, vars: []), sample: History.State(main: sampleMain(), vars: [("A", sampllevarA()), ("z", sampllevarZ())]))
-let realInitalHistory = History(initial: History.State(main: "x".rvar, vars: []), sample: History.State(main: sampleRealMain(), vars: []))
+let realInitalHistory = History(initial: History.State(main: "x".rvar, vars: []), sample: History.State(main: sampleRealMain(), vars: [("x", .R(3.r))]))
 class ViewController: UIViewController {
     @IBOutlet weak var mathRollv: MathScrollView!
     @IBSegueAction func addHelpSwiftUIView(_ coder: NSCoder) -> UIViewController? {
