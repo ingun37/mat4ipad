@@ -261,9 +261,9 @@ extension Exp {
     func latex()->String {
         switch self {
         case let .M(m):
-            return ComplexMatrixAlgebra.latex(m)
+            return (m).latex()
         case let .R(r):
-            return ComplexMatrixAlgebra.latex(r)
+            return (r).latex()
         }
     }
     func sameTypeVar(name:String)->Exp {

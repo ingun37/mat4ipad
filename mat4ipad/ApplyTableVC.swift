@@ -40,11 +40,13 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
     var exp:Exp!
     var parentExp:Exp?
     var varNames:[String] = []
-    var availableVarName = "Z"
-    func set(exp:Exp, parentExp:Exp?, varNames:[String], availableVarName:String) {
+    var availableRealVarName = "z"
+    var availableMatrixVarName = "Z"
+    func set(exp:Exp, parentExp:Exp?, varNames:[String], availableRealVarName:String, availableMatrixVarName:String) {
         self.exp = exp
         self.varNames = varNames
-        self.availableVarName = availableVarName
+        self.availableRealVarName = availableRealVarName
+        self.availableMatrixVarName = availableMatrixVarName
         self.parentExp = parentExp
     }
     
@@ -65,7 +67,7 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         var options:[Represent] = []
         switch exp {
         case let .M(m):
-            let holder:Matrix<Real> = .init(.e(.Var(availableVarName)))
+            let holder:Matrix<Real> = .init(.e(.Var(availableMatrixVarName)))
             let id22_row1 = NonEmpty(Real(element: .Basis(.N(1))), [Real(element: .Basis(.N(0)))])
             let id22_row2 = NonEmpty(Real(element: .Basis(.N(0))), [Real(element: .Basis(.N(1)))])
             let id22NonemptyElements = NonEmpty(id22_row1, [id22_row2])
@@ -80,12 +82,13 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(Represent(.M(.init(amonoidOp: .Add(.init(l: holder, r: m))))))
             options.append(Represent(.M(.init(abelianOp: .Subtract(m, holder)))))
             options.append(Represent(.M(.init(abelianOp: .Subtract(holder, m)))))
-            options.append(Represent(.R(.init(fieldOp: .Determinant(m))), show: "\\text{Determinant of }\(exp.latex())"))
             options.append(Represent(.M(.init(.o(.Echelon(m)))), show: "\\text{Echelon Form of } \(exp.latex())"))
             options.append(Represent(.M(.init(.o(.ReducedEchelon(m)))), show: "\\text{Reduced Echelon Form of } \(exp.latex())"))
 
         case let .R(r):
-            let holder:Real = .init(.e(.Var(availableVarName)))
+            let holder:Real = .init(.e(.Var(availableRealVarName)))
+            let mholder:Matrix<Real> = .init(.e(.Var(availableMatrixVarName)))
+
             options.append(Represent(.R(.init(abelianOp: .Negate(r)))))
             options.append(Represent(.R(.init(mabelianOp: .Quotient(r, holder)))))
             options.append(Represent(.R(.init(mabelianOp: .Inverse(r)))))
@@ -96,6 +99,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
             options.append(Represent(.R(.init(abelianOp: .Subtract(r, holder)))))
             options.append(Represent(.R(.init(abelianOp: .Subtract(holder, r)))))
             options.append(Represent(.R(.init(fieldOp: .Power(base: r, exponent: holder)))))
+            options.append(Represent(.R(.init(fieldOp: .Determinant(mholder))), show: "\\text{Determinant of }\((mholder.latex()))"))
+
         }
         
         return options
