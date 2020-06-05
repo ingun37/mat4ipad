@@ -151,7 +151,7 @@ class ExpView: UIView, ExpViewable {
             matrixView.isHidden = true
             stack.isHidden = false
             diagramView.isHidden = false
-            directCommutativeKids(exp: exp).forEach { (relLineage) in
+            directAssociativeKids(exp: exp).forEach { (relLineage) in
                 let v = ExpView.loadViewFromNib()
                 v.setExp(lineage: Lineage(chain: lineage.chain + relLineage.chain, exp: relLineage.exp))
                 v.emit.subscribe(self.emit).disposed(by: self.dbag)
@@ -166,25 +166,25 @@ class ExpView: UIView, ExpViewable {
 }
 
 ///rename it to associative
-func directCommutativeKids(exp:Exp)-> [Lineage] {
+func directAssociativeKids(exp:Exp)-> [Lineage] {
     let kids = exp.kids()
     
     let commutativeKids = (0..<kids.count).flatMap { (idx) -> [Lineage] in
         let kid = kids[idx]
         let baseChain = [idx]
         let associativeOperator:Bool
-        if case let .R(r) = kid {
-            if case .o(.f(.Abelian(.Monoid(.Add(_))))) = r.c {
+        if case let .R(r) = kid, case let .R(exp) = exp {
+            if case .o(.f(.Abelian(.Monoid(.Add(_))))) = r.c, case .o(.f(.Abelian(.Monoid(.Add(_))))) = exp.c {
                 associativeOperator = true
-            } else if case .o(.f(.Mabelian(.Monoid(.Mul(_))))) = r.c {
+            } else if case .o(.f(.Mabelian(.Monoid(.Mul(_))))) = r.c, case .o(.f(.Mabelian(.Monoid(.Mul(_))))) = exp.c {
                 associativeOperator = true
             } else {
                 associativeOperator = false
             }
-        } else if case let .M(r) = kid {
-            if case .o(.Ring(.Abelian(.Monoid(.Add(_))))) = r.c {
+        } else if case let .M(r) = kid, case let .M(exp) = exp {
+            if case .o(.Ring(.Abelian(.Monoid(.Add(_))))) = r.c, case .o(.Ring(.Abelian(.Monoid(.Add(_))))) = exp.c {
                 associativeOperator = true
-            } else if case .o(.Ring(.MMonoid(.Mul(_)))) = r.c {
+            } else if case .o(.Ring(.MMonoid(.Mul(_)))) = r.c, case .o(.Ring(.MMonoid(.Mul(_)))) = exp.c {
                 associativeOperator = true
             } else {
                 associativeOperator = false
@@ -193,7 +193,7 @@ func directCommutativeKids(exp:Exp)-> [Lineage] {
             associativeOperator = false
         }
         if associativeOperator {
-            let granCommuteKids = directCommutativeKids(exp: kid)
+            let granCommuteKids = directAssociativeKids(exp: kid)
             return granCommuteKids.map { (relLineage) -> (Lineage) in
                 return Lineage(chain: baseChain + relLineage.chain, exp: relLineage.exp)
             }
