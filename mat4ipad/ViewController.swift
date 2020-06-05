@@ -16,13 +16,16 @@ import SwiftUI
 import EasyTipView
 import SwiftGraph
 import ComplexMatrixAlgebra
+import NonEmpty
 
-extension Int {
-    var e:Exp {
-        return .R(.init(.e(.Basis(.N(self)))))
+fileprivate extension Int {
+    var r:Real {
+        return .init(.e(.Basis(.N(self))))
     }
 }
-extension String {
+fileprivate extension String {
+    var r:Real { return .init(.e(.Var(self))) }
+    var m:Matrix<Real> { return .init(.e(.Var(self))) }
     var rvar:Exp {
         return .R(.init(.e(.Var(self))))
     }
@@ -31,33 +34,34 @@ extension String {
     }
 }
 func sampllevarZ()->Exp {
-    return (-1).e
+    return .R((-1).r)
 }
 func sampllevarA()->Exp {
-    let m = Exp.M(.init(.e(.Basis(.zero))))
-    return m
-//    let x = "x".e
-//    let p = Power(x, (-2).e)
-//    let f = Negate(Fraction(numerator: 1.e, denominator: "z".e))
-//    return Mat([[f, 2.e],[3.e, p]])
+    let x = "x".r
+    let p = Real(fieldOp: .Power(base: x, exponent: (-2).r))
+    let f = -(1.r / "z".r)
+    let row1 = NonEmpty(f, [2.r]).list
+    let row2 = NonEmpty(3.r, [p]).list
+    let rows = NonEmpty(row1, [row2]).list
+    return .M(.init(element: .Basis(.Matrix(.init(e: rows)))))
 }
 func sampleMain()->Exp {
-    return "A".mvar
-//    let x = "x".e
-//    let z = "z".e
-//    let A = "A".e
-//    return Add(Power(Mat([[1.e, x  ],
-//                          [0.e, 1.e]]), 2.e),
-//               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
+    let x = "x".r
+    let z = "z".r
+    let A = "A".m
+    
+    let row1 = NonEmpty<[Real]>(1.r, [x]).list
+    let row2 = NonEmpty<[Real]>(0.r, [1.r]).list
+    let rows = NonEmpty(row1, [row2]).list
+    let Mx = Matrix<Real>(element: .Basis(.Matrix(.init(e: rows))))
+    let rowy1 = NonEmpty(1.r, [0.r]).list
+    let rowy2 = NonEmpty(z, [1.r]).list
+    let My = Matrix<Real>(element: .Basis(.Matrix(.init(e: NonEmpty(rowy1, [rowy2]).list)) ))
+    let aaa = (Mx * Mx) + (My * A)
+    return .M(aaa)
 }
 func sampleRealMain()->Exp {
     return "x".rvar
-//    let x = "x".e
-//    let z = "z".e
-//    let A = "A".e
-//    return Add(Power(Mat([[1.e, x  ],
-//                          [0.e, 1.e]]), 2.e),
-//               Mul(Mat([[1.e, 0.e],[z, 1.e]]), A))
 }
 struct History {
     struct State {
@@ -232,7 +236,7 @@ class ViewController: UIViewController {
         }
         
         do {
-            try preview.set("= {\(final.eval().latex())}")
+            try preview.set("= {\(final.eval().prettify().latex())}")
         } catch {
 //            if let e = error as? evalErr {
 //                switch e {
@@ -405,7 +409,7 @@ class ViewController: UIViewController {
     public var tipShown = false
     public var varTipShown = false
     public var handleTipShown = false
-    func availableVarName()->String {
+    func availableMatrixVarName()->String {
         let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
             allSubVarNames(of: v)
         })
@@ -413,13 +417,21 @@ class ViewController: UIViewController {
             !self.history.top.vars.map({$0.0}).contains(name) && !allSubVars.contains(name)
         })!
     }
+    func availableRealVarName()->String {
+        let allSubVars = allSubVarNames(of: history.top.main) + history.top.vars.flatMap({ (_, v) in
+            allSubVarNames(of: v)
+        })
+        return lexiFreeMonoid(generator: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".lowercased().map({"\($0)"})).first(where: {name in
+            !self.history.top.vars.map({$0.0}).contains(name) && !allSubVars.contains(name)
+        })!
+    }
     var variableAddTimes:[String: Date] = [:]
     @IBAction func addVariableClick(_ sender: Any) {
-        let varname = availableVarName()
+        let varname = availableRealVarName()
         newVar(name: varname, exp: varname.rvar)
     }
     @IBAction func newMatrixVariableClick(_ sender: Any) {
-        let varname = availableVarName()
+        let varname = availableMatrixVarName()
         newVar(name: varname, exp: varname.mvar)
     }
     func newVar(name:String, exp:Exp) {

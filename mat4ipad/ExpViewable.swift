@@ -252,6 +252,12 @@ extension Exp {
         case let .R(r): return .R(r.eval())
         }
     }
+    func prettify()->Exp {
+        switch self {
+        case let .M(m): return .M(m.prettyfy())
+        case let .R(r): return .R(r.prettyfy())
+        }
+    }
     func latex()->String {
         switch self {
         case let .M(m):
