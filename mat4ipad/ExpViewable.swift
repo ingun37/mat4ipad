@@ -24,6 +24,9 @@ protocol ExpViewable: UIView {
 extension Exp {
     func refRemove(chain:[Int])-> Exp? {
         guard let head = chain.first else {
+            if case let .M(m) = self, case .Basis(_) = m.element {
+                return nil
+            }
             if let firstKid = kids().first {
                 return firstKid
             } else {
