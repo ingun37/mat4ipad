@@ -48,7 +48,7 @@ class ExpView: UIView, ExpViewable {
         vc.popoverPresentationController?.sourceView = padLatexView
         
         
-        vc.set(exp: exp, parentExp: nil, varNames: substitutableVars(for: self.exp), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
+        vc.set(exp: exp, parentExp: nil, varNames: substitutableVars(for: self.exp), availableRealVarName: availableRealVarName(), availableMatrixVarName: availableMatrixVarName())
         vc.promise.then { (r) in
             switch r {
             case let .changed(to):
@@ -90,7 +90,7 @@ class ExpView: UIView, ExpViewable {
             guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
             vc.modalPresentationStyle = .popover
             vc.popoverPresentationController?.sourceView = cell
-            vc.set(exp: cell.exp, parentExp: nil, varNames: substitutableVars(for: cell.exp), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
+            vc.set(exp: cell.exp, parentExp: nil, varNames: substitutableVars(for: cell.exp), availableRealVarName: availableRealVarName(), availableMatrixVarName: availableMatrixVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
@@ -277,9 +277,7 @@ class DiagramView:UIView {
     }
 }
 func substitutableVars(for forexp:Exp)->[String] {
-    guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return []}
-
-    return root.history.top.vars.filter { (name, exp) -> Bool in
+    return appStore.state.ofCase.vars.filter { (name, exp) -> Bool in
         switch exp {
         case .M(_):
             switch forexp {
