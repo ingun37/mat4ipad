@@ -47,7 +47,8 @@ class ExpView: UIView, ExpViewable {
         vc.modalPresentationStyle = .popover
         vc.popoverPresentationController?.sourceView = padLatexView
         
-        vc.set(exp: exp, parentExp: nil, varNames: Array(root.history.top.vars.map({$0.0})), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
+        
+        vc.set(exp: exp, parentExp: nil, varNames: substitutableVars(for: self.exp), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
         vc.promise.then { (r) in
             switch r {
             case let .changed(to):
@@ -89,7 +90,7 @@ class ExpView: UIView, ExpViewable {
             guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return}
             vc.modalPresentationStyle = .popover
             vc.popoverPresentationController?.sourceView = cell
-            vc.set(exp: cell.exp, parentExp: nil, varNames: Array(root.history.top.vars.map({$0.0})), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
+            vc.set(exp: cell.exp, parentExp: nil, varNames: substitutableVars(for: cell.exp), availableRealVarName: root.availableRealVarName(), availableMatrixVarName: root.availableMatrixVarName())
             vc.promise.then { (r) in
                 switch r {
                 case let .changed(to):
@@ -134,8 +135,11 @@ class ExpView: UIView, ExpViewable {
         diagramView.backgroundColor = color
     }
     var lineage:Lineage = Lineage(chain: [], exp: .M(.Id))
+    
     func setExp(lineage:Lineage) {
         self.lineage = lineage
+
+        
         padLatexView.contentView.mathv?.latex = exp.latex()
         
         if case let .M(m) = exp, case let .e(.Basis(.Matrix(exp))) = m.c {
@@ -271,4 +275,22 @@ class DiagramView:UIView {
         context.addLine(to: CGPoint(x: sorted.last!, y: 15))
         context.strokePath()
     }
+}
+func substitutableVars(for forexp:Exp)->[String] {
+    guard let root = UIApplication.shared.windows.first?.rootViewController as? ViewController else {return []}
+
+    return root.history.top.vars.filter { (name, exp) -> Bool in
+        switch exp {
+        case .M(_):
+            switch forexp {
+            case .M(_): return true
+            case .R(_): return false
+            }
+        case .R(_):
+            switch forexp {
+            case .M(_): return false
+            case .R(_): return true
+            }
+        }
+    }.map({$0.0})
 }
