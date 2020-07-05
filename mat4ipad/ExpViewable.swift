@@ -249,16 +249,16 @@ extension NonEmptyArray {
     }
 }
 extension Exp {
-    func eval()->Exp {
+    func eval() throws ->Exp {
         switch self {
-        case let .M(m): return .M(m.eval())
-        case let .R(r): return .R(r.eval())
+        case let .M(m): return try .M(m.eval())
+        case let .R(r): return try .R(r.eval())
         }
     }
-    func prettify()->Exp {
+    func prettify()throws ->Exp {
         switch self {
-        case let .M(m): return .M(m.prettyfy())
-        case let .R(r): return .R(r.prettyfy())
+        case let .M(m): return  try .M(m.prettyfy())
+        case let .R(r): return try .R(r.prettyfy())
         }
     }
     func latex()->String {

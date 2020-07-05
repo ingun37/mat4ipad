@@ -169,7 +169,18 @@ class ViewController: UIViewController, StoreSubscriber {
             }
         }
         
-        try preview.set("= {\(final.eval().prettify().latex())}")
+        do {
+            try preview.set("= {\(final.eval().prettify().latex())}")
+        } catch {
+            switch error {
+            case AlgebraError.DivisionByZero:
+                preview.set("= {\\text{Division by zero}}")
+            default:
+                preview.set("= {\\text{unknown error}}")
+
+            }
+
+        }
         
         singleTipView?.dismiss()
         varTipView?.dismiss()

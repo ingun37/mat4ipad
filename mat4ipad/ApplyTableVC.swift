@@ -197,8 +197,8 @@ class ApplyTableVC: UIViewController, UITextFieldDelegate, UIPopoverPresentation
         if let value = Double(txt) {
             return .init(element: .Basis(.R(value)))
         }
-        if let r = Rational<Int>(from: txt){
-            return .init(element: .Basis(.Q(r)))
+        if let r = NumberKit.Rational<Int>(from: txt){
+            return .init(element: .Basis(.Q(Rational(r))))
         }
         if let match = #"^([a-zA-Z0-9]+)\+([a-zA-Z0-9]+)$"#.r?.findFirst(in: txt) {
             if let partl = match.group(at: 1), let expl = txt2exp(txt: partl) {
